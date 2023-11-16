@@ -126,8 +126,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Constraints: 112
+  m_CollisionDetection: 1
 --- !u!136 &7892222582909619828
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -135,7 +135,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3732477854314595335}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 04af4f0d64db8304d91011fce844301b, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -163,9 +163,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4567ba0b77e5c384eac4fe3b08f6c54c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 6
-  runSpeed: 12
+  walkSpeed: 20
+  runSpeed: 40
+  jumpForce: 5
+  jumpGravity: 10
+  fallGravity: 20
   lookSpeed: 24
+  lookMaxAngle: 80
+  playerCamera: {fileID: 2615616476239957227}
 --- !u!114 &1511051698418156324
 MonoBehaviour:
   m_ObjectHideFlags: 0
