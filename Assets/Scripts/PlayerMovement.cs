@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(PlayerController), typeof(Rigidbody))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour {
     [Header("Camera")]
     [SerializeField] private float lookSpeed    = 24f;
     [SerializeField] private float lookMaxAngle = 80f;
 
     [Header("Movement")]
-    [SerializeField] private float walkSpeed = 6f;
-    [SerializeField] private float runSpeed  = 10f;
-    [SerializeField] private float moveForce = 20f;
+    [SerializeField] private float walkSpeed = 12f;
+    [SerializeField] private float runSpeed  = 20f;
 
     [Header("Jump")]
     [SerializeField] private float jumpForce   = 10f;
@@ -23,7 +22,7 @@ public class PlayerMovement : MonoBehaviour {
 
     //? Variables
     private bool canMove = true, isGrounded, isJumping;
-    private Vector3 moveDirection = Vector3.zero;
+    private Vector3 moveDirection = Vector3.zero, velocity = Vector3.zero;
     private float cameraPitch = 0, jumpTimer;
 
     private bool jumpPressed, runPressed;
@@ -33,12 +32,12 @@ public class PlayerMovement : MonoBehaviour {
     [Header("Other Configuration")]
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private LayerMask groundLayer;
-    PlayerController player;
+    CharacterController characterController;
     Rigidbody rb;
 
     // =======================================================
     void Start() {
-        player = GetComponent<PlayerController>();
+        characterController = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
         canMove = true;
     }
@@ -51,17 +50,14 @@ public class PlayerMovement : MonoBehaviour {
         UpdateInputs();
         if(canMove) {
             HandleCameraMovement();
-            HandleJump();
-            FixMovement();
+            //HandleJump();
+            HandleMovement();
+            //FixMovement();
         }
     }
 
     void FixedUpdate() {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckRange, groundLayer);
-
-        if(canMove) {
-            HandleMovement();
-        }
+        
     }
 
     // =======================================================
@@ -75,7 +71,6 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void HandleCameraMovement() {
-        // Update camera
         cameraPitch -= mouseY * lookSpeed;
         cameraPitch = Mathf.Clamp(cameraPitch, -lookMaxAngle, lookMaxAngle);
         playerCamera.transform.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
@@ -83,51 +78,28 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void FixMovement() {
-        // Limit player velocity
-        var curVel = rb.velocity; curVel.y = 0;
 
-        var speed = runPressed ? runSpeed : walkSpeed;
-        if (curVel.magnitude > speed) {
-            var correctedVel = curVel.normalized * speed;
-            correctedVel.y = rb.velocity.y;
-            rb.velocity = correctedVel;
-        }
     }
 
     void HandleMovement() {
-        
-        if(canMove) {
-            //? MOVE
-            moveDirection = (transform.forward * xAxis) + (transform.right * yAxis);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckRange, groundLayer);
 
-            // Apply forces
-            var gravity = jumpPressed && isJumping ? jumpGravity : fallGravity;
-            rb.AddForce(Physics.gravity * gravity * rb.mass);
-            rb.AddForce(moveDirection.normalized * moveForce, ForceMode.Force);
+        // Cancel falling velocity when grounded
+        if(isGrounded) velocity.y = Physics.gravity.y;
 
-            // TODO: https://www.youtube.com/watch?v=qQLvcS9FxnY
-            // TODOv2: https://www.youtube.com/watch?v=f473C43s8nE
-        }
+        var speed = runPressed ? runSpeed : walkSpeed;
+        moveDirection = (transform.forward * xAxis) + (transform.right * yAxis);
+        moveDirection *= speed; // Scale with current move speed
+
+        // Time.deltaTime makes it framerate independent
+        characterController.Move(moveDirection * Time.deltaTime);
+
+        // Apply Gravity (Time.deltaTime applied twice because of freeFall formula -> t^2)
+        velocity.y += Physics.gravity.y * Time.deltaTime;
+        characterController.Move(velocity * Time.deltaTime);
     }
 
     void HandleJump() {
-        //? JUMP
-        if (jumpPressed && isGrounded) {
-            // Start jumping 
-            if (isGrounded) {
-                rb.AddForce(transform.up * jumpForce * Time.deltaTime, ForceMode.Impulse);
-                jumpTimer = maxJumpTime;
-                isJumping = true;
-            }
-            // Make higher jump is input was held
-            else if (isJumping) {
-                if (jumpTimer > 0) {
-                    
-                    jumpTimer -= Time.deltaTime;
-                }
-                else isJumping = false;
-            }
-        }
-        else isJumping = false;
+
     }
 }
