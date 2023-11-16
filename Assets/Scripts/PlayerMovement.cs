@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour {
     [Header("Jump")]
     [SerializeField] private float groundCheckRange = 2.2f;
     [SerializeField] private float jumpHeigh        = 2f;
+    [SerializeField] private float fallGravity      = 1.5f;
 
     //? Variables
     private bool isGrounded;
@@ -37,7 +38,6 @@ public class PlayerMovement : MonoBehaviour {
     void Start() {
         characterController = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
-        canMove = true;
     }
 
     void OnDrawGizmosSelected() {
@@ -52,7 +52,8 @@ public class PlayerMovement : MonoBehaviour {
 
     // =======================================================
     void UpdateInputs() {
-        jumpPressed = Input.GetButton("Jump");
+        jumpPressed = Input.GetButtonDown("Jump");
+        runPressed = Input.GetButton("Run");
 
         xAxis = Input.GetAxis("Vertical");
         yAxis = Input.GetAxis("Horizontal");
@@ -69,8 +70,10 @@ public class PlayerMovement : MonoBehaviour {
 
     void HandleMovement() {
         isGrounded = Physics.CheckSphere(playerFeet.transform.position, groundCheckRange, groundLayer);
-        // Cancel falling velocity when grounded
-        if(isGrounded && rb.velocity.y < 0.2f) velocity.y = -2f;
+        var gravity = !isGrounded && !jumpPressed ? Physics.gravity.y * fallGravity : Physics.gravity.y;
+
+        // Cancel excesive falling velocity when grounded
+        if(isGrounded && velocity.y < Physics.gravity.y) velocity.y = Physics.gravity.y;
 
         //! Horizontal movements
         var speed = runPressed ? runSpeed : walkSpeed;
@@ -83,11 +86,11 @@ public class PlayerMovement : MonoBehaviour {
         //! Vertical Movements + Gravity
         if (jumpPressed && isGrounded) {
             // Height to Velocity Formula => v = sqrt(H * -2g)
-            velocity.y = Mathf.Sqrt(jumpHeigh * -2f * Physics.gravity.y);
+            velocity.y = Mathf.Sqrt(jumpHeigh * -2f * gravity);
         }
 
         // Time.deltaTime applied twice on gravity because of freeFall formula => deltaY = (1/2) * g * t^2
-        velocity.y += Physics.gravity.y * Time.deltaTime;
+        velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
     }
 }

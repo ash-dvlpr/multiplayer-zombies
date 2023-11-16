@@ -181,10 +181,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookSpeed: 20
   lookMaxAngle: 80
-  walkSpeed: 10
-  runSpeed: 15
+  walkSpeed: 8
+  runSpeed: 12
   groundCheckRange: 0.3
-  jumpHeigh: 2
+  jumpHeigh: 5
+  fallGravity: 3
   playerCamera: {fileID: 2615616476239957227}
   playerFeet: {fileID: 5485812985579287515}
   groundLayer:
