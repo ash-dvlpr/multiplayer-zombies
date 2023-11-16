@@ -5,17 +5,20 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 [RequireComponent(typeof(PlayerController), typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour {
+    [Header("Camera")]
+    [SerializeField] private float lookSpeed    = 24f;
+    [SerializeField] private float lookMaxAngle = 80f;
+
     [Header("Movement")]
     [SerializeField] private float walkSpeed = 6f;
-    [SerializeField] private float runSpeed  = 12f;
-    [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private float jumpGravity = 1f;
-    [SerializeField] private float fallGravity = 3f;
-    [SerializeField] private float groundCheckRange = 2.2f;
+    [SerializeField] private float runSpeed  = 10f;
+    [SerializeField] private float moveForce = 20f;
 
-    [Header("Camera")]
-    [SerializeField] private float lookSpeed;
-    [SerializeField] private float lookMaxAngle = 80f;
+    [Header("Jump")]
+    //[SerializeField] private float jumpForce = 10f;
+    //[SerializeField] private float jumpGravity = 1f;
+    //[SerializeField] private float fallGravity = 3f;
+    [SerializeField] private float groundCheckRange = 2.2f;
 
     //? Variables
     private bool canMove = true, isGrounded;
@@ -93,19 +96,17 @@ public class PlayerMovement : MonoBehaviour {
         
         if(canMove) {
             //? MOVE
-            var speed = isRunning ? runSpeed : walkSpeed;
             moveDirection = (transform.forward * xAxis) + (transform.right * yAxis);
             
             //? JUMP
             var mvDirY = moveDirection.y;
-
             // TODO: check canJump
             //moveDirection.y = jumpPressed && isGrounded ? jumpForce : mvDirY;
             // TODO: if (!grounded)
             //moveDirection.y -= (jumpPressed ? jumpGravity : fallGravity);
 
             // Apply forces
-            rb.AddForce(moveDirection.normalized * speed, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveForce, ForceMode.Force);
             
 
             // TODO: https://www.youtube.com/watch?v=qQLvcS9FxnY

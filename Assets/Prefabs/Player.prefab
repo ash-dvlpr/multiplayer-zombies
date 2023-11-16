@@ -163,14 +163,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4567ba0b77e5c384eac4fe3b08f6c54c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 10
-  runSpeed: 20
+  lookSpeed: 24
+  lookMaxAngle: 80
+  walkSpeed: 6
+  runSpeed: 10
+  moveForce: 30
   jumpForce: 5
   jumpGravity: 10
   fallGravity: 20
   groundCheckRange: 1.6
-  lookSpeed: 24
-  lookMaxAngle: 80
   playerCamera: {fileID: 2615616476239957227}
   groundLayer:
     serializedVersion: 2
