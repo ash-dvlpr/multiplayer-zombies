@@ -14,16 +14,13 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float runSpeed  = 20f;
 
     [Header("Jump")]
-    [SerializeField] private float jumpForce   = 10f;
-    [SerializeField] private float maxJumpTime = 10f;
-    [SerializeField] private float jumpGravity = 1f;
-    [SerializeField] private float fallGravity = 3f;
     [SerializeField] private float groundCheckRange = 2.2f;
+    [SerializeField] private float jumpHeigh        = 2f;
 
     //? Variables
-    private bool canMove = true, isGrounded, isJumping;
+    private bool isGrounded;
     private Vector3 moveDirection = Vector3.zero, velocity = Vector3.zero;
-    private float cameraPitch = 0, jumpTimer;
+    private float cameraPitch = 0;
 
     private bool jumpPressed, runPressed;
     private float xAxis = 0f, yAxis = 0f, mouseX = 0f, mouseY = 0f;
@@ -31,6 +28,7 @@ public class PlayerMovement : MonoBehaviour {
     //? References
     [Header("Other Configuration")]
     [SerializeField] private GameObject playerCamera;
+    [SerializeField] private GameObject playerFeet;
     [SerializeField] private LayerMask groundLayer;
     CharacterController characterController;
     Rigidbody rb;
@@ -42,22 +40,14 @@ public class PlayerMovement : MonoBehaviour {
         canMove = true;
     }
 
-    void OnDrawGizmos() {
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckRange);
+    void OnDrawGizmosSelected() {
+        Gizmos.DrawWireSphere(playerFeet.transform.position, groundCheckRange);
     }
 
     void Update() {
         UpdateInputs();
-        if(canMove) {
-            HandleCameraMovement();
-            //HandleJump();
-            HandleMovement();
-            //FixMovement();
-        }
-    }
-
-    void FixedUpdate() {
-        
+        HandleCameraMovement();
+        HandleMovement();
     }
 
     // =======================================================
@@ -77,16 +67,12 @@ public class PlayerMovement : MonoBehaviour {
         transform.rotation *= Quaternion.Euler(0, mouseX * lookSpeed, 0);
     }
 
-    void FixMovement() {
-
-    }
-
     void HandleMovement() {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckRange, groundLayer);
-
+        isGrounded = Physics.CheckSphere(playerFeet.transform.position, groundCheckRange, groundLayer);
         // Cancel falling velocity when grounded
-        if(isGrounded) velocity.y = Physics.gravity.y;
+        if(isGrounded && rb.velocity.y < 0.2f) velocity.y = -2f;
 
+        //! Horizontal movements
         var speed = runPressed ? runSpeed : walkSpeed;
         moveDirection = (transform.forward * xAxis) + (transform.right * yAxis);
         moveDirection *= speed; // Scale with current move speed
@@ -94,12 +80,14 @@ public class PlayerMovement : MonoBehaviour {
         // Time.deltaTime makes it framerate independent
         characterController.Move(moveDirection * Time.deltaTime);
 
-        // Apply Gravity (Time.deltaTime applied twice because of freeFall formula -> t^2)
+        //! Vertical Movements + Gravity
+        if (jumpPressed && isGrounded) {
+            // Height to Velocity Formula => v = sqrt(H * -2g)
+            velocity.y = Mathf.Sqrt(jumpHeigh * -2f * Physics.gravity.y);
+        }
+
+        // Time.deltaTime applied twice on gravity because of freeFall formula => deltaY = (1/2) * g * t^2
         velocity.y += Physics.gravity.y * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
-    }
-
-    void HandleJump() {
-
     }
 }
