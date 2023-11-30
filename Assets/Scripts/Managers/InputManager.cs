@@ -30,8 +30,8 @@ public class InputManager : MonoBehaviour {
     }
 
     // ================== Outside Facing API ==================
-    public static Vector2 InGameMovement() => Instance?.controls.InGame.Movement.ReadValue<Vector2>() ?? Vector2.zero;
-    public static Vector2 InGameLookDelta() => Instance?.controls.InGame.LookDelta.ReadValue<Vector2>() ?? Vector2.zero;
-    public static bool InGameRunPressed() => Instance?.controls.InGame.RunModifier.IsPressed() ?? false;
-    public static bool InGameJumpTriggered() => Instance?.controls.InGame.Jump.triggered ?? false;
+    public static Vector2 InGameMovement => Instance?.controls.InGame.Movement.ReadValue<Vector2>() ?? Vector2.zero;
+    public static Vector2 InGameLookDelta => Instance?.controls.InGame.LookDelta.ReadValue<Vector2>() ?? Vector2.zero;
+    public static bool InGameRunPressed => Instance?.controls.InGame.RunModifier.IsPressed() ?? false;
+    public static bool InGameJumpPressed => Instance?.controls.InGame.Jump.IsPressed() ?? false;
 }

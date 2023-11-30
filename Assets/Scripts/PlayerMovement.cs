@@ -15,14 +15,15 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField, Range(0f, 90f)] float lookMaxAngleUp   = 80f;
     [SerializeField, Range(0f, 90f)] float lookMaxAngleDown = 90f;
 
-
     [Header("Character Movement")]
     [SerializeField] float walkSpeed = 12f;
     [SerializeField] float runSpeed  = 20f;
-    [SerializeField, Range(1f, 20f)] float gravityScale = 1f;
 
+    [Header("Character Jump")]
     [SerializeField] LayerMask jumplableLayers;
-    [SerializeField] private float groundCheckRange = 2.2f;
+    [SerializeField] private float groundCheckRange = 0.3f;
+    [SerializeField, Range(1f, 20f)] float gravityScale = 4f;
+    [SerializeField] float jumpHeigh = 2f;
 
     // ====================== References =====================
     CharacterController _characterController;
@@ -49,10 +50,11 @@ public class PlayerMovement : MonoBehaviour {
     void Update() {
         if (canMove) {
             UpdateState();
+
             HandleCameraLook();
             HandleMovement();
 
-            HandleFinalMovements();
+            ApplyMovementForces();
         }
     }
 
@@ -66,7 +68,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void HandleCameraLook() {
-        var lookDelta = InputManager.InGameLookDelta();
+        var lookDelta = InputManager.InGameLookDelta;
         _cameraPitch -= lookDelta.y * lookSpeedY;
         _cameraPitch = Mathf.Clamp(_cameraPitch, -lookMaxAngleUp, lookMaxAngleDown);
 
@@ -75,8 +77,8 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void HandleMovement() {
-        var speed = InputManager.InGameRunPressed() ? runSpeed : walkSpeed;
-        var moveAxis = InputManager.InGameMovement();
+        var speed = InputManager.InGameRunPressed ? runSpeed : walkSpeed;
+        var moveAxis = InputManager.InGameMovement;
 
         var mY = _moveDirection.y;
         _moveDirection = (transform.forward * moveAxis.y) + (transform.right * moveAxis.x);
@@ -84,23 +86,24 @@ public class PlayerMovement : MonoBehaviour {
         _moveDirection.y = mY;
     }
 
-    void HandleFinalMovements() {
+    void ApplyMovementForces() {
         var g = Physics.gravity.y * gravityScale;
-
-        // Cancel excesive falling velocity when grounded
-        if(_isGrounded && _velocity.y < g) _velocity.y = g;
 
         // Apply movement
         _characterController.Move(_moveDirection * Time.deltaTime);
 
         //! Vertical Movements + Gravity
-        if (_isGrounded && InputManager.InGameJumpTriggered()) {
+        if (_isGrounded && InputManager.InGameJumpPressed) {
             // Height to Velocity Formula => v = sqrt(H * -2g)
-            _velocity.y = -g;
+            _velocity.y = Mathf.Sqrt(jumpHeigh * (-2*g));
+        } else {
+            // Time.deltaTime applied twice on gravity because of freeFall formula => deltaY = (1/2) * g * t^2
+            _velocity.y += g * Time.deltaTime;
+
+            // Cancel excesive falling velocity when grounded
+            if(_isGrounded) _velocity.y = Physics.gravity.y;
         }
 
-        // Time.deltaTime applied twice on gravity because of freeFall formula => deltaY = (1/2) * g * t^2
-        _velocity.y += g * Time.deltaTime;
         _characterController.Move(_velocity * Time.deltaTime);
     } 
 }

@@ -320,16 +320,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraHandle: {fileID: 7015815664069237034}
   lookSpeedX: 0.8
-  lookSpeedY: 1
+  lookSpeedY: 0.8
   lookMaxAngleUp: 80
   lookMaxAngleDown: 90
-  walkSpeed: 12
-  runSpeed: 20
-  gravityScale: 1
+  walkSpeed: 8
+  runSpeed: 12
   jumplableLayers:
     serializedVersion: 2
     m_Bits: 9
   groundCheckRange: 0.3
+  gravityScale: 4
+  jumpHeigh: 2
   canMove: 1
 --- !u!1 &8979948885879669666
 GameObject:
