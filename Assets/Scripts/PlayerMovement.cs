@@ -1,30 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Windows;
 
-[RequireComponent(typeof(CharacterController), typeof(ICharacterInput))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour {
     // ==================== Configuration ====================
     [Header("Camera Movement / Look")]
     [SerializeField] GameObject cameraHandle;
     [SerializeField] float lookSpeedX = 24f;
     [SerializeField] float lookSpeedY = 24f;
-    [SerializeField][Range(0f, 90f)] float lookMaxAngleUp   = 80f;
-    [SerializeField][Range(0f, 90f)] float lookMaxAngleDown = 90f;
+    [SerializeField, Range(0f, 90f)] float lookMaxAngleUp   = 80f;
+    [SerializeField, Range(0f, 90f)] float lookMaxAngleDown = 90f;
 
 
     [Header("Character Movement")]
     [SerializeField] float walkSpeed = 12f;
     [SerializeField] float runSpeed  = 20f;
-    [SerializeField] float gravity   = 1.5f;
+    [SerializeField, Range(1f, 20f)] float gravityScale = 1f;
 
     [SerializeField] LayerMask jumplableLayers;
     [SerializeField] private float groundCheckRange = 2.2f;
 
     // ====================== References =====================
     CharacterController _characterController;
-    ICharacterInput _inputs;
-    //Camera _camera;
 
     // ====================== Variables ======================
     [SerializeField] bool canMove = true;
@@ -37,37 +38,69 @@ public class PlayerMovement : MonoBehaviour {
     // ====================== Unity Code ======================
     void Awake() {
         _characterController = GetComponent<CharacterController>();
-        _inputs = GetComponent<ICharacterInput>();
-        //_camera = GetComponentInChildren<Camera>();
     }
 
-    //void OnDrawGizmosSelected() {
-        //Gizmos.DrawWireSphere(playerFeet.transform.position, groundCheckRange);
-    //}
+    void OnDrawGizmosSelected() {
+        var feetPos = transform.position;
+        feetPos.y -= _characterController ? _characterController.height / 2 : 0;
+        Gizmos.DrawWireSphere(feetPos, groundCheckRange);
+    }
 
     void Update() {
-        //if (canMove) {
-        //    HandleCameraLook();
-        //    HandleMovement();
-        //    HandleFinalMovements();
-        //}
+        if (canMove) {
+            UpdateState();
+            HandleCameraLook();
+            HandleMovement();
+
+            HandleFinalMovements();
+        }
     }
 
 
     // ===================== Custom Code =====================
+    void UpdateState() {
+        var feetPos = transform.position;
+        feetPos.y -= _characterController.height / 2;
+
+        _isGrounded = Physics.CheckSphere(feetPos, groundCheckRange, jumplableLayers);
+    }
+
     void HandleCameraLook() {
-        //_cameraPitch -= _inputs.MouseY * lookSpeedY;
-        //_cameraPitch = Mathf.Clamp(_cameraPitch, -lookMaxAngleUp, lookMaxAngleDown);
-        //_camera.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
-        //transform.rotation *= Quaternion.Euler(0, _inputs.MouseX * lookSpeedX, 0);
+        var lookDelta = InputManager.InGameLookDelta();
+        _cameraPitch -= lookDelta.y * lookSpeedY;
+        _cameraPitch = Mathf.Clamp(_cameraPitch, -lookMaxAngleUp, lookMaxAngleDown);
+
+        cameraHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
+        transform.rotation *= Quaternion.Euler(0, lookDelta.x * lookSpeedX, 0);
     }
 
     void HandleMovement() {
+        var speed = InputManager.InGameRunPressed() ? runSpeed : walkSpeed;
+        var moveAxis = InputManager.InGameMovement();
 
-
+        var mY = _moveDirection.y;
+        _moveDirection = (transform.forward * moveAxis.y) + (transform.right * moveAxis.x);
+        _moveDirection *= speed; // Scale with current move speed
+        _moveDirection.y = mY;
     }
 
     void HandleFinalMovements() {
+        var g = Physics.gravity.y * gravityScale;
 
+        // Cancel excesive falling velocity when grounded
+        if(_isGrounded && _velocity.y < g) _velocity.y = g;
+
+        // Apply movement
+        _characterController.Move(_moveDirection * Time.deltaTime);
+
+        //! Vertical Movements + Gravity
+        if (_isGrounded && InputManager.InGameJumpTriggered()) {
+            // Height to Velocity Formula => v = sqrt(H * -2g)
+            _velocity.y = -g;
+        }
+
+        // Time.deltaTime applied twice on gravity because of freeFall formula => deltaY = (1/2) * g * t^2
+        _velocity.y += g * Time.deltaTime;
+        _characterController.Move(_velocity * Time.deltaTime);
     } 
 }
