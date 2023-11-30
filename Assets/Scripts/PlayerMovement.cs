@@ -51,29 +51,29 @@ public class PlayerMovement : MonoBehaviour {
 
     // =======================================================
     void HandleCameraMovement() {
-        cameraPitch -= inputs.State.mouseY * lookSpeed;
+        cameraPitch -= inputs.MouseY * lookSpeed;
         cameraPitch = Mathf.Clamp(cameraPitch, -lookMaxAngle, lookMaxAngle);
         playerCamera.transform.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
-        transform.rotation *= Quaternion.Euler(0, inputs.State.mouseX * lookSpeed, 0);
+        transform.rotation *= Quaternion.Euler(0, inputs.MouseX * lookSpeed, 0);
     }
 
     void HandleMovement() {
         isGrounded = Physics.CheckSphere(playerFeet.transform.position, groundCheckRange, groundLayer);
-        var gravity = !isGrounded && !inputs.State.jumpPressed ? Physics.gravity.y * fallGravity : Physics.gravity.y;
+        var gravity = !isGrounded && !inputs.JumpPressed ? Physics.gravity.y * fallGravity : Physics.gravity.y;
 
         // Cancel excesive falling velocity when grounded
         if(isGrounded && velocity.y < Physics.gravity.y) velocity.y = Physics.gravity.y;
 
         //! Horizontal movements
-        var speed = inputs.State.runPressed ? runSpeed : walkSpeed;
-        moveDirection = (transform.forward * inputs.State.xAxis) + (transform.right * inputs.State.yAxis);
+        var speed = inputs.RunPressed ? runSpeed : walkSpeed;
+        moveDirection = (transform.forward * inputs.XAxis) + (transform.right * inputs.YAxis);
         moveDirection *= speed; // Scale with current move speed
 
         // Time.deltaTime makes it framerate independent
         characterController.Move(moveDirection * Time.deltaTime);
 
         //! Vertical Movements + Gravity
-        if (inputs.State.jumpPressed && isGrounded) {
+        if (inputs.JumpPressed && isGrounded) {
             // Height to Velocity Formula => v = sqrt(H * -2g)
             velocity.y = Mathf.Sqrt(jumpHeigh * -2f * gravity);
         }
