@@ -8,7 +8,7 @@ using UnityEngine.PlayerLoop;
 public class PlayerInput : MonoBehaviour, ICharacterInput {
     public ICharacterInput.InputStates State { get => _state; }
     private ICharacterInput.InputStates _state;
-    
+
     void Update() {
         UpdateInputs();
     }

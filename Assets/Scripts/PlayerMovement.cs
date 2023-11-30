@@ -1,85 +1,73 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CharacterController), typeof(ICharacterInput))]
 public class PlayerMovement : MonoBehaviour {
-    [Header("Camera")]
-    [SerializeField] private float lookSpeed    = 24f;
-    [SerializeField] private float lookMaxAngle = 80f;
+    // ==================== Configuration ====================
+    [Header("Camera Movement / Look")]
+    [SerializeField] GameObject cameraHandle;
+    [SerializeField] float lookSpeedX = 24f;
+    [SerializeField] float lookSpeedY = 24f;
+    [SerializeField][Range(0f, 90f)] float lookMaxAngleUp   = 80f;
+    [SerializeField][Range(0f, 90f)] float lookMaxAngleDown = 90f;
 
-    [Header("Movement")]
-    [SerializeField] private float walkSpeed = 12f;
-    [SerializeField] private float runSpeed  = 20f;
 
-    [Header("Jump")]
+    [Header("Character Movement")]
+    [SerializeField] float walkSpeed = 12f;
+    [SerializeField] float runSpeed  = 20f;
+    [SerializeField] float gravity   = 1.5f;
+
+    [SerializeField] LayerMask jumplableLayers;
     [SerializeField] private float groundCheckRange = 2.2f;
-    [SerializeField] private float jumpHeigh        = 2f;
-    [SerializeField] private float fallGravity      = 1.5f;
 
-    //? References
-    [Header("Other Configuration")]
-    [SerializeField] private GameObject playerCamera;
-    [SerializeField] private GameObject playerFeet;
-    [SerializeField] private LayerMask groundLayer;
-    CharacterController characterController;
-    ICharacterInput inputs;
-    Rigidbody rb;
+    // ====================== References =====================
+    CharacterController _characterController;
+    ICharacterInput _inputs;
+    //Camera _camera;
 
-    //? Variables
-    private bool isGrounded;
-    private Vector3 moveDirection = Vector3.zero, velocity = Vector3.zero;
-    private float cameraPitch = 0;
+    // ====================== Variables ======================
+    [SerializeField] bool canMove = true;
+
+    Vector3 _moveDirection = Vector3.zero, _velocity = Vector3.zero;
+    float _cameraPitch = 0;
+    bool _isGrounded;
 
 
-    // =======================================================
-    void Start() {
-        characterController = GetComponent<CharacterController>();
-        inputs = GetComponent<ICharacterInput>();
-        rb = GetComponent<Rigidbody>();
+    // ====================== Unity Code ======================
+    void Awake() {
+        _characterController = GetComponent<CharacterController>();
+        _inputs = GetComponent<ICharacterInput>();
+        //_camera = GetComponentInChildren<Camera>();
     }
 
-    void OnDrawGizmosSelected() {
-        Gizmos.DrawWireSphere(playerFeet.transform.position, groundCheckRange);
-    }
+    //void OnDrawGizmosSelected() {
+        //Gizmos.DrawWireSphere(playerFeet.transform.position, groundCheckRange);
+    //}
 
     void Update() {
-        HandleCameraMovement();
-        HandleMovement();
+        //if (canMove) {
+        //    HandleCameraLook();
+        //    HandleMovement();
+        //    HandleFinalMovements();
+        //}
     }
 
-    // =======================================================
-    void HandleCameraMovement() {
-        cameraPitch -= inputs.MouseY * lookSpeed;
-        cameraPitch = Mathf.Clamp(cameraPitch, -lookMaxAngle, lookMaxAngle);
-        playerCamera.transform.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
-        transform.rotation *= Quaternion.Euler(0, inputs.MouseX * lookSpeed, 0);
+
+    // ===================== Custom Code =====================
+    void HandleCameraLook() {
+        //_cameraPitch -= _inputs.MouseY * lookSpeedY;
+        //_cameraPitch = Mathf.Clamp(_cameraPitch, -lookMaxAngleUp, lookMaxAngleDown);
+        //_camera.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
+        //transform.rotation *= Quaternion.Euler(0, _inputs.MouseX * lookSpeedX, 0);
     }
 
     void HandleMovement() {
-        isGrounded = Physics.CheckSphere(playerFeet.transform.position, groundCheckRange, groundLayer);
-        var gravity = !isGrounded && !inputs.JumpPressed ? Physics.gravity.y * fallGravity : Physics.gravity.y;
 
-        // Cancel excesive falling velocity when grounded
-        if(isGrounded && velocity.y < Physics.gravity.y) velocity.y = Physics.gravity.y;
 
-        //! Horizontal movements
-        var speed = inputs.RunPressed ? runSpeed : walkSpeed;
-        moveDirection = (transform.forward * inputs.XAxis) + (transform.right * inputs.YAxis);
-        moveDirection *= speed; // Scale with current move speed
-
-        // Time.deltaTime makes it framerate independent
-        characterController.Move(moveDirection * Time.deltaTime);
-
-        //! Vertical Movements + Gravity
-        if (inputs.JumpPressed && isGrounded) {
-            // Height to Velocity Formula => v = sqrt(H * -2g)
-            velocity.y = Mathf.Sqrt(jumpHeigh * -2f * gravity);
-        }
-
-        // Time.deltaTime applied twice on gravity because of freeFall formula => deltaY = (1/2) * g * t^2
-        velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
     }
+
+    void HandleFinalMovements() {
+
+    } 
 }
