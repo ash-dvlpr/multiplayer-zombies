@@ -330,7 +330,7 @@ MonoBehaviour:
     m_Bits: 136
   groundCheckRange: 0.3
   gravityScale: 4
-  jumpHeigh: 2
+  jumpHeigh: 1.8
   canMove: 1
 --- !u!1 &8979948885879669666
 GameObject:

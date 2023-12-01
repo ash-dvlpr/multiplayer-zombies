@@ -98,12 +98,15 @@ public class PlayerMovement : MonoBehaviour {
             _velocity.y = Mathf.Sqrt(jumpHeigh * (-2*g));
         } else {
             // Time.deltaTime applied twice on gravity because of freeFall formula => deltaY = (1/2) * g * t^2
-            _velocity.y += g * Time.deltaTime;
+            // Acceleration split in two to average out frame inconsistencies
+            _velocity.y += g * Time.deltaTime / 2;
 
-            // Cancel excesive falling velocity when grounded
-            if(_isGrounded) _velocity.y = Physics.gravity.y;
+            // Cancel velocity when grounded
+            if(_isGrounded) _velocity.y = -0.5f;
         }
 
         _characterController.Move(_velocity * Time.deltaTime);
-    } 
+        // Apply the rest of the acceleration
+        _velocity.y += g * Time.deltaTime / 2;
+    }
 }
