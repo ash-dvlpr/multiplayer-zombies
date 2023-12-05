@@ -145,7 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Min>k__BackingField: 0
   <Max>k__BackingField: 100
-  _amount: 0
+  _amount: 100
 --- !u!1 &608651564
 GameObject:
   m_ObjectHideFlags: 0

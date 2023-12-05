@@ -37,6 +37,13 @@ public abstract class Resource : MonoBehaviour {
     }
 
     // ====================== Unity Code ======================
+#if UNITY_EDITOR
+    void OnValidate() {
+        if (!Application.isPlaying) Reset();
+        else Amount = Amount;
+    }
+#endif
+
     protected void Reset() {
         switch (ResType) {
             case ResourceType.Charge:
