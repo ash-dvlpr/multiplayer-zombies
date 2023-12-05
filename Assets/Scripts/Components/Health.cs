@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,22 @@ public class Health : Resource {
     public override ResourceType ResType { get => ResourceType.Plentiful; }
 
     // ====================== Unity Code ======================
-    void Awake() {
-        base.Reset();   
+    protected override void Awake() {
+        base.Awake();
+    }
+
+    // ================== Outside Facing API ==================
+    protected override void TriggerOnChange() {
+        base.TriggerOnChange();
+
+        if (Amount.Equals(0)) {
+            onDeath?.Invoke(this);
+        }
+    }
+
+    private event Action<Health> onDeath;
+    public event Action<Health> OnDeath {
+        add    { lock(this) { onDeath += value; } }
+        remove { lock(this) { onDeath -= value; } }
     }
 }

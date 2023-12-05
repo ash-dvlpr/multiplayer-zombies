@@ -401,7 +401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b51fd53ae6b83b468df56cd38fbd535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Min>k__BackingField: 0
   <Max>k__BackingField: 100
   _amount: 100
 --- !u!1 &8979948885879669666

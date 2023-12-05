@@ -34,7 +34,7 @@ public abstract class Resource : MonoBehaviour {
         get => _amount;
         protected set {
             _amount = Math.Clamp(value, 0, Max);
-            onChange?.Invoke(_amount);
+            TriggerOnChange();
         }
     }
 
@@ -59,7 +59,15 @@ public abstract class Resource : MonoBehaviour {
         }
     }
 
+    protected virtual void Awake() {
+        Reset();
+    }
+
     // ================== Outside Facing API ==================
+    protected virtual void TriggerOnChange() { 
+        onChange?.Invoke(_amount);
+    }
+
     private event Action<int> onChange;
     public event Action<int> OnChange {
         add    { lock(this) { onChange += value; } }
