@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ public abstract class Resource : MonoBehaviour {
     public abstract ResourceType ResType { get; }
 
     // ====================== Variables ======================    
-    [field: SerializeField, ReadOnly] private int _amount;
+    [field: SerializeField, ShowOnly] private int _amount;
     public int Amount {
         get => _amount;
         protected set {
@@ -52,24 +53,5 @@ public abstract class Resource : MonoBehaviour {
     public event Action<int> OnChange {
         add    { lock(this) { onChange += value; } }
         remove { lock(this) { onChange -= value; } }
-    }
-}
-
-
-public class ReadOnlyAttribute : PropertyAttribute { }
-
-[CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
-public class ReadOnlyDrawer : PropertyDrawer {
-    public override float GetPropertyHeight(SerializedProperty property,
-                                            GUIContent label) {
-        return EditorGUI.GetPropertyHeight(property, label, true);
-    }
-
-    public override void OnGUI(Rect position,
-                               SerializedProperty property,
-                               GUIContent label) {
-        GUI.enabled = false;
-        EditorGUI.PropertyField(position, property, label, true);
-        GUI.enabled = true;
     }
 }
