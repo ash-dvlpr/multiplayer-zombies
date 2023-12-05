@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Health))]
 public class PlayerController : MonoBehaviour {
     void Start() {
         // Hide Mouse Cursor
