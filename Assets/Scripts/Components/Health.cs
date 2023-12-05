@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Health : Resource {
     // ==================== Configuration ====================
-    public override ResourceType ResType { get => ResourceType.Clasic; }
+    public override ResourceType ResType { get => ResourceType.Plentiful; }
 
     // ====================== Unity Code ======================
     void Awake() {

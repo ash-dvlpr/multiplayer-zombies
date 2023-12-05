@@ -4,21 +4,22 @@ using System.Collections.Generic;
 using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Internal;
 
 public abstract class Resource : MonoBehaviour {
     public enum @ResourceType : uint {
         /// <summary>
         /// <see cref="Amount">Amount</see> will start off at it's <see cref="Max">Max</see> value.
         /// </summary>
-        Clasic = 0,
+        Plentiful = 0,
         /// <summary>
         /// <see cref="Amount">Amount</see> will start off at it's <see cref="Min">Min</see> value.
         /// </summary>
-        Charge = 1,
+        Scarse = 1,
     }
 
     // ==================== Configuration ====================
-    [field: SerializeField, Min(0)] public int Min { get; private set; }
+    [field: Header("Configuration")]
     [field: SerializeField, Min(1)] public int Max { get; private set; }
 
     /// <value>
@@ -26,12 +27,13 @@ public abstract class Resource : MonoBehaviour {
     /// </value>
     public abstract ResourceType ResType { get; }
 
-    // ====================== Variables ======================    
+    // ====================== Variables ======================
+    [field: Header("Info")]
     [field: SerializeField, ShowOnly] private int _amount;
     public int Amount {
         get => _amount;
         protected set {
-            _amount = Mathf.Clamp(value, Min, Max);
+            _amount = Math.Clamp(value, 0, Max);
             onChange?.Invoke(_amount);
         }
     }
@@ -39,6 +41,8 @@ public abstract class Resource : MonoBehaviour {
     // ====================== Unity Code ======================
 #if UNITY_EDITOR
     void OnValidate() {
+        Max = Math.Max(1, Max);
+
         if (!Application.isPlaying) Reset();
         else Amount = Amount;
     }
@@ -46,9 +50,9 @@ public abstract class Resource : MonoBehaviour {
 
     protected void Reset() {
         switch (ResType) {
-            case ResourceType.Charge:
-                Amount = Min; break;
-            case ResourceType.Clasic:
+            case ResourceType.Scarse:
+                Amount = 0; break;
+            case ResourceType.Plentiful:
                 Amount = Max; break;
             default:
                 throw new NotImplementedException($"'Resource.Reset()': Missing implementation for enum variant: '{ResType}'");
