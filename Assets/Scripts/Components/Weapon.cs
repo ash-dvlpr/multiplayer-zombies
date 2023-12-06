@@ -5,8 +5,8 @@ using UnityEngine;
 public class Weapon : MonoBehaviour {
 
     [field: Header("Hands Rigging")]
+    [field: SerializeField] public Transform LeftHandPos { get; private set; }
     [field: SerializeField] public Transform RightHandPos { get; private set; }
-    [field: SerializeField] public Transform RightLeftPos { get; private set; }
     
     [field: Header("Effects")]
     [field: SerializeField] public Transform MuzzlePos { get; private set; }

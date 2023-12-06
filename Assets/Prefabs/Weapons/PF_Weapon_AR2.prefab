@@ -24,13 +24,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2452822985376055090}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.329, y: 0.02, z: -0.428}
+  m_LocalRotation: {x: -0.4359142, y: 0.64160454, z: -0.3924937, w: 0.49423793}
+  m_LocalPosition: {x: -0.342, y: -0.035, z: -0.165}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6685723114512179979}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 4.173, y: 101.765, z: -71.779}
 --- !u!1 &3654890151511198530
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,13 +86,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8820540018853660668}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.329, y: 0.16800022, z: -1.0612798}
+  m_LocalRotation: {x: -0.75627756, y: -0.03994457, z: 0.3512989, w: 0.55048865}
+  m_LocalPosition: {x: -0.34700057, y: 0.19500005, z: -0.88300014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6685723114512179979}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -53.57, y: -104.342, z: 131.145}
 --- !u!1001 &6818220785574541518
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -191,11 +191,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 168702940067339205, guid: fb816b0183c1b0647ae50c5bfe1dff7f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8912425956042044949}
+      addedObject: {fileID: 6123246793170226513}
     - targetCorrespondingSourceObject: {fileID: 168702940067339205, guid: fb816b0183c1b0647ae50c5bfe1dff7f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6123246793170226513}
+      addedObject: {fileID: 8912425956042044949}
     - targetCorrespondingSourceObject: {fileID: 168702940067339205, guid: fb816b0183c1b0647ae50c5bfe1dff7f,
         type: 3}
       insertIndex: -1
@@ -230,6 +230,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f891aa89bff27de459368e531c1c0b52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <LeftHandPos>k__BackingField: {fileID: 6123246793170226513}
   <RightHandPos>k__BackingField: {fileID: 8912425956042044949}
-  <RightLeftPos>k__BackingField: {fileID: 6123246793170226513}
   <MuzzlePos>k__BackingField: {fileID: 7471305367362118356}
