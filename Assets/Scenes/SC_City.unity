@@ -216,9 +216,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 424240992}
-  - component: {fileID: 424240993}
   - component: {fileID: 424240991}
   - component: {fileID: 424240989}
+  - component: {fileID: 424240993}
   m_Layer: 3
   m_Name: GroundLayer
   m_TagString: Untagged
