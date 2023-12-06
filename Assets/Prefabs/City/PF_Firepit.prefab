@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6344111220954982181}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: PF_Firepit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,7 +52,7 @@ PrefabInstance:
     - target: {fileID: 4734434453166976330, guid: f02c83561c240704da2a370fd1a0ab4f,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4734434453166976330, guid: f02c83561c240704da2a370fd1a0ab4f,
         type: 3}
@@ -186,7 +186,7 @@ PrefabInstance:
     - target: {fileID: 1077062838617211300, guid: 743af5e8492bacf429cd6c8b70867cb0,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1077062838617211300, guid: 743af5e8492bacf429cd6c8b70867cb0,
         type: 3}
@@ -270,7 +270,7 @@ PrefabInstance:
     - target: {fileID: 1077062838617211300, guid: 743af5e8492bacf429cd6c8b70867cb0,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1077062838617211300, guid: 743af5e8492bacf429cd6c8b70867cb0,
         type: 3}
@@ -304,7 +304,7 @@ PrefabInstance:
     - target: {fileID: 1459910606926099295, guid: e2c487ce7d13e8742aa6ad5a05a07250,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1459910606926099295, guid: e2c487ce7d13e8742aa6ad5a05a07250,
         type: 3}
@@ -388,7 +388,7 @@ PrefabInstance:
     - target: {fileID: 1459910606926099295, guid: e2c487ce7d13e8742aa6ad5a05a07250,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1459910606926099295, guid: e2c487ce7d13e8742aa6ad5a05a07250,
         type: 3}
