@@ -12,8 +12,18 @@ public class Health : Resource {
         base.Awake();
     }
 
+    // ===================== Custom Code =====================
+    public void Heal(int amount) {
+        Amount += Math.Max(0, amount);
+    }
+
+    public void Damage(int amount) {
+        Amount -= Math.Max(0, amount);
+    }
+
     // ================== Outside Facing API ==================
     protected override void TriggerOnChange() {
+        Debug.Log($"Health: {Amount}");
         base.TriggerOnChange();
 
         if (Amount.Equals(0)) {

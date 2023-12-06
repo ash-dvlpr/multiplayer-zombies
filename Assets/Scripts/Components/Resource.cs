@@ -28,7 +28,6 @@ public abstract class Resource : MonoBehaviour {
     public abstract ResourceType ResType { get; }
 
     // ====================== Variables ======================
-    [field: Header("Info")]
     [field: SerializeField, ShowOnly] private int _amount;
     public int Amount {
         get => _amount;
@@ -65,11 +64,11 @@ public abstract class Resource : MonoBehaviour {
 
     // ================== Outside Facing API ==================
     protected virtual void TriggerOnChange() { 
-        onChange?.Invoke(_amount);
+        onChange?.Invoke(this);
     }
 
-    private event Action<int> onChange;
-    public event Action<int> OnChange {
+    private event Action<Resource> onChange;
+    public event Action<Resource> OnChange {
         add    { lock(this) { onChange += value; } }
         remove { lock(this) { onChange -= value; } }
     }

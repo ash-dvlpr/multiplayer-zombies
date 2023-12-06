@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Windows;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour {
@@ -22,7 +19,7 @@ public class PlayerMovement : MonoBehaviour {
 
     [Header("Character Jump")]
     [SerializeField] LayerMask jumplableLayers;
-    [SerializeField] private float groundCheckRange = 0.3f;
+    [SerializeField] float groundCheckRange = 0.3f;
     [SerializeField, Range(1f, 20f)] float gravityScale = 4f;
     [SerializeField] float jumpHeigh = 2f;
 
@@ -69,7 +66,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void HandleCameraLook() {
-        var lookDelta = InputManager.InGameLookDelta;
+        var lookDelta = InputManager.InGame_LookDelta;
         _cameraPitch -= lookDelta.y * lookSpeedY;
         _cameraPitch = Mathf.Clamp(_cameraPitch, -lookMaxAngleUp, lookMaxAngleDown);
 
@@ -79,8 +76,8 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void HandleMovement() {
-        var speed = InputManager.InGameRunPressed ? runSpeed : walkSpeed;
-        var moveAxis = InputManager.InGameMovement;
+        var speed = InputManager.InGame_RunPressed ? runSpeed : walkSpeed;
+        var moveAxis = InputManager.InGame_Movement;
 
         var mY = _moveDirection.y;
         _moveDirection = (transform.forward * moveAxis.y) + (transform.right * moveAxis.x);
@@ -95,7 +92,7 @@ public class PlayerMovement : MonoBehaviour {
         _characterController.Move(_moveDirection * Time.deltaTime);
 
         //! Vertical Movements + Gravity
-        if (_isGrounded && InputManager.InGameJumpPressed) {
+        if (_isGrounded && InputManager.InGame_JumpPressed) {
             // Height to Velocity Formula => v = sqrt(H * -2g)
             _velocity.y = Mathf.Sqrt(jumpHeigh * (-2*g));
         } else {

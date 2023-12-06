@@ -46,6 +46,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""LookDelta"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""83227912-365d-4024-a43c-f3b2f4c5e2b7"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""PassThrough"",
                     ""id"": ""ed3288b9-e0fd-4abb-bd98-85da749d370a"",
@@ -55,38 +64,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""LookDelta"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""83227912-365d-4024-a43c-f3b2f4c5e2b7"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""867e5416-b316-4623-ae9d-337939002e10"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""a750b14f-e308-4eea-898a-f22ca1f2dec1"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LookDelta"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8d1a36ca-3190-4485-a9f5-1b8d422d5687"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LookDelta"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": ""WASD"",
                     ""id"": ""3768b6eb-b7eb-42d9-89c3-3576a70c463d"",
@@ -196,6 +183,50 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""RunModifier"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6c6822b8-b8e4-4a20-a49f-d76d9a2cbdb0"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b47a38f5-ca57-4d5c-a013-00a307c8060e"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a750b14f-e308-4eea-898a-f22ca1f2dec1"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LookDelta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8d1a36ca-3190-4485-a9f5-1b8d422d5687"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LookDelta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -206,8 +237,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_InGame = asset.FindActionMap("InGame", throwIfNotFound: true);
         m_InGame_Movement = m_InGame.FindAction("Movement", throwIfNotFound: true);
         m_InGame_RunModifier = m_InGame.FindAction("RunModifier", throwIfNotFound: true);
-        m_InGame_Jump = m_InGame.FindAction("Jump", throwIfNotFound: true);
         m_InGame_LookDelta = m_InGame.FindAction("LookDelta", throwIfNotFound: true);
+        m_InGame_Jump = m_InGame.FindAction("Jump", throwIfNotFound: true);
+        m_InGame_Shoot = m_InGame.FindAction("Shoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -271,16 +303,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IInGameActions> m_InGameActionsCallbackInterfaces = new List<IInGameActions>();
     private readonly InputAction m_InGame_Movement;
     private readonly InputAction m_InGame_RunModifier;
-    private readonly InputAction m_InGame_Jump;
     private readonly InputAction m_InGame_LookDelta;
+    private readonly InputAction m_InGame_Jump;
+    private readonly InputAction m_InGame_Shoot;
     public struct InGameActions
     {
         private @PlayerControls m_Wrapper;
         public InGameActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_InGame_Movement;
         public InputAction @RunModifier => m_Wrapper.m_InGame_RunModifier;
-        public InputAction @Jump => m_Wrapper.m_InGame_Jump;
         public InputAction @LookDelta => m_Wrapper.m_InGame_LookDelta;
+        public InputAction @Jump => m_Wrapper.m_InGame_Jump;
+        public InputAction @Shoot => m_Wrapper.m_InGame_Shoot;
         public InputActionMap Get() { return m_Wrapper.m_InGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -296,12 +330,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @RunModifier.started += instance.OnRunModifier;
             @RunModifier.performed += instance.OnRunModifier;
             @RunModifier.canceled += instance.OnRunModifier;
-            @Jump.started += instance.OnJump;
-            @Jump.performed += instance.OnJump;
-            @Jump.canceled += instance.OnJump;
             @LookDelta.started += instance.OnLookDelta;
             @LookDelta.performed += instance.OnLookDelta;
             @LookDelta.canceled += instance.OnLookDelta;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+            @Shoot.started += instance.OnShoot;
+            @Shoot.performed += instance.OnShoot;
+            @Shoot.canceled += instance.OnShoot;
         }
 
         private void UnregisterCallbacks(IInGameActions instance)
@@ -312,12 +349,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @RunModifier.started -= instance.OnRunModifier;
             @RunModifier.performed -= instance.OnRunModifier;
             @RunModifier.canceled -= instance.OnRunModifier;
-            @Jump.started -= instance.OnJump;
-            @Jump.performed -= instance.OnJump;
-            @Jump.canceled -= instance.OnJump;
             @LookDelta.started -= instance.OnLookDelta;
             @LookDelta.performed -= instance.OnLookDelta;
             @LookDelta.canceled -= instance.OnLookDelta;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+            @Shoot.started -= instance.OnShoot;
+            @Shoot.performed -= instance.OnShoot;
+            @Shoot.canceled -= instance.OnShoot;
         }
 
         public void RemoveCallbacks(IInGameActions instance)
@@ -339,7 +379,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnRunModifier(InputAction.CallbackContext context);
-        void OnJump(InputAction.CallbackContext context);
         void OnLookDelta(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
     }
 }
