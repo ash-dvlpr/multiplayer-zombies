@@ -144,6 +144,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4734434453166976330, guid: f02c83561c240704da2a370fd1a0ab4f,
         type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4734434453166976330, guid: f02c83561c240704da2a370fd1a0ab4f,
+        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -211,6 +216,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 424240992}
+  - component: {fileID: 424240993}
   - component: {fileID: 424240991}
   - component: {fileID: 424240989}
   m_Layer: 3
@@ -218,7 +224,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!65 &424240989
 BoxCollider:
@@ -264,6 +270,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &424240993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424240988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: -334000983
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.1
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 30a53f9181752d141960c5f4173e0eaa, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1001 &607214105
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -565,6 +602,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1459910606926099295, guid: e2c487ce7d13e8742aa6ad5a05a07250,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1459910606926099295, guid: e2c487ce7d13e8742aa6ad5a05a07250,
         type: 3}
@@ -1411,6 +1453,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Firepit
       objectReference: {fileID: 0}
+    - target: {fileID: 3258217997375601131, guid: 930958dcf67809f48a668acb6816c68f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6344111220954982181, guid: 930958dcf67809f48a668acb6816c68f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2042,6 +2089,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 424240992}
   - {fileID: 6824421704169896929}
+  - {fileID: 2702281703127001764}
   - {fileID: 903359248637896167}
   - {fileID: 8682541386352602917}
   - {fileID: 2731991841243920458}
@@ -2055,7 +2103,6 @@ SceneRoots:
   - {fileID: 607214105}
   - {fileID: 1258524129}
   - {fileID: 1715075206}
-  - {fileID: 2702281703127001764}
   - {fileID: 1333294263}
   - {fileID: 1252506708}
   - {fileID: 371230016}
