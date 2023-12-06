@@ -74,6 +74,8 @@ public class PlayerMovement : MonoBehaviour {
 
         cameraHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
         transform.rotation *= Quaternion.Euler(0, lookDelta.x * lookSpeedX, 0);
+
+        // TODO: vertical rotation of weaponhandle
     }
 
     void HandleMovement() {
