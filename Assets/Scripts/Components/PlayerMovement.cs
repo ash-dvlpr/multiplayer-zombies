@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour {
     // ==================== Configuration ====================
     [Header("Camera Movement / Look")]
     [SerializeField] GameObject cameraHandle;
+    [SerializeField] GameObject weaponHandle;
     [SerializeField] float lookSpeedX = 24f;
     [SerializeField] float lookSpeedY = 24f;
     [SerializeField, Range(0f, 90f)] float lookMaxAngleUp   = 80f;
@@ -73,9 +74,8 @@ public class PlayerMovement : MonoBehaviour {
         _cameraPitch = Mathf.Clamp(_cameraPitch, -lookMaxAngleUp, lookMaxAngleDown);
 
         cameraHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
+        //weaponHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
         transform.rotation *= Quaternion.Euler(0, lookDelta.x * lookSpeedX, 0);
-
-        // TODO: vertical rotation of weaponhandle
     }
 
     void HandleMovement() {
