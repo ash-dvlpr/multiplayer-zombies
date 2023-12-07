@@ -23,7 +23,6 @@ public class Health : Resource {
 
     // ================== Outside Facing API ==================
     protected override void TriggerOnChange() {
-        Debug.Log($"Health: {Amount}");
         base.TriggerOnChange();
 
         if (Amount.Equals(0)) {
