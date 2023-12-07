@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour {
     // ==================== Configuration ====================
     [Header("Shooting")]
+    [SerializeField] Animator weaponHandleAnimator;
     [SerializeField] LayerMask damageableLayers;
     [SerializeField] float maxShotDistance;
     [SerializeField] int shotDamage = 20;
@@ -44,18 +45,19 @@ public class PlayerController : MonoBehaviour {
     }
 
     // ===================== Custom Code =====================
-    void ShootHandler(InputAction.CallbackContext ctx) {
-        var camPos = Camera.main.transform.position;
-        var camDir = Camera.main.transform.forward;
-        Shoot(camPos, camDir);
-    }
-
     void RoundStart() {
         playerMovement.CanMove = true;
     }
     void RoundEnd() {
         playerMovement.CanMove = false;
     }
+
+    void ShootHandler(InputAction.CallbackContext ctx) {
+        var camPos = Camera.main.transform.position;
+        var camDir = Camera.main.transform.forward;
+        weaponHandleAnimator.SetTrigger(AnimatorID.triggerAttack);
+        Shoot(camPos, camDir);
+    }    
 
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
         if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {

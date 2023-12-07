@@ -41,6 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6031703874369724667}
+  - component: {fileID: 5854942815679027901}
   m_Layer: 11
   m_Name: WeaponHandle
   m_TagString: Untagged
@@ -64,6 +65,27 @@ Transform:
   - {fileID: 4922715092183325025}
   m_Father: {fileID: 1008160082742298438}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &5854942815679027901
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105573142140967833}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e731f5ae3230bd7449e9713d1f602cc7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5078050515333566611
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +423,7 @@ MonoBehaviour:
     m_Bits: 4096
   maxShotDistance: 200
   shotDamage: 20
-  _weapon: {fileID: 6394904917938065769}
+  weapon: {fileID: 0}
 --- !u!114 &4200630878187310317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,7 +450,7 @@ MonoBehaviour:
   groundCheckRange: 0.3
   gravityScale: 4
   jumpHeigh: 1.8
-  canMove: 1
+  _canMove: 1
 --- !u!114 &6786355811569176275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -653,15 +675,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 518511499691714657}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6394904917938065769 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6885259813350848776, guid: fa0240326adc27242a3a9137bb853c37,
-    type: 3}
-  m_PrefabInstance: {fileID: 518511499691714657}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f891aa89bff27de459368e531c1c0b52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

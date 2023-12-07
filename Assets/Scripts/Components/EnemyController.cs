@@ -77,6 +77,8 @@ public class EnemyController : MonoBehaviour {
     }
 
     void OnDeath() {
+        animator.SetBool(AnimatorID.isRunning, false);
+
         Destroy(this.gameObject, timeBeforeCorpseRemoval);
     }
 }
