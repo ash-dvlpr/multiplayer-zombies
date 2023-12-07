@@ -5,21 +5,25 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
 public class WeaponRigHandler : MonoBehaviour {
+    
+    // ====================== References =====================
     [Header("Config")]
-    [SerializeField] private TwoBoneIKConstraint leftHandIK;
-    [SerializeField] private TwoBoneIKConstraint rightHandIK;
-    [SerializeField] private Weapon weapon;
+    [SerializeField] TwoBoneIKConstraint leftHandIK;
+    [SerializeField] TwoBoneIKConstraint rightHandIK;
+    [SerializeField] Weapon weapon;
 
-    private RigBuilder rigBuilder;
+    RigBuilder rigBuilder;
 
     private void Awake() {
         rigBuilder = GetComponent<RigBuilder>();
     }
 
+    // ====================== Unity Code ======================
     void Start() {
         UpdateHandsRig();
     }
 
+    // ===================== Custom Code =====================
     public void UpdateHandsRig() {
         leftHandIK.data.target = weapon.LeftHandPos;
         rightHandIK.data.target = weapon.RightHandPos;

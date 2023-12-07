@@ -13,7 +13,7 @@ public abstract class Resource : MonoBehaviour {
         /// </summary>
         Plentiful = 0,
         /// <summary>
-        /// <see cref="Amount">Amount</see> will start off at it's <see cref="Min">Min</see> value.
+        /// <see cref="Amount">Amount</see> will start off at 0.
         /// </summary>
         Scarse = 1,
     }

@@ -24,10 +24,11 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] float jumpHeigh = 2f;
 
     // ====================== References =====================
-    CharacterController _characterController;
+    CharacterController characterController;
 
     // ====================== Variables ======================
-    [SerializeField] bool canMove = true;
+    public bool CanMove { get => _canMove; set => _canMove = value; }
+    [SerializeField] bool _canMove = true;
 
     Vector3 _moveDirection = Vector3.zero, _velocity = Vector3.zero;
     float _cameraPitch = 0;
@@ -36,17 +37,17 @@ public class PlayerMovement : MonoBehaviour {
 
     // ====================== Unity Code ======================
     void Awake() {
-        _characterController = GetComponent<CharacterController>();
+        characterController = GetComponent<CharacterController>();
     }
 
     void OnDrawGizmosSelected() {
         var feetPos = transform.position;
-        feetPos.y -= _characterController ? _characterController.height / 2 : 0;
+        feetPos.y -= characterController ? characterController.height / 2 : 0;
         Gizmos.DrawWireSphere(feetPos, groundCheckRange);
     }
 
     void Update() {
-        if (canMove) {
+        if (_canMove) {
             UpdateState();
 
             HandleCameraLook();
@@ -60,7 +61,7 @@ public class PlayerMovement : MonoBehaviour {
     // ===================== Custom Code =====================
     void UpdateState() {
         var feetPos = transform.position;
-        feetPos.y -= _characterController.height / 2;
+        feetPos.y -= characterController.height / 2;
 
         _isGrounded = Physics.CheckSphere(feetPos, groundCheckRange, jumplableLayers);
     }
@@ -89,7 +90,7 @@ public class PlayerMovement : MonoBehaviour {
         var g = Physics.gravity.y * gravityScale;
 
         // Apply movement
-        _characterController.Move(_moveDirection * Time.deltaTime);
+        characterController.Move(_moveDirection * Time.deltaTime);
 
         //! Vertical Movements + Gravity
         if (_isGrounded && InputManager.InGame_JumpPressed) {
@@ -104,7 +105,7 @@ public class PlayerMovement : MonoBehaviour {
             if(_isGrounded) _velocity.y = -0.5f;
         }
 
-        _characterController.Move(_velocity * Time.deltaTime);
+        characterController.Move(_velocity * Time.deltaTime);
         // Apply the rest of the acceleration
         _velocity.y += g * Time.deltaTime / 2;
     }

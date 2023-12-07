@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(PlayerMovement), typeof(Health))]
 public class PlayerController : MonoBehaviour {
     // ==================== Configuration ====================
     [Header("Shooting")]
@@ -11,13 +11,20 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float maxShotDistance;
     [SerializeField] int shotDamage = 20;
 
+    //[Header("Death")]
+    //[SerializeField] float timeBeforeCorpseRemoval = 4f;
+
     // ====================== References =====================
-    CharacterController _characterController;
-    [SerializeField] Weapon _weapon;
+    [SerializeField] Weapon weapon;
+    CharacterController characterController;
+    PlayerMovement playerMovement;
+    Health health;
 
     // ====================== Unity Code ======================
     void Awake() {
-        _characterController = GetComponent<CharacterController>();    
+        characterController = GetComponent<CharacterController>();    
+        playerMovement = GetComponent<PlayerMovement>();
+        health = GetComponent<Health>();
     }
 
     void Start() {
@@ -27,11 +34,13 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnEnable() {
-        InputManager.InGame_OnShoot += ShootHandler;    
+        InputManager.InGame_OnShoot += ShootHandler;
+        health.OnDeath += OnDeath;
     }
 
     void OnDisable() {
-        InputManager.InGame_OnShoot -= ShootHandler;    
+        InputManager.InGame_OnShoot -= ShootHandler;
+        health.OnDeath -= OnDeath;
     }
 
     // ===================== Custom Code =====================
@@ -41,10 +50,22 @@ public class PlayerController : MonoBehaviour {
         Shoot(camPos, camDir);
     }
 
+    void RoundStart() {
+        playerMovement.CanMove = true;
+    }
+    void RoundEnd() {
+        playerMovement.CanMove = false;
+    }
+
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
         if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
             var hitHp = hit.transform.GetComponent<Health>();
             hitHp?.Damage(shotDamage);
         }
+    }
+
+    void OnDeath() {
+        //Destroy(this, timeBeforeCorpseRemoval);
+        Debug.Log("Player died");
     }
 }

@@ -588,27 +588,17 @@ PrefabInstance:
     - target: {fileID: 2109693951488194609, guid: 707e5c9d5367afe47aebf1a1b10e9908,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2109693951488194609, guid: 707e5c9d5367afe47aebf1a1b10e9908,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2388762785975040200, guid: 707e5c9d5367afe47aebf1a1b10e9908,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3421357705540626866, guid: 707e5c9d5367afe47aebf1a1b10e9908,
-        type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5680727386775206352, guid: 707e5c9d5367afe47aebf1a1b10e9908,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6683331676802628459, guid: 707e5c9d5367afe47aebf1a1b10e9908,
         type: 3}

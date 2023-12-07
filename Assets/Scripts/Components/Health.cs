@@ -7,6 +7,11 @@ public class Health : Resource {
     // ==================== Configuration ====================
     public override ResourceType ResType { get => ResourceType.Plentiful; }
 
+    // ====================== Variables ======================
+    public bool IsAlive { 
+        get => (Amount > 0);
+    }
+
     // ====================== Unity Code ======================
     protected override void Awake() {
         base.Awake();
@@ -26,12 +31,12 @@ public class Health : Resource {
         base.TriggerOnChange();
 
         if (Amount.Equals(0)) {
-            onDeath?.Invoke(this);
+            onDeath?.Invoke();
         }
     }
 
-    private event Action<Health> onDeath;
-    public event Action<Health> OnDeath {
+    private event Action onDeath;
+    public event Action OnDeath {
         add    { lock(this) { onDeath += value; } }
         remove { lock(this) { onDeath -= value; } }
     }

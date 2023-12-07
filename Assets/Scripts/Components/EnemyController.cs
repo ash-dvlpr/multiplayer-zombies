@@ -3,16 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class EnemyController : MonoBehaviour {
+    // ==================== Configuration ====================
+    [Header("Death")]
+    [SerializeField] float timeBeforeCorpseRemoval = 4f;
+
     // ====================== References =====================
-    private NavMeshAgent agent;
-    private Animator animator;
-    private Transform _target;
+    NavMeshAgent agent;
+    Animator animator;
+    Health health;
+
+    // ====================== Variables ======================
+    Transform _target;
+
 
     // ====================== Unity Code ======================
     void Awake() {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
+        health = GetComponent<Health>();
+    }
+
+    void OnEnable() {
+        health.OnDeath += OnDeath;
+    }
+
+    void OnDisable() {
+        health.OnDeath -= OnDeath;
     }
 
     void Start() {
@@ -20,12 +38,14 @@ public class EnemyController : MonoBehaviour {
     }
 
     void Update() {
-        if (null != _target) {
-            agent.destination = _target.position;
-        }
+        if (health.IsAlive) {
+            if (null != _target) {
+                agent.destination = _target.position;
+            }
 
-        bool moving = agent.velocity.magnitude > 1;
-        animator.SetBool(AnimatorID.isRunning, moving);
+            bool moving = agent.velocity.magnitude > 1;
+            animator.SetBool(AnimatorID.isRunning, moving);
+        }
     }
 
     // ===================== Custom Code =====================
@@ -54,5 +74,9 @@ public class EnemyController : MonoBehaviour {
 
     public void ChangeTarget(Transform newTarget) {
         _target = newTarget;
+    }
+
+    void OnDeath() {
+        Destroy(this.gameObject, timeBeforeCorpseRemoval);
     }
 }

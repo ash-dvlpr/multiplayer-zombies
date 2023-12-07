@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class ResourceBar : MonoBehaviour {
 
     // ====================== References =====================
-
     [Header("Customization")]
     [SerializeField] Color borderColor;
     [SerializeField] Color backgroundColor;
@@ -26,6 +25,12 @@ public class ResourceBar : MonoBehaviour {
     Slider barSlider;
 
     // ====================== Unity Code ======================
+#if UNITY_EDITOR
+    void OnValidate() {
+        ReloadBar();
+    }
+#endif
+
     void Awake() {
         barSlider = GetComponent<Slider>();
         ReloadBar();
@@ -39,12 +44,6 @@ public class ResourceBar : MonoBehaviour {
         if (trackedResource) trackedResource.OnChange -= OnResourceChanged;
     }
 
-#if UNITY_EDITOR
-    void OnValidate() {
-        ReloadBar();
-    }
-#endif
-
     // ===================== Custom Code =====================
     void ReloadBar() {
         if (displayText) displayText.enabled = showValues;
@@ -57,7 +56,7 @@ public class ResourceBar : MonoBehaviour {
     void OnResourceChanged(Resource resource) {
         var percent = resource.Amount / (float) resource.Max;
         barSlider.value = percent;
-        if (showValues) {
+        if (showValues && displayText.enabled) {
             displayText.text = $"{resource.Amount} / {resource.Max}";
         }
     }
