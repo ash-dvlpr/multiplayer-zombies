@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class EnemyController : MonoBehaviour {
     // ==================== Configuration ====================
+    [Header("Combat")]
+    [SerializeField] float attackRate = 2f;
+    [SerializeField] int attackDamage = 10;
+
     [Header("Death")]
     [SerializeField] float timeBeforeCorpseRemoval = 4f;
 
@@ -16,6 +21,7 @@ public class EnemyController : MonoBehaviour {
 
     // ====================== Variables ======================
     Transform _target;
+    bool _attacking = false;
 
 
     // ====================== Unity Code ======================
@@ -39,8 +45,9 @@ public class EnemyController : MonoBehaviour {
 
     void Update() {
         if (health.IsAlive) {
-            if (null != _target) {
-                agent.destination = _target.position;
+            var target = _attacking ? this.transform.position : _target.position;
+            if (null != target) {
+                agent.destination = target;
             }
 
             bool moving = agent.velocity.magnitude > 1;
@@ -48,7 +55,41 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
+    void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Player") && !_attacking) {
+            StartCoroutine(AttackDelay());
+            animator.SetTrigger(AnimatorID.triggerAttack);
+            
+            var targetHealth = other.GetComponent<Health>();
+            targetHealth.Damage(attackDamage);
+        }
+    }
+
     // ===================== Custom Code =====================
+    /* TODO: config
+     * - Serializable Transform for attack position + radious
+     * - Draw Attack range gizmo
+     * 
+     * TODO: attack rework
+     * - If round has started, start coroutine to replace the target objective every couple seconds
+     * - Then, on Update, chech distance to target, and if target on attac range, trigger an attack.
+     */
+
+    //void Attack() {
+    //    if (!_attacking) {
+    //        Physics.OverlapSphere();
+    //        // if player in range, continue attacking
+    //        AttackDelay();
+
+    //        // TODO: damage
+    //    }
+    //}
+    IEnumerator AttackDelay() {
+        _attacking = true;
+        yield return new WaitForSeconds(attackRate);
+        _attacking = false;
+    }
+
     private void ChangeTarget() {
         GameObject[] players;
         players = GameObject.FindGameObjectsWithTag("Player");

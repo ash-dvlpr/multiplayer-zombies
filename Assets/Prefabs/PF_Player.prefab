@@ -418,12 +418,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c5a940ccab0ac4faac3e05b0787b1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponHandleAnimator: {fileID: 5854942815679027901}
   damageableLayers:
     serializedVersion: 2
     m_Bits: 4096
   maxShotDistance: 200
   shotDamage: 20
-  weapon: {fileID: 0}
+  weapon: {fileID: 6394904917938065769}
 --- !u!114 &4200630878187310317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,3 +676,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 518511499691714657}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6394904917938065769 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6885259813350848776, guid: fa0240326adc27242a3a9137bb853c37,
+    type: 3}
+  m_PrefabInstance: {fileID: 518511499691714657}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f891aa89bff27de459368e531c1c0b52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
