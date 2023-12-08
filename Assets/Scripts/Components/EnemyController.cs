@@ -120,6 +120,8 @@ public class EnemyController : MonoBehaviour {
 
     void OnDeath() {
         animator.SetBool(AnimatorID.isRunning, false);
+        agent.destination = this.transform.position;
+        agent.isStopped = true;
 
         Destroy(this.gameObject, timeBeforeCorpseRemoval);
     }
