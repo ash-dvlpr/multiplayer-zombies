@@ -1,11 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Resource;
 
 public abstract class Menu : MonoBehaviour {
     public abstract MenuID MenuKey { get; }
-    
-    // ===================== Custom Code =====================
 
+    // ===================== Custom Code =====================
+    /// <summary>
+    /// Used for showing the menu. Can be extended to do additional setup.
+    /// </summary>
+    public virtual void OpenMenu() { 
+        gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Used for showing the menu. Can be extended to do additional cleanup.
+    /// </summary>
+    public virtual void CloseMenu() {
+        gameObject.SetActive(false);
+    }
 }
