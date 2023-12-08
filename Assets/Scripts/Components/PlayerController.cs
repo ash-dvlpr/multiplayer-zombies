@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour {
     void ShootHandler(InputAction.CallbackContext ctx) {
         var camPos = Camera.main.transform.position;
         var camDir = Camera.main.transform.forward;
+
         weaponHandleAnimator.SetTrigger(AnimatorID.triggerAttack);
         Shoot(camPos, camDir);
     }    

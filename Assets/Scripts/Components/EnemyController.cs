@@ -56,10 +56,10 @@ public class EnemyController : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("Player") && !_attacking) {
+        if (health.IsAlive && !_attacking && other.CompareTag("Player")) {
             StartCoroutine(AttackDelay());
             animator.SetTrigger(AnimatorID.triggerAttack);
-            
+
             var targetHealth = other.GetComponent<Health>();
             targetHealth.Damage(attackDamage);
         }
@@ -91,26 +91,27 @@ public class EnemyController : MonoBehaviour {
     }
 
     private void ChangeTarget() {
-        GameObject[] players;
-        players = GameObject.FindGameObjectsWithTag("Player");
-
-
+        // TODO: Get players from GameManager's cached player list
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         GameObject nearestPlayer = null;
 
-        float distance = Mathf.Infinity;
-        Vector3 position = transform.position;
+        // TODO: Skip if no alive players
+        var shortestDistance = Mathf.Infinity;
 
-        foreach (GameObject p in players) {
-            var disatance = p.transform.position - position;
-            float curDistance = disatance.sqrMagnitude;
-
-            if (curDistance < distance) {
+        foreach (var p in players) {
+            var vDistance = p.transform.position - transform.position;
+            // We are just comparing distances, we don't need precision, so we can save up on a Mathf.Sqrt()
+            var distance = vDistance.sqrMagnitude;
+            
+            if (shortestDistance > distance) {
                 nearestPlayer = p;
-                distance = curDistance;
+                shortestDistance = distance;
             }
         }
 
-        ChangeTarget(nearestPlayer.transform);
+        if (nearestPlayer != null) {
+            ChangeTarget(nearestPlayer.transform);
+        }
     }
 
     public void ChangeTarget(Transform newTarget) {
