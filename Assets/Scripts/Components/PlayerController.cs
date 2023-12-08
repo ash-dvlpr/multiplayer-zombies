@@ -15,41 +15,45 @@ public class PlayerController : MonoBehaviour {
     //[Header("Death")]
     //[SerializeField] float timeBeforeCorpseRemoval = 4f;
 
+    // ====================== Variables ======================
+    public bool CanMove { get; private set; }
+
     // ====================== References =====================
     [SerializeField] Weapon weapon;
-    CharacterController characterController;
-    PlayerMovement playerMovement;
+    //PlayerMovement playerMovement;
     Health health;
 
     // ====================== Unity Code ======================
     void Awake() {
-        characterController = GetComponent<CharacterController>();    
-        playerMovement = GetComponent<PlayerMovement>();
+        //playerMovement = GetComponent<PlayerMovement>();
         health = GetComponent<Health>();
     }
 
-    void Start() {
-        // Hide Mouse Cursor
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
     void OnEnable() {
-        InputManager.InGame_OnShoot += ShootHandler;
         health.OnDeath += OnDeath;
+        GameManager.Instance.OnRoundStart += RoundStart;
+        GameManager.Instance.OnRoundEnd += RoundEnd;
+        InputManager.InGame_OnShoot += ShootHandler;
     }
 
     void OnDisable() {
-        InputManager.InGame_OnShoot -= ShootHandler;
         health.OnDeath -= OnDeath;
+        GameManager.Instance.OnRoundStart -= RoundStart;
+        GameManager.Instance.OnRoundEnd += RoundEnd;
+        InputManager.InGame_OnShoot -= ShootHandler;
     }
 
     // ===================== Custom Code =====================
     void RoundStart() {
-        playerMovement.CanMove = true;
+        CanMove = true;
     }
     void RoundEnd() {
-        playerMovement.CanMove = false;
+        CanMove = false;
+    }
+    void OnDeath() {
+        Debug.Log("Player died");
+        CanMove = false;
+        //Destroy(this, timeBeforeCorpseRemoval);
     }
 
     void ShootHandler(InputAction.CallbackContext ctx) {
@@ -58,17 +62,12 @@ public class PlayerController : MonoBehaviour {
 
         weaponHandleAnimator.SetTrigger(AnimatorID.triggerAttack);
         Shoot(camPos, camDir);
-    }    
+    }
 
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
         if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
             var hitHp = hit.transform.GetComponent<Health>();
             hitHp?.Damage(shotDamage);
         }
-    }
-
-    void OnDeath() {
-        //Destroy(this, timeBeforeCorpseRemoval);
-        Debug.Log("Player died");
     }
 }

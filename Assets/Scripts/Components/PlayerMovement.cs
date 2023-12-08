@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(PlayerController))]
 public class PlayerMovement : MonoBehaviour {
     // ==================== Configuration ====================
     [Header("Camera Movement / Look")]
@@ -25,11 +25,9 @@ public class PlayerMovement : MonoBehaviour {
 
     // ====================== References =====================
     CharacterController characterController;
+    PlayerController controller;
 
     // ====================== Variables ======================
-    public bool CanMove { get => _canMove; set => _canMove = value; }
-    [SerializeField] bool _canMove = true;
-
     Vector3 _moveDirection = Vector3.zero, _velocity = Vector3.zero;
     float _cameraPitch = 0;
     bool _isGrounded;
@@ -38,6 +36,7 @@ public class PlayerMovement : MonoBehaviour {
     // ====================== Unity Code ======================
     void Awake() {
         characterController = GetComponent<CharacterController>();
+        controller = GetComponent<PlayerController>();
     }
 
     void OnDrawGizmosSelected() {
@@ -47,7 +46,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void Update() {
-        if (_canMove) {
+        if (controller.CanMove) {
             UpdateState();
 
             HandleCameraLook();

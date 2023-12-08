@@ -10,6 +10,11 @@ public abstract class Menu : MonoBehaviour {
     /// Used for showing the menu. Can be extended to do additional setup.
     /// </summary>
     public virtual void OpenMenu() { 
+        // Unlock Mouse
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        
+        // Show Menu
         gameObject.SetActive(true);
     }
 

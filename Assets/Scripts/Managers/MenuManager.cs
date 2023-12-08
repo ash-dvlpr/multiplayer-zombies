@@ -21,23 +21,21 @@ public static class MenuManager {
 
     // ===================== Custom Code =====================
     public static void Init() {
-        menuChache = new Dictionary<MenuID, Menu>();
-        mainCanvas = GameObject.Find("MainCanvas");
+        if (!Initialised) { 
+            menuChache = new Dictionary<MenuID, Menu>();
+            mainCanvas = GameObject.Find("MainCanvas");
+            GameObject.DontDestroyOnLoad(mainCanvas);
 
-        // Cache all menu objects
-        foreach (Transform child in mainCanvas.transform) {
-            var menu = child.GetComponent<Menu>();
-            if (!menu || MenuID.None == menu.MenuKey) continue;
+            // Cache all menu objects
+            foreach (Transform child in mainCanvas.transform) {
+                var menu = child.GetComponent<Menu>();
+                if (!menu || MenuID.None == menu.MenuKey) continue;
 
-            menuChache[menu.MenuKey] = menu;
+                menuChache[menu.MenuKey] = menu;
+            }
+
+            Initialised = true;
         }
-
-        Initialised = true;
-    }
-
-    private static void Cleanup() {
-        Initialised = false;
-        CurrentMenu = MenuID.None;
     }
 
     public static void ResetSelectedUIObject() {
@@ -45,10 +43,14 @@ public static class MenuManager {
         EventSystem.current.SetSelectedGameObject(null);
     }
 
-    public static void OpenMenu(MenuID menu, MenuID current = MenuID.None) {
+    /// <summary>
+    /// Opens up a menu based on it's identifier and closes the previouslly open menu.
+    /// After opening a menu it caches it.
+    /// </summary>
+    /// <param name="menu"><see cref="MenuID">MenuID</see> of the menu that you want to open.</param>
+    public static void OpenMenu(MenuID menu) {
         if (!Initialised) Init();
-
-        if (MenuID.None == current) current = CurrentMenu;
+        var previous = CurrentMenu;
         CurrentMenu = menu;
 
         try {
@@ -60,12 +62,29 @@ public static class MenuManager {
             }
 
             // Hide old Menu
-            if (menuChache.TryGetValue(current, out var currentMenu)) {
+            if (menuChache.TryGetValue(previous, out var currentMenu)) {
                 currentMenu.CloseMenu();
             }
         }
         catch (KeyNotFoundException ke) {
-            Debug.LogError($"MenuManger.OpenMenu({menu}, {current}): ");
+            Debug.LogError($"MenuManger.OpenMenu({menu}, {previous})");
+            Debug.LogException(ke, mainCanvas);
+        }
+    }
+
+    /// <summary>
+    /// Closes up the currently open menu.
+    /// </summary>
+    public static void CloseMenu() {
+        if (!Initialised) Init();
+
+        try {
+            if (menuChache.TryGetValue(CurrentMenu, out var menu)) {
+                menu.CloseMenu();
+            }
+        }
+        catch (KeyNotFoundException ke) {
+            Debug.LogError($"MenuManger.CloseMenu(): {CurrentMenu} not found.");
             Debug.LogException(ke, mainCanvas);
         }
     }

@@ -6,8 +6,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Internal;
 
+/// <summary>
+/// Generic abstract resource component.
+/// </summary>
 public abstract class Resource : MonoBehaviour {
-    public enum @ResourceType : uint {
+    public enum ResourceType : uint {
         /// <summary>
         /// <see cref="Amount">Amount</see> will start off at it's <see cref="Max">Max</see> value.
         /// </summary>

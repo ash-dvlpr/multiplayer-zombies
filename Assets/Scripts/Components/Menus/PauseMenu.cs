@@ -16,13 +16,17 @@ public class PauseMenu : Menu {
 
     // ===================== UI Actions ======================
     public void OnClick_Resume() {
-        MenuManager.OpenMenu(MenuID.None);
+        // Lock Mouse
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        MenuManager.CloseMenu();
     }
     public void OnClick_Settings() {
         MenuManager.OpenMenu(MenuID.Settings);
     }
     public void OnClick_MainMenu() {
-        MenuManager.OpenMenu(MenuID.None);
+        MenuManager.CloseMenu();
         GameManager.ExitToTittleScreen();
     }
 }

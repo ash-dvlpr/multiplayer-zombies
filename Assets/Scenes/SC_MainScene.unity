@@ -395,7 +395,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 959568899}
-  - component: {fileID: 959568900}
   m_Layer: 0
   m_Name: PlayerInputManager
   m_TagString: Untagged
@@ -418,18 +417,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &959568900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 959568898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 762f928b58126f34aafc7713a13e5cc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &1534138723 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7935671166375333558, guid: f4128bb197a86e94a8044a2c754b1ef4,
@@ -590,6 +577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916a4fa95bfa6504496aa6fa9a808c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideSceneLoading: 1
 --- !u!224 &2141376074 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2913302873625971525, guid: 6c819bb429975554ca9194435e2da3ca,

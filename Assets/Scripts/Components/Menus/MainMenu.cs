@@ -15,10 +15,10 @@ public class MainMenu : Menu {
 
     // ===================== UI Actions ======================
     public void OnClick_Singleplayer() {
-        GameManager.TryLoadSingleplayerGame();
+        GameManager.CreateSinglePlayerLobby();
     }
     public void OnClick_Multiplayer() {
-        GameManager.TryLoadMultiplayerGame();
+        GameManager.CreateMultiPlayerLobby();
     }
     public void OnClick_Settings() { 
         MenuManager.OpenMenu(MenuID.Settings);
