@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour {
+    // TODO: migrate to a static class initialized on the Startup stage of the GameManager 
+
     public static InputManager Instance { get; private set; }
     private @PlayerControls controls;
 
@@ -21,11 +23,11 @@ public class InputManager : MonoBehaviour {
     }
 
     void OnEnable() {
-        controls.Enable();
+        controls?.Enable();
     }
 
     void OnDisable() {
-        controls.Disable();
+        controls?.Disable();
     }
 
     // ================== Outside Facing API ==================
