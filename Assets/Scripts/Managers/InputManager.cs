@@ -41,4 +41,9 @@ public static class InputManager {
         add { lock(LOCK) { Controls.InGame.Shoot.performed += value; } }
         remove { lock(LOCK) { Controls.InGame.Shoot.performed -= value; }  }
     }
+
+    public static event Action<InputAction.CallbackContext> InGame_OnPause {
+        add { lock(LOCK) { Controls.InGame.Pause.performed += value; } }
+        remove { lock(LOCK) { Controls.InGame.Pause.performed -= value; }  }
+    }
 }

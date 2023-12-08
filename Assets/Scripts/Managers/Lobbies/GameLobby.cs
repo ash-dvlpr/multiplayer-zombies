@@ -17,9 +17,10 @@ public abstract class GameLobby {
 
     // ================== Outside Facing API ==================
     /// <summary>
-    /// Used to prepare Lobby.
+    /// Used to prepare Lobby and/or show the Lobby Menu.
     /// </summary>
-    public abstract void PrepareLobby();
+    /// <returns>Resulting state from preparing the lobby.</returns>
+    public abstract GameState PrepareLobby();
 
     /// <summary>
     /// Used to open the Lobby.
@@ -34,7 +35,12 @@ public abstract class GameLobby {
     /// <summary>
     /// Used to start the game once the lobby and players are ready.
     /// </summary
-    public abstract GameManager.GameState StartGame();
+    public abstract GameState StartGame();
+
+    /// <summary>
+    /// Used to start the game once the lobby and players are ready.
+    /// </summary
+    public abstract GameState RestartGame();
 
     /// <summary>
     /// Used to close the lobby. Should be called whenever we are closing the game or returning to main menu.

@@ -10,19 +10,30 @@ public class SinglePlayerLobby : GameLobby {
     // ====================== Variables ======================
 
     // ===================== Custom Code =====================
-    public override void PrepareLobby() {
-        return GameState.InLobby;
+    public override GameState PrepareLobby() {
+        OpenLobby();
+        JoinLobby();
+        return StartGame();
     }
-    public override void CloseLobby() {
-        throw new System.NotImplementedException();
+
+    public override void OpenLobby() {
+        // TODO: Multipass: select Yak server
     }
 
     public override void JoinLobby() {
+        // TODO: Multipass select Yak transport
+    }
+
+    public override GameState StartGame() {
+        // TODO: Other game loading stuff stuff
+        return GameState.InGame;
+    }
+
+    public override GameState RestartGame() {
         throw new System.NotImplementedException();
     }
 
-
-    public override GameState StartGame() {
+    public override void CloseLobby() {
         throw new System.NotImplementedException();
     }
 }

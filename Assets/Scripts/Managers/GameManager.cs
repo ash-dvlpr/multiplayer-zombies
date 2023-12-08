@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
     public static bool ApplicationIsQuitting { get; private set; } = false;
 
-    private const int SCENE_ID_MAIN     = 0;
-    private const int SCENE_ID_GAME     = 1;
+    private const int SCENE_ID_MAIN = 0;
+    private const int SCENE_ID_CITY = 1;
 
     // ====================== Variables ======================
     private GameState state = GameState.None;
@@ -40,11 +40,14 @@ public class GameManager : MonoBehaviour {
 
     void OnApplicationQuit() {
         ApplicationIsQuitting = true;
+
+        // Cleanup in reverse order
+        MenuManager.Cleanup();
         InputManager.Cleanup();
     }
 
     // ===================== Game States ======================
-    private void TryChangeGameState(GameState newState, LobbyType newLobbyType = LobbyType.None) {
+    private void TryChangeGameState(GameState newState, LobbyType newLobbyType = LobbyType.None, bool isHost = false) {
         if (state == newState) return;
 
         // Finite State Machine to handle possible state changes
@@ -52,7 +55,7 @@ public class GameManager : MonoBehaviour {
             GameState.Startup => HandleTo_Startup(),
             GameState.MainMenu => HandleTo_MainMenu(),
             GameState.InLobby => HandleTo_InLobby(newLobbyType),
-            GameState.InGame => HandleTo_InGame(),
+            GameState.InGame => HandleTo_InGame(isHost),
             _ => Handle_Unimplemented(newState),
         };
     }
@@ -72,16 +75,13 @@ public class GameManager : MonoBehaviour {
 
     private GameState HandleTo_MainMenu() {
         // TODO: Coming back from the game
-        if (GameState.InGame == state || GameState.GameOver == state) {
-            //if (LobbyType.MultiPlayer == lobbyType) {
-            //    // TODO: Multiplayer Cleanup
-            //}
+        if (null != lobby) { 
+            // TODO: Close and Clean up Lobby
 
-            UnloadScene(SCENE_ID_GAME);
+            UnloadScene(SCENE_ID_CITY);
         }
 
         MenuManager.OpenMenu(MenuID.Main);
-
         return GameState.MainMenu;
     }
 
@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour {
         switch (newLobbyType) {
             // Create the lobby
             case LobbyType.SinglePlayer: lobby = new SinglePlayerLobby(); break;
-            case LobbyType.MultiPlayer: lobby = new MultiPlayerLobby(); break;
+            //case LobbyType.MultiPlayer: lobby = new MultiPlayerLobby(); break;
 
             default:
                 throw new NotImplementedException($"GameManager.HandleTo_InLobby(): {newLobbyType} not yet implemented.");
@@ -102,31 +102,35 @@ public class GameManager : MonoBehaviour {
         return GameState.InLobby;
     }
 
-    private GameState HandleTo_InGame() {
+    private GameState HandleTo_InGame(bool isHost) {
         if (GameState.InLobby == state) {
-            // Do not care about the type,
-            lobby.PrepareLobby();
+            // If we are in the lobby state, we have to know if we are hosting or joining
+            if (isHost) lobby.OpenLobby();
+            else lobby.JoinLobby();
 
-
-            //currentLoby.StartGame();
+            return lobby.StartGame();
         }
-        else if (GameState.InGame == state ||GameState.GameOver == state) { 
-            // TOOD: Handle game restarting
+        else if (GameState.InGame == state || GameState.GameOver == state) {
+            return lobby.RestartGame();
         }
 
-        throw new NotImplementedException($"GameManager.HandleTo_InGame(): Not yet implemented.");
-        return GameState.InGame;
+        // Just in case
+        throw new NotImplementedException($"GameManager.HandleTo_InGame(): Not yet implemented for current state: '{state}'.");
     }
 
     //private GameState HandleTo_GameOver() { }
 
     // =================== Scene Management ===================
-
     private static void LoadScene(int sceneBuildIndex) {
-
+        SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Additive);
     }
     private static void UnloadScene(int sceneBuildIndex) {
         SceneManager.UnloadSceneAsync(sceneBuildIndex);
+    }
+
+    //? Exposed methods for the Lobby Code
+    public void LoadCityScene() {
+        LoadScene(SCENE_ID_CITY);
     }
 
     // ======================== Events ========================
@@ -135,7 +139,7 @@ public class GameManager : MonoBehaviour {
         add    { lock(this) { onRoundStart += value; } }
         remove { lock(this) { onRoundStart -= value; } }
     }
-    private void NotifyRoundStart() {
+    public void NotifyRoundStart() {
         if (!ApplicationIsQuitting) {
             onRoundStart?.Invoke();
         }
@@ -146,7 +150,7 @@ public class GameManager : MonoBehaviour {
         add    { lock(this) { onRoundEnd += value; } }
         remove { lock(this) { onRoundEnd -= value; } }
     }
-    private void NotifyRoundEnd() {
+    public void NotifyRoundEnd() {
         if (!ApplicationIsQuitting) {
             onRoundEnd?.Invoke();
         }
@@ -155,22 +159,30 @@ public class GameManager : MonoBehaviour {
     // ================== Outside Facing API ==================
     public static GameState CurrentState { get => Instance?.state ?? GameState.None; }
 
-    // Preparing to play
+    //? Preparing to play
     public static void CreateSinglePlayerLobby() {
-        Instance?.TryChangeGameState(GameState.InLobby, LobbyType.SinglePlayer);
+        Instance?.TryChangeGameState(GameState.InLobby, newLobbyType: LobbyType.SinglePlayer);
     }
     public static void CreateMultiPlayerLobby() {
-        Instance?.TryChangeGameState(GameState.InLobby, LobbyType.MultiPlayer);
+        Instance?.TryChangeGameState(GameState.InLobby, newLobbyType: LobbyType.MultiPlayer);
     }
 
-    // Going into play
-    public void TryStartGame() { 
+    //? Going into play
+    public static void TryHostGame() {
+        Instance?.TryChangeGameState(GameState.InGame, isHost: true);
+    }
+
+    public static void TryJoinGame() {
+        Instance?.TryChangeGameState(GameState.InGame, isHost: false);
+    }
+
+    public static void TryStartGame() { 
         Instance?.TryChangeGameState(GameState.InGame);
     }
 
-    // Exiting
+    //? Exiting
     public static void ExitToTittleScreen() {
-        Instance.TryChangeGameState(GameState.MainMenu);
+        Instance?.TryChangeGameState(GameState.MainMenu);
     }
 
     public static void CloseGame() {

@@ -679,6 +679,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c5a940ccab0ac4faac3e05b0787b1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
+  weaponHandleAnimator: {fileID: 0}
+  damageableLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  maxShotDistance: 0
+  shotDamage: 20
+  weapon: {fileID: 0}
 --- !u!114 &4200630878187310317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -705,7 +715,6 @@ MonoBehaviour:
   groundCheckRange: 0.3
   gravityScale: 4
   jumpHeigh: 1.8
-  canMove: 1
 --- !u!114 &6786355811569176275
 MonoBehaviour:
   m_ObjectHideFlags: 0

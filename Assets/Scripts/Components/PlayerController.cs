@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FishNet.Object;
 
 [RequireComponent(typeof(PlayerMovement), typeof(Health))]
 public class PlayerController : MonoBehaviour {

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public enum MenuID : int {
     None     = -1,
@@ -35,9 +37,24 @@ public static class MenuManager {
             }
 
             Initialised = true;
+
+            InputManager.InGame_OnPause += PauseHandler;
         }
     }
 
+    public static void Cleanup() {
+        InputManager.InGame_OnPause -= PauseHandler;
+        Initialised = false;
+    }
+
+
+    // ======================== Events ========================
+    private static void PauseHandler(InputAction.CallbackContext ctx) {
+        if (MenuID.None == CurrentMenu) OpenMenu(MenuID.Pause);
+    }
+
+
+    // ================== Outside Facing API ==================
     public static void ResetSelectedUIObject() {
         //var selected = EventSystem.current.currentSelectedGameObject;
         EventSystem.current.SetSelectedGameObject(null);
