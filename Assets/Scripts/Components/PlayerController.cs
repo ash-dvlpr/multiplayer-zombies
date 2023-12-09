@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 using FishNet.Object;
 
 [RequireComponent(typeof(PlayerMovement), typeof(Health))]
@@ -21,6 +22,7 @@ public class PlayerController : NetworkBehaviour {
     public bool CanMove { get => IsOwner && GameManager.IsPlaying && _canMove; private set => _canMove = value; }
 
     // ====================== References =====================
+    [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] Weapon weapon;
     //PlayerMovement playerMovement;
     Health health;
@@ -30,10 +32,14 @@ public class PlayerController : NetworkBehaviour {
         base.OnStartClient();
 
         _canMove = GameManager.IsPlaying;
+        if (!IsOwner) virtualCamera.enabled = false;
     }
 
     // ====================== Unity Code ======================
     void Awake() {
+        if (!virtualCamera) virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+        if (!weapon) weapon = GetComponentInChildren<Weapon>();
+
         //playerMovement = GetComponent<PlayerMovement>();
         health = GetComponent<Health>();
     }

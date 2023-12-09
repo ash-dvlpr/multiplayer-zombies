@@ -20,7 +20,7 @@ public enum ClientType : byte {
     Client = 2,
 }
 
-public abstract class FishNetLobby<T> : Lobby where T : Transport {
+public abstract class FishNetLobby<T> : ALobby where T : Transport {
 
     public abstract LobbyType Type { get; }
     public LocalConnectionState ServerState { get; protected set; } = LocalConnectionState.Stopped;
@@ -48,17 +48,28 @@ public abstract class FishNetLobby<T> : Lobby where T : Transport {
 
     // ===================== Custom Code =====================
     protected virtual void StartServer() {
+        networkManager.ServerManager.OnServerConnectionState += OnServerConnectionState;
         serverTransport.StartConnection(true);
     }
     protected virtual void StopServer() {
+        networkManager.ServerManager.OnServerConnectionState -= OnServerConnectionState;
         serverTransport.StopConnection(true);
     }
 
     protected virtual void ConnectClient() {
+        networkManager.ClientManager.OnClientConnectionState += OnClientConnectionState;
         networkManager.ClientManager.StartConnection();
     }
     protected virtual void DisconnectClient() {
+        networkManager.ClientManager.OnClientConnectionState -= OnClientConnectionState;
         networkManager.ClientManager.StopConnection();
+    }
+
+    private void OnClientConnectionState(ClientConnectionStateArgs obj) {
+        ClientState = obj.ConnectionState;
+    }
+    private void OnServerConnectionState(ServerConnectionStateArgs obj) {
+        ServerState = obj.ConnectionState;
     }
 
     // ================== Outside Facing API ==================
@@ -67,24 +78,28 @@ public abstract class FishNetLobby<T> : Lobby where T : Transport {
         multipass = networkManager.TransportManager.GetTransport<Multipass>();
         ConfigTransports();
 
-        return GameState.InLobby;
-    }
+        
 
-    public override void CloseLobby() {
-        DisconnectClient();
-        if (ClientType.Host == clientType) StopServer();
+        return GameState.InLobby;
     }
 
     public override void HostLobby() {
         clientType = ClientType.Host;
-
-        GameManager.Instance.LoadCityScene();
         StartServer();
+        NetSceneManager.Instance.LoadCityScene();
+        
         JoinLobby();
     }
 
     public override void JoinLobby() {
         ConnectClient();
+    }
+
+    public override void CloseLobby() {
+        NetSceneManager.Instance.UnloadCityScene();
+
+        DisconnectClient();
+        if (ClientType.Host == clientType) StopServer();
     }
 
     public override GameState StartGame() {

@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FishNet.Object;
 
 [RequireComponent(typeof(CharacterController), typeof(PlayerController))]
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : NetworkBehaviour {
     // ==================== Configuration ====================
     [Header("Camera Movement / Look")]
     [SerializeField] GameObject cameraHandle;
@@ -32,6 +33,11 @@ public class PlayerMovement : MonoBehaviour {
     float _cameraPitch = 0;
     bool _isGrounded;
 
+    // ======================= NetCode ========================
+    public override void OnStartClient() { 
+        base.OnStartClient();
+        if (!IsOwner) enabled = false;
+    }
 
     // ====================== Unity Code ======================
     void Awake() {

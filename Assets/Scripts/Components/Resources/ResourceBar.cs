@@ -14,7 +14,7 @@ public class ResourceBar : MonoBehaviour {
     [SerializeField] Color barColor;
 
     [Header("Configuration")]
-    [SerializeField] Resource trackedResource;
+    [SerializeField] AResource trackedResource;
     [SerializeField] bool showValues;
 
     [Header("References")]
@@ -53,7 +53,7 @@ public class ResourceBar : MonoBehaviour {
         bar.color = barColor;
     }
 
-    void OnResourceChanged(Resource resource) {
+    void OnResourceChanged(AResource resource) {
         var percent = resource.Amount / (float) resource.Max;
         barSlider.value = percent;
         if (showValues && displayText.enabled) {

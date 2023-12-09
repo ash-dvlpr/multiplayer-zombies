@@ -688,6 +688,7 @@ MonoBehaviour:
     m_Bits: 0
   maxShotDistance: 0
   shotDamage: 20
+  virtualCamera: {fileID: 0}
   weapon: {fileID: 0}
 --- !u!114 &4200630878187310317
 MonoBehaviour:
@@ -701,6 +702,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4567ba0b77e5c384eac4fe3b08f6c54c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
   cameraHandle: {fileID: 7015815664069237034}
   weaponHandle: {fileID: 2105573142140967833}
   lookSpeedX: 0.8

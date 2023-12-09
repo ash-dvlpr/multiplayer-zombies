@@ -17,19 +17,19 @@ public static class MenuManager {
     public static MenuID CurrentMenu { get; private set; } = MenuID.None;
 
     private static GameObject mainCanvas;
-    private static Dictionary<MenuID, Menu> menuChache;
+    private static Dictionary<MenuID, AMenu> menuChache;
 
 
     // ===================== Custom Code =====================
     public static void Init() {
         if (!Initialised) { 
-            menuChache = new Dictionary<MenuID, Menu>();
+            menuChache = new Dictionary<MenuID, AMenu>();
             mainCanvas = GameObject.Find("MainCanvas");
             GameObject.DontDestroyOnLoad(mainCanvas);
 
             // Cache all menu objects
             foreach (Transform child in mainCanvas.transform) {
-                var menu = child.GetComponent<Menu>();
+                var menu = child.GetComponent<AMenu>();
                 if (!menu || MenuID.None == menu.MenuKey) continue;
 
                 menuChache[menu.MenuKey] = menu;

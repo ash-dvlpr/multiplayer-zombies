@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PauseMenu : Menu {
+public class PauseMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Pause; }
 
     // ===================== Custom Code =====================

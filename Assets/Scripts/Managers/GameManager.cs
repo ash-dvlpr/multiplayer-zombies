@@ -2,18 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
     public static bool ApplicationIsQuitting { get; private set; } = false;
 
-    private const int SCENE_ID_MAIN = 0;
-    private const int SCENE_ID_CITY = 1;
+    public const string SCENE_ID_MAIN = "SC_MainScene";
+    public const string SCENE_ID_CITY = "SC_City";
 
     // ====================== Variables ======================
     private GameState state = GameState.None;
-    private Lobby lobby;
+    private ALobby lobby;
 
     public enum GameState : int {
         None     = 0, // Uninitialised
@@ -78,7 +77,6 @@ public class GameManager : MonoBehaviour {
         if (null != lobby) {
             // TODO: Close and Clean up Lobby
             lobby.CloseLobby();
-            UnloadCityScene();
         }
 
         MenuManager.OpenMenu(MenuID.Main);
@@ -122,22 +120,6 @@ public class GameManager : MonoBehaviour {
     }
 
     //private GameState HandleTo_GameOver() { }
-
-    // =================== Scene Management ===================
-    private static void LoadScene(int sceneBuildIndex) {
-        SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Additive);
-    }
-    private static void UnloadScene(int sceneBuildIndex) {
-        SceneManager.UnloadSceneAsync(sceneBuildIndex);
-    }
-
-    //? Exposed methods for the Lobby Code
-    public void LoadCityScene() {
-        LoadScene(SCENE_ID_CITY);
-    }
-    public void UnloadCityScene() {
-        UnloadScene(SCENE_ID_CITY);
-    }
 
     // ======================== Events ========================
     private event Action onRoundStart;

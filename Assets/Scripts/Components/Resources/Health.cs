@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : Resource {
+public class Health : AResource {
     // ==================== Configuration ====================
     public override ResourceType ResType { get => ResourceType.Plentiful; }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainMenu : Menu {
+public class MainMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Main; }
 
     // ===================== Custom Code =====================

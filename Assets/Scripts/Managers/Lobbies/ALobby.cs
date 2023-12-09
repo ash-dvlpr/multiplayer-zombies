@@ -7,7 +7,7 @@ using static GameManager;
 /// <summary>
 /// Generic GameLobby abstraction that provides an easy way to generalize server/client code.
 /// </summary>
-public abstract class Lobby {
+public abstract class ALobby {
     /// <summary>
     /// Used to prepare Lobby and/or show the Lobby Menu.
     /// </summary>

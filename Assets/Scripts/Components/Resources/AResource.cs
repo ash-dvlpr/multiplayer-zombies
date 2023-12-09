@@ -9,7 +9,7 @@ using UnityEngine.Internal;
 /// <summary>
 /// Generic abstract resource component.
 /// </summary>
-public abstract class Resource : MonoBehaviour {
+public abstract class AResource : MonoBehaviour {
     public enum ResourceType : uint {
         /// <summary>
         /// <see cref="Amount">Amount</see> will start off at it's <see cref="Max">Max</see> value.
@@ -70,8 +70,8 @@ public abstract class Resource : MonoBehaviour {
         onChange?.Invoke(this);
     }
 
-    private event Action<Resource> onChange;
-    public event Action<Resource> OnChange {
+    private event Action<AResource> onChange;
+    public event Action<AResource> OnChange {
         add    { lock(this) { onChange += value; } }
         remove { lock(this) { onChange -= value; } }
     }

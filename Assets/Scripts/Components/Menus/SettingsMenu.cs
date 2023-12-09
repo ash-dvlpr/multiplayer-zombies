@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
 
-public class SettingsMenu : Menu {
+public class SettingsMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Settings; }
 
     // ===================== Custom Code =====================

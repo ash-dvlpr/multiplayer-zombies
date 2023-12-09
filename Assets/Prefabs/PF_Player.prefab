@@ -406,7 +406,7 @@ MonoBehaviour:
   _interpolation: 2
   _extrapolation: 2
   _enableTeleport: 0
-  _teleportThreshold: 1
+  _teleportThreshold: 3
   _scaleThreshold: 1
   _clientAuthoritative: 1
   _sendToOwner: 1
@@ -444,12 +444,13 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   _networkBehaviours:
   - {fileID: 2771313245341101214}
-  - {fileID: 0}
+  - {fileID: 379383837749684972}
+  - {fileID: 4200630878187310317}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Position: {x: 16.5, y: 1.13, z: 4.49}
+    Rotation: {x: -0, y: -0.71076536, z: -0, w: 0.70342916}
     LocalScale: {x: 1, y: 1, z: 1}
   _isNetworked: 1
   _isGlobal: 0
@@ -458,7 +459,7 @@ MonoBehaviour:
   NetworkObserver: {fileID: 0}
   <PrefabId>k__BackingField: 0
   <SpawnableCollectionId>k__BackingField: 0
-  _scenePathHash: 0
+  _scenePathHash: 3211674769
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 4714240676600475015
 --- !u!143 &4509960628881228098
@@ -499,12 +500,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c5a940ccab0ac4faac3e05b0787b1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 5011034186560501455}
+  _networkObjectCache: {fileID: 5011034186560501455}
   weaponHandleAnimator: {fileID: 5854942815679027901}
   damageableLayers:
     serializedVersion: 2
     m_Bits: 4096
   maxShotDistance: 200
   shotDamage: 20
+  virtualCamera: {fileID: 4561794382584809056}
   weapon: {fileID: 6394904917938065769}
 --- !u!114 &4200630878187310317
 MonoBehaviour:
@@ -518,6 +523,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4567ba0b77e5c384eac4fe3b08f6c54c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 5011034186560501455}
+  _networkObjectCache: {fileID: 5011034186560501455}
   cameraHandle: {fileID: 7015815664069237034}
   weaponHandle: {fileID: 2105573142140967833}
   lookSpeedX: 0.6

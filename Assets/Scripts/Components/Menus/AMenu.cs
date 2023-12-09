@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Menu : MonoBehaviour {
+public abstract class AMenu : MonoBehaviour {
     public abstract MenuID MenuKey { get; }
 
     // ===================== Custom Code =====================
