@@ -21,8 +21,6 @@ public class SinglePlayerLobby : FishNetLobby<Yak> {
         base.PrepareLobby(); // Ignore return type
 
         HostLobby();
-        JoinLobby();
-
         return StartGame();
     }
 

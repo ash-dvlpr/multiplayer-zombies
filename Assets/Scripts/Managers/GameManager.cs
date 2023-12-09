@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour {
         // TODO: Coming back from the game
         if (null != lobby) {
             // TODO: Close and Clean up Lobby
-
+            lobby.CloseLobby();
             UnloadCityScene();
         }
 

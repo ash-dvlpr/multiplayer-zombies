@@ -80,6 +80,7 @@ public abstract class FishNetLobby<T> : Lobby where T : Transport {
 
         GameManager.Instance.LoadCityScene();
         StartServer();
+        JoinLobby();
     }
 
     public override void JoinLobby() {
