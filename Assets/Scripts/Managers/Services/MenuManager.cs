@@ -51,7 +51,7 @@ public static class MenuManager {
 
     // ======================== Events ========================
     private static void PauseHandler(InputAction.CallbackContext ctx) {
-        if (MenuID.None == CurrentMenu) OpenMenu(MenuID.Pause);
+        if (MenuID.PlayerUI == CurrentMenu) OpenMenu(MenuID.Pause);
         else if (MenuID.Pause == CurrentMenu) OpenMenu(MenuID.PlayerUI);
     }
 

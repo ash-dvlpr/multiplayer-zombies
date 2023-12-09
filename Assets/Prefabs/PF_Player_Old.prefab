@@ -682,7 +682,7 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 0}
   _networkObjectCache: {fileID: 0}
-  weaponHandleAnimator: {fileID: 0}
+  weaponAnimator: {fileID: 0}
   damageableLayers:
     serializedVersion: 2
     m_Bits: 0

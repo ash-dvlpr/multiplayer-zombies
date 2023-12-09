@@ -19,12 +19,14 @@ public class Health : AResource {
     }
 
     // ===================== Custom Code =====================
-    [ServerRpc(RequireOwnership = false)]
+    //[ServerRpc(RequireOwnership = false)]
+    //[Server]
     public void Heal(int amount) {
         Amount += Math.Max(0, amount);
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    //[ServerRpc(RequireOwnership = false)]
+    //[Server]
     public void Damage(int amount) {
         Amount -= Math.Max(0, amount);
     }

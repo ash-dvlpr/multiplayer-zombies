@@ -41,7 +41,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6031703874369724667}
+  - component: {fileID: 8798444223157199154}
   - component: {fileID: 5854942815679027901}
+  - component: {fileID: 5043371318861110613}
   m_Layer: 11
   m_Name: WeaponHandle
   m_TagString: Untagged
@@ -65,6 +67,39 @@ Transform:
   - {fileID: 4922715092183325025}
   m_Father: {fileID: 1008160082742298438}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8798444223157199154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105573142140967833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsNested>k__BackingField: 1
+  <ComponentIndex>k__BackingField: 1
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  _networkBehaviours:
+  - {fileID: 5043371318861110613}
+  <ParentNetworkObject>k__BackingField: {fileID: 5011034186560501455}
+  <ChildNetworkObjects>k__BackingField: []
+  SerializedTransformProperties:
+    Position: {x: 0.0853, y: 0.21000004, z: 0.3178}
+    Rotation: {x: -0, y: -0, z: -0, w: 1}
+    LocalScale: {x: 1, y: 1, z: 1}
+  _isNetworked: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  <PrefabId>k__BackingField: 0
+  <SpawnableCollectionId>k__BackingField: 0
+  _scenePathHash: 0
+  <SceneId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
 --- !u!95 &5854942815679027901
 Animator:
   serializedVersion: 5
@@ -86,6 +121,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5043371318861110613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105573142140967833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 5011034186560501455}
+  _networkObjectCache: {fileID: 8798444223157199154}
+  IgnoredParameters: []
+  _animator: {fileID: 5854942815679027901}
+  _smoothFloats: 1
+  _interpolation: 2
+  _clientAuthoritative: 1
+  _sendToOwner: 0
 --- !u!1 &5078050515333566611
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,8 +502,10 @@ MonoBehaviour:
   - {fileID: 2771313245341101214}
   - {fileID: 379383837749684972}
   - {fileID: 4200630878187310317}
+  - {fileID: 6786355811569176275}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
-  <ChildNetworkObjects>k__BackingField: []
+  <ChildNetworkObjects>k__BackingField:
+  - {fileID: 8798444223157199154}
   SerializedTransformProperties:
     Position: {x: 16.5, y: 1.13, z: 4.49}
     Rotation: {x: -0, y: -0.71076536, z: -0, w: 0.70342916}
@@ -459,7 +517,7 @@ MonoBehaviour:
   NetworkObserver: {fileID: 0}
   <PrefabId>k__BackingField: 0
   <SpawnableCollectionId>k__BackingField: 0
-  _scenePathHash: 3211674769
+  _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 4714240676600475015
 --- !u!143 &4509960628881228098
@@ -503,12 +561,14 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 5011034186560501455}
   _networkObjectCache: {fileID: 5011034186560501455}
-  weaponHandleAnimator: {fileID: 5854942815679027901}
+  weaponAnimator: {fileID: 5043371318861110613}
   damageableLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 6144
   maxShotDistance: 200
+  shootingRate: 0.1
   shotDamage: 20
+  _canShoot: 1
   virtualCamera: {fileID: 4561794382584809056}
   weapon: {fileID: 6394904917938065769}
 --- !u!114 &4200630878187310317
@@ -552,6 +612,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b51fd53ae6b83b468df56cd38fbd535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 5011034186560501455}
+  _networkObjectCache: {fileID: 5011034186560501455}
   <Max>k__BackingField: 100
   _amount: 100
 --- !u!1 &8395028571652949898

@@ -6,12 +6,13 @@ using Cinemachine;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Connection;
+using FishNet.Component.Animating;
 
 [RequireComponent(typeof(PlayerMovement), typeof(Health))]
 public class PlayerController : NetworkBehaviour {
     // ==================== Configuration ====================
     [Header("Shooting")]
-    [SerializeField] Animator weaponHandleAnimator;
+    [SerializeField] NetworkAnimator weaponAnimator;
     [SerializeField] LayerMask damageableLayers;
     [SerializeField] float maxShotDistance;
     [SerializeField] float shootingRate = 0.1f;
@@ -23,7 +24,10 @@ public class PlayerController : NetworkBehaviour {
     // ====================== Variables ======================
     [SyncVar] bool _canShoot = false;
     bool _canMove = false;
-    public bool CanMove { get => IsOwner && GameManager.IsPlaying && _canMove; private set => _canMove = value; }
+    public bool CanMove { 
+        get => IsOwner && GameManager.IsPlaying && _canMove && !GameManager.IsPaused; 
+        private set => _canMove = value; 
+    }
     public bool CanShoot { get => _canShoot; private set => _canShoot = value; }
 
     // ====================== References =====================
@@ -41,10 +45,7 @@ public class PlayerController : NetworkBehaviour {
 
         if (!IsOwner) virtualCamera.enabled = false;
 
-        _canMove = GameManager.IsPlaying;
-        playerUI = (PlayerUI) MenuManager.Get(MenuID.PlayerUI);
-        hpBar = playerUI.Bar; 
-        hpBar.SwapTrackedResource(health);
+        _canMove = _canShoot = GameManager.IsPlaying;
     }
 
     // ====================== Unity Code ======================
@@ -54,6 +55,9 @@ public class PlayerController : NetworkBehaviour {
 
         //playerMovement = GetComponent<PlayerMovement>();
         health = GetComponent<Health>();
+        playerUI = (PlayerUI) MenuManager.Get(MenuID.PlayerUI);
+        hpBar = playerUI.Bar;
+        hpBar.SwapTrackedResource(health);
     }
 
     void OnEnable() {
@@ -90,7 +94,7 @@ public class PlayerController : NetworkBehaviour {
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RunLocally = true)]
     void Shoot(Vector3 cameraPosition, Vector3 direction, NetworkConnection sender = null) {
         // TODO: consume ammo
         
@@ -108,7 +112,7 @@ public class PlayerController : NetworkBehaviour {
             var camPos = Camera.main.transform.position;
             var camDir = Camera.main.transform.forward;
 
-            weaponHandleAnimator.SetTrigger(AnimatorID.triggerAttack);
+            weaponAnimator.SetTrigger(AnimatorID.triggerAttack);
             Shoot(camPos, camDir);
 
             yield return new WaitForSeconds(shootingRate);

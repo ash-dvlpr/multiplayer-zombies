@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2646453246598871632
 RectTransform:
   m_ObjectHideFlags: 0
@@ -106,6 +106,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8674193985567992306}
+  - component: {fileID: 7264522708794332463}
+  - component: {fileID: -5908798485125680831}
   - component: {fileID: 3063532892464494326}
   - component: {fileID: 7295470242444610486}
   - component: {fileID: 7506624315702293527}
@@ -135,6 +137,86 @@ Transform:
   - {fileID: 8267612116115878610}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7264522708794332463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6683331676802628459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: -5908798485125680831}
+  _networkObjectCache: {fileID: -5908798485125680831}
+  _componentConfiguration: 2
+  _synchronizeParent: 0
+  _packing:
+    Position: 1
+    Rotation: 1
+    Scale: 0
+  _interpolation: 2
+  _extrapolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  _scaleThreshold: 1
+  _clientAuthoritative: 0
+  _sendToOwner: 1
+  _enableNetworkLod: 1
+  _interval: 1
+  _synchronizePosition: 1
+  _positionSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeRotation: 1
+  _rotationSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeScale: 1
+  _scaleSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+--- !u!114 &-5908798485125680831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6683331676802628459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsNested>k__BackingField: 0
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  _networkBehaviours:
+  - {fileID: 7264522708794332463}
+  - {fileID: 2333305395235521766}
+  - {fileID: 6812358286670298681}
+  <ParentNetworkObject>k__BackingField: {fileID: 0}
+  <ChildNetworkObjects>k__BackingField: []
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    LocalScale: {x: 1, y: 1, z: 1}
+  _isNetworked: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  <PrefabId>k__BackingField: 0
+  <SpawnableCollectionId>k__BackingField: 0
+  _scenePathHash: 0
+  <SceneId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 5791277486299054559
 --- !u!54 &3063532892464494326
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -219,9 +301,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d8b95584b0bc0642b2ae6a1f819e74e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: -5908798485125680831}
+  _networkObjectCache: {fileID: -5908798485125680831}
   attackRate: 2.5
   attackDamage: 10
   timeBeforeCorpseRemoval: 4
+  _target: {fileID: 0}
 --- !u!114 &6812358286670298681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,6 +320,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b51fd53ae6b83b468df56cd38fbd535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: -5908798485125680831}
+  _networkObjectCache: {fileID: -5908798485125680831}
   <Max>k__BackingField: 100
   _amount: 100
 --- !u!1 &8974892785716732044
@@ -352,12 +441,12 @@ PrefabInstance:
     - target: {fileID: 220132022827193522, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 220132022827193522, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 220132022827193522, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}

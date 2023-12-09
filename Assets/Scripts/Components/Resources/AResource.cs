@@ -4,9 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Internal;
 
 /// <summary>
 /// Generic abstract resource component.
@@ -33,23 +31,32 @@ public abstract class AResource : NetworkBehaviour {
     public abstract ResourceType ResType { get; }
 
     // ====================== Variables ======================
-    [field: SerializeField, ShowOnly][SyncVar(OnChange = nameof(TriggerOnChange))] private int _amount;
+    [SerializeField, ShowOnly]
+    [SyncVar(OnChange = nameof(TriggerOnChange))] private int _amount;
+
     public int Amount {
         get => _amount;
         protected set { _amount = Math.Clamp(value, 0, Max); }
     }
 
+    protected virtual void TriggerOnChange(int prev, int next, bool asServer) {
+        Debug.Log($"asServer: {asServer}");
+        onChange?.Invoke(this);
+    }
+
     // ====================== Unity Code ======================
 #if UNITY_EDITOR
-    void OnValidate() {
+    protected override void OnValidate() {
+        base.OnValidate();
         Max = Math.Max(1, Max);
 
         if (!Application.isPlaying) Reset();
-        else Amount = Amount;
+        //else Amount = Amount;
     }
 #endif
 
-    protected void Reset() {
+    protected override void Reset() {
+        base.OnValidate();
         switch (ResType) {
             case ResourceType.Scarse:
                 Amount = 0; break;
@@ -65,10 +72,6 @@ public abstract class AResource : NetworkBehaviour {
     }
 
     // ================== Outside Facing API ==================
-    protected virtual void TriggerOnChange(int prev, int next, bool asServer) { 
-        onChange?.Invoke(this);
-    }
-
     private event Action<AResource> onChange;
     public event Action<AResource> OnChange {
         add    { lock(this) { onChange += value; } }

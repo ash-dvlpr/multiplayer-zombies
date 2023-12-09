@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3414388834844115456
 RectTransform:
   m_ObjectHideFlags: 0
@@ -127,17 +127,22 @@ PrefabInstance:
     - target: {fileID: 220132022827193522, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 220132022827193522, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4571053054279095371, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}
       propertyPath: m_Name
       value: HealthBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 5419417612698298383, guid: 9d874477856a045469192d1bd1fbe0ad,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 32.7
       objectReference: {fileID: 0}
     - target: {fileID: 7220884041256623352, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}
@@ -172,12 +177,12 @@ PrefabInstance:
     - target: {fileID: 7220884041256623352, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 270.311
       objectReference: {fileID: 0}
     - target: {fileID: 7220884041256623352, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 40.547
       objectReference: {fileID: 0}
     - target: {fileID: 7220884041256623352, guid: 9d874477856a045469192d1bd1fbe0ad,
         type: 3}

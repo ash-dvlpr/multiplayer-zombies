@@ -63,6 +63,8 @@ public class ResourceBar : MonoBehaviour {
 
     // ================== Outside Facing API ==================
     public void SwapTrackedResource(AResource newResource) {
+        if (trackedResource) trackedResource.OnChange -= OnResourceChanged;
         trackedResource = newResource;
+        trackedResource.OnChange += OnResourceChanged;
     }
 }

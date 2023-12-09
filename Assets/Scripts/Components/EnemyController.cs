@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
-public class EnemyController : MonoBehaviour {
+public class EnemyController : NetworkBehaviour {
     // ==================== Configuration ====================
     [Header("Combat")]
     [SerializeField] float attackRate = 2f;
@@ -20,11 +22,16 @@ public class EnemyController : MonoBehaviour {
     Health health;
 
     // ====================== Variables ======================
-    Transform _target;
+    [SyncVar] Transform _target;
     bool _attacking = false;
 
 
     // ====================== Unity Code ======================
+    public override void OnStartServer() {
+        base.OnStartServer();
+        StartCoroutine(SearchTargets());
+    }
+
     void Awake() {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
@@ -38,13 +45,8 @@ public class EnemyController : MonoBehaviour {
     void OnDisable() {
         health.OnDeath -= OnDeath;
     }
-
-    void Start() {
-        ChangeTarget();
-    }
-
     void Update() {
-        if (health.IsAlive) {
+        if (health.IsAlive && _target) {
             var target = _attacking ? this.transform.position : _target.position;
             if (null != target) {
                 agent.destination = target;
@@ -84,12 +86,20 @@ public class EnemyController : MonoBehaviour {
     //        // TODO: damage
     //    }
     //}
+    IEnumerator SearchTargets() {
+        while (true) { 
+            ChangeTarget();
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
     IEnumerator AttackDelay() {
         _attacking = true;
         yield return new WaitForSeconds(attackRate);
         _attacking = false;
     }
 
+    [Server]
     private void ChangeTarget() {
         // TODO: Get players from GameManager's cached player list
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -110,15 +120,18 @@ public class EnemyController : MonoBehaviour {
         }
 
         if (nearestPlayer != null) {
-            ChangeTarget(nearestPlayer.transform);
+            _target= nearestPlayer.transform;
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
     public void ChangeTarget(Transform newTarget) {
         _target = newTarget;
     }
 
     void OnDeath() {
+        if (IsServer) StopAllCoroutines();
+
         animator.SetBool(AnimatorID.isRunning, false);
         agent.destination = this.transform.position;
         agent.isStopped = true;
