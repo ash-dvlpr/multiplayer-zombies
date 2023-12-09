@@ -64,11 +64,13 @@ public class PlayerController : NetworkBehaviour {
     }
 
     void ShootHandler(InputAction.CallbackContext ctx) {
-        var camPos = Camera.main.transform.position;
-        var camDir = Camera.main.transform.forward;
+        if (CanMove) {
+            var camPos = Camera.main.transform.position;
+            var camDir = Camera.main.transform.forward;
 
-        weaponHandleAnimator.SetTrigger(AnimatorID.triggerAttack);
-        Shoot(camPos, camDir);
+            weaponHandleAnimator.SetTrigger(AnimatorID.triggerAttack);
+            Shoot(camPos, camDir);
+        }
     }
 
     void Shoot(Vector3 cameraPosition, Vector3 direction) {

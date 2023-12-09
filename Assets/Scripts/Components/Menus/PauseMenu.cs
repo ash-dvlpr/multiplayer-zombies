@@ -11,15 +11,14 @@ public class PauseMenu : Menu {
         base.OpenMenu();
     }
     public override void CloseMenu() { 
+        // Lock Mouse
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         base.CloseMenu();
     }
 
     // ===================== UI Actions ======================
     public void OnClick_Resume() {
-        // Lock Mouse
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
         MenuManager.CloseMenu();
     }
     public void OnClick_Settings() {

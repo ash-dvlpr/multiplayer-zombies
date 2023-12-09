@@ -51,6 +51,7 @@ public static class MenuManager {
     // ======================== Events ========================
     private static void PauseHandler(InputAction.CallbackContext ctx) {
         if (MenuID.None == CurrentMenu) OpenMenu(MenuID.Pause);
+        else if (MenuID.Pause == CurrentMenu) CloseMenu();
     }
 
 
@@ -71,16 +72,16 @@ public static class MenuManager {
         CurrentMenu = menu;
 
         try {
+            // Hide old Menu
+            if (menuChache.TryGetValue(previous, out var currentMenu)) {
+                currentMenu.CloseMenu();
+            }
+
             // TODO: Menu transitions
 
             // Show new Menu
             if (menuChache.TryGetValue(menu, out var newMenu)) {
                 newMenu.OpenMenu();
-            }
-
-            // Hide old Menu
-            if (menuChache.TryGetValue(previous, out var currentMenu)) {
-                currentMenu.CloseMenu();
             }
         }
         catch (KeyNotFoundException ke) {
@@ -97,6 +98,7 @@ public static class MenuManager {
 
         try {
             if (menuChache.TryGetValue(CurrentMenu, out var menu)) {
+                CurrentMenu = MenuID.None;
                 menu.CloseMenu();
             }
         }
