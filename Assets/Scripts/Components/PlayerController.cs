@@ -18,7 +18,7 @@ public class PlayerController : NetworkBehaviour {
 
     // ====================== Variables ======================
     private bool _canMove = false;
-    public bool CanMove { get => _canMove && IsOwner; private set => _canMove = value; }
+    public bool CanMove { get => IsOwner && GameManager.IsPlaying && _canMove; private set => _canMove = value; }
 
     // ====================== References =====================
     [SerializeField] Weapon weapon;
@@ -27,7 +27,9 @@ public class PlayerController : NetworkBehaviour {
 
     // ======================= NetCode ========================
     public override void OnStartClient() { 
+        base.OnStartClient();
 
+        _canMove = GameManager.IsPlaying;
     }
 
     // ====================== Unity Code ======================
