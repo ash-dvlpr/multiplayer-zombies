@@ -12,16 +12,13 @@ public class PauseMenu : AMenu {
     public override void OpenMenu() { 
         base.OpenMenu();
     }
-    public override void CloseMenu() { 
-        // Lock Mouse
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+    public override void CloseMenu() {
         base.CloseMenu();
     }
 
     // ===================== UI Actions ======================
     public void OnClick_Resume() {
-        MenuManager.CloseMenu();
+        MenuManager.OpenMenu(MenuID.PlayerUI);
     }
     public void OnClick_Settings() {
         MenuManager.OpenMenu(MenuID.Settings);

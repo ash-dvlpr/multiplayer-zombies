@@ -67,9 +67,20 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
 
     private void OnClientConnectionState(ClientConnectionStateArgs obj) {
         ClientState = obj.ConnectionState;
+
+        // Exit the lobby
+        if (LocalConnectionState.Stopped == ClientState) {
+            GameManager.ExitToTittleScreen();
+        }
     }
     private void OnServerConnectionState(ServerConnectionStateArgs obj) {
         ServerState = obj.ConnectionState;
+
+        // Join the lobby
+        if (ClientType.Host == clientType && LocalConnectionState.Started == ServerState) { 
+            NetSceneManager.Instance.LoadCityScene();
+            JoinLobby();
+        }
     }
 
     // ================== Outside Facing API ==================
@@ -86,9 +97,6 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
     public override void HostLobby() {
         clientType = ClientType.Host;
         StartServer();
-        NetSceneManager.Instance.LoadCityScene();
-        
-        JoinLobby();
     }
 
     public override void JoinLobby() {
@@ -104,7 +112,7 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
 
     public override GameState StartGame() {
         GameManager.Instance.NotifyRoundStart();
-        MenuManager.CloseMenu();
+        MenuManager.OpenMenu(MenuID.PlayerUI);
         return GameState.InGame;
     }
 }

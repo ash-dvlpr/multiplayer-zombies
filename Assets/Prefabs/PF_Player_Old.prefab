@@ -687,7 +687,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   maxShotDistance: 0
+  shootingRate: 0.1
   shotDamage: 20
+  _canShoot: 0
   virtualCamera: {fileID: 0}
   weapon: {fileID: 0}
 --- !u!114 &4200630878187310317
@@ -731,6 +733,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b51fd53ae6b83b468df56cd38fbd535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
   <Max>k__BackingField: 100
   _amount: 100
 --- !u!1 &8471222013267634079

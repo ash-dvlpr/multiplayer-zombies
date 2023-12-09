@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using FishNet.Connection;
 
 [RequireComponent(typeof(PlayerMovement), typeof(Health))]
 public class PlayerController : NetworkBehaviour {
@@ -12,27 +14,37 @@ public class PlayerController : NetworkBehaviour {
     [SerializeField] Animator weaponHandleAnimator;
     [SerializeField] LayerMask damageableLayers;
     [SerializeField] float maxShotDistance;
+    [SerializeField] float shootingRate = 0.1f;
     [SerializeField] int shotDamage = 20;
 
     //[Header("Death")]
     //[SerializeField] float timeBeforeCorpseRemoval = 4f;
 
     // ====================== Variables ======================
-    private bool _canMove = false;
+    [SyncVar] bool _canShoot = false;
+    bool _canMove = false;
     public bool CanMove { get => IsOwner && GameManager.IsPlaying && _canMove; private set => _canMove = value; }
+    public bool CanShoot { get => _canShoot; private set => _canShoot = value; }
 
     // ====================== References =====================
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] Weapon weapon;
     //PlayerMovement playerMovement;
+
+    PlayerUI playerUI;
+    ResourceBar hpBar;
     Health health;
 
     // ======================= NetCode ========================
     public override void OnStartClient() { 
         base.OnStartClient();
 
-        _canMove = GameManager.IsPlaying;
         if (!IsOwner) virtualCamera.enabled = false;
+
+        _canMove = GameManager.IsPlaying;
+        playerUI = (PlayerUI) MenuManager.Get(MenuID.PlayerUI);
+        hpBar = playerUI.Bar; 
+        hpBar.SwapTrackedResource(health);
     }
 
     // ====================== Unity Code ======================
@@ -61,6 +73,7 @@ public class PlayerController : NetworkBehaviour {
     // ===================== Custom Code =====================
     void RoundStart() {
         CanMove = true;
+        CanShoot = true;
     }
     void RoundEnd() {
         CanMove = false;
@@ -72,19 +85,35 @@ public class PlayerController : NetworkBehaviour {
     }
 
     void ShootHandler(InputAction.CallbackContext ctx) {
-        if (CanMove) {
+        if (CanMove && CanShoot) {
+            StartCoroutine(ApplyShootingDelay());
+        }
+    }
+
+    [ServerRpc]
+    void Shoot(Vector3 cameraPosition, Vector3 direction, NetworkConnection sender = null) {
+        // TODO: consume ammo
+        
+
+        if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
+            var hitHp = hit.transform.GetComponent<Health>();
+            hitHp?.Damage(shotDamage);
+        }
+    }
+
+    IEnumerator ApplyShootingDelay() {
+        if (CanShoot) {
+            CanShoot = false;
+            
             var camPos = Camera.main.transform.position;
             var camDir = Camera.main.transform.forward;
 
             weaponHandleAnimator.SetTrigger(AnimatorID.triggerAttack);
             Shoot(camPos, camDir);
-        }
-    }
 
-    void Shoot(Vector3 cameraPosition, Vector3 direction) {
-        if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
-            var hitHp = hit.transform.GetComponent<Health>();
-            hitHp?.Damage(shotDamage);
+            yield return new WaitForSeconds(shootingRate);
         }
+
+        CanShoot = true;
     }
 }

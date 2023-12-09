@@ -1,9 +1,8 @@
-using FishNet;
-using FishNet.Managing.Scened;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using FishNet;
+using FishNet.Managing.Scened;
 
 public class NetSceneManager : MonoBehaviour {
     public static NetSceneManager Instance { get; private set; }
@@ -21,8 +20,8 @@ public class NetSceneManager : MonoBehaviour {
 
 
     // =================== Scene Management ===================
-    private void LoadScene(string sceneName) {
-        if (!IsServer) return;
+    private void LoadScene(string sceneName, bool @override = false) {
+        if (!IsServer && !@override) return;
 
         SceneLoadData sld = new SceneLoadData(sceneName);
         InstanceFinder.SceneManager.LoadGlobalScenes(sld);

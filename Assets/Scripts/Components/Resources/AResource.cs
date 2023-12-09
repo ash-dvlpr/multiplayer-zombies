@@ -1,3 +1,5 @@
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using UnityEngine.Internal;
 /// <summary>
 /// Generic abstract resource component.
 /// </summary>
-public abstract class AResource : MonoBehaviour {
+public abstract class AResource : NetworkBehaviour {
     public enum ResourceType : uint {
         /// <summary>
         /// <see cref="Amount">Amount</see> will start off at it's <see cref="Max">Max</see> value.
@@ -31,13 +33,10 @@ public abstract class AResource : MonoBehaviour {
     public abstract ResourceType ResType { get; }
 
     // ====================== Variables ======================
-    [field: SerializeField, ShowOnly] private int _amount;
+    [field: SerializeField, ShowOnly][SyncVar(OnChange = nameof(TriggerOnChange))] private int _amount;
     public int Amount {
         get => _amount;
-        protected set {
-            _amount = Math.Clamp(value, 0, Max);
-            TriggerOnChange();
-        }
+        protected set { _amount = Math.Clamp(value, 0, Max); }
     }
 
     // ====================== Unity Code ======================
@@ -66,7 +65,7 @@ public abstract class AResource : MonoBehaviour {
     }
 
     // ================== Outside Facing API ==================
-    protected virtual void TriggerOnChange() { 
+    protected virtual void TriggerOnChange(int prev, int next, bool asServer) { 
         onChange?.Invoke(this);
     }
 

@@ -10,6 +10,7 @@ public enum MenuID : int {
     Settings = 2,
     Lobby    = 3,
     Pause    = 4,
+    PlayerUI = 5,
 }
 
 public static class MenuManager {
@@ -26,6 +27,7 @@ public static class MenuManager {
             menuChache = new Dictionary<MenuID, AMenu>();
             mainCanvas = GameObject.Find("MainCanvas");
             GameObject.DontDestroyOnLoad(mainCanvas);
+            mainCanvas.SetActive(true);
 
             // Cache all menu objects
             foreach (Transform child in mainCanvas.transform) {
@@ -50,11 +52,16 @@ public static class MenuManager {
     // ======================== Events ========================
     private static void PauseHandler(InputAction.CallbackContext ctx) {
         if (MenuID.None == CurrentMenu) OpenMenu(MenuID.Pause);
-        else if (MenuID.Pause == CurrentMenu) CloseMenu();
+        else if (MenuID.Pause == CurrentMenu) OpenMenu(MenuID.PlayerUI);
     }
 
 
     // ================== Outside Facing API ==================
+    public static AMenu Get(MenuID id) {
+        menuChache.TryGetValue(id, out var menu);
+        return menu;
+    }
+
     public static void ResetSelectedUIObject() {
         //var selected = EventSystem.current.currentSelectedGameObject;
         EventSystem.current.SetSelectedGameObject(null);

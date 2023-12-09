@@ -1,3 +1,4 @@
+using FishNet.Object;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,17 +19,19 @@ public class Health : AResource {
     }
 
     // ===================== Custom Code =====================
+    [ServerRpc(RequireOwnership = false)]
     public void Heal(int amount) {
         Amount += Math.Max(0, amount);
     }
 
+    [ServerRpc(RequireOwnership = false)]
     public void Damage(int amount) {
         Amount -= Math.Max(0, amount);
     }
 
     // ================== Outside Facing API ==================
-    protected override void TriggerOnChange() {
-        base.TriggerOnChange();
+    protected override void TriggerOnChange(int prev, int next, bool asServer) {
+        base.TriggerOnChange(prev, next, asServer);
 
         if (Amount.Equals(0)) {
             onDeath?.Invoke();

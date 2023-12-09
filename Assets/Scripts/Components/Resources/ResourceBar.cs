@@ -60,4 +60,9 @@ public class ResourceBar : MonoBehaviour {
             displayText.text = $"{resource.Amount} / {resource.Max}";
         }
     }
+
+    // ================== Outside Facing API ==================
+    public void SwapTrackedResource(AResource newResource) {
+        trackedResource = newResource;
+    }
 }
