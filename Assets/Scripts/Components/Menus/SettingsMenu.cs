@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GameManager;
 
 public class SettingsMenu : Menu {
     public override MenuID MenuKey { get => MenuID.Settings; }
@@ -18,7 +19,7 @@ public class SettingsMenu : Menu {
     // ===================== UI Actions ======================
     public void OnClick_Back() {
         // Return to Main Menu
-        if (GameManager.GameState.MainMenu == GameManager.CurrentState) {
+        if (GameState.MainMenu == GameManager.CurrentState) {
             MenuManager.OpenMenu(MenuID.Main);
         }
         // Return to Pause Menu

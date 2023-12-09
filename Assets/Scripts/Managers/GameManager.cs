@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static GameManager;
 
 public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
@@ -14,14 +13,15 @@ public class GameManager : MonoBehaviour {
 
     // ====================== Variables ======================
     private GameState state = GameState.None;
-    private GameLobby lobby;
+    private Lobby lobby;
+
     public enum GameState : int {
-        None     = -1, // Uninitialised
-        Startup  =  0, // General Initialization
-        MainMenu =  1, // Main Menu interface
-        InLobby  =  2, // Lobby interface
-        InGame   =  3, // Player is playing the game
-        GameOver =  4, // Players died, lobby may be restarted
+        None     = 0, // Uninitialised
+        Startup  = 1, // General Initialization
+        MainMenu = 2, // Main Menu interface
+        InLobby  = 3, // Lobby interface
+        InGame   = 4, // Player is playing the game
+        GameOver = 5, // Players died, lobby may be restarted
     }
 
     // ====================== Unity Code ======================
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour {
     }
 
     // ===================== Game States ======================
-    private void TryChangeGameState(GameState newState, LobbyType newLobbyType = LobbyType.None, bool isHost = false) {
+    private void TryChangeGameState(GameState newState, LobbyType newLobbyType = 0, ClientType clientType = 0) {
         if (state == newState) return;
 
         // Finite State Machine to handle possible state changes
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour {
             GameState.Startup => HandleTo_Startup(),
             GameState.MainMenu => HandleTo_MainMenu(),
             GameState.InLobby => HandleTo_InLobby(newLobbyType),
-            GameState.InGame => HandleTo_InGame(isHost),
+            GameState.InGame => HandleTo_InGame(clientType),
             _ => Handle_Unimplemented(newState),
         };
     }
@@ -75,10 +75,10 @@ public class GameManager : MonoBehaviour {
 
     private GameState HandleTo_MainMenu() {
         // TODO: Coming back from the game
-        if (null != lobby) { 
+        if (null != lobby) {
             // TODO: Close and Clean up Lobby
 
-            UnloadScene(SCENE_ID_CITY);
+            UnloadCityScene();
         }
 
         MenuManager.OpenMenu(MenuID.Main);
@@ -92,21 +92,24 @@ public class GameManager : MonoBehaviour {
         switch (newLobbyType) {
             // Create the lobby
             case LobbyType.SinglePlayer: lobby = new SinglePlayerLobby(); break;
-            //case LobbyType.MultiPlayer: lobby = new MultiPlayerLobby(); break;
+            case LobbyType.MultiPlayer: lobby = new MultiPlayerLobby(); break;
 
             default:
                 throw new NotImplementedException($"GameManager.HandleTo_InLobby(): {newLobbyType} not yet implemented.");
         }
 
-        lobby.PrepareLobby();
-        return GameState.InLobby;
+        return lobby.PrepareLobby();
     }
 
-    private GameState HandleTo_InGame(bool isHost) {
+    private GameState HandleTo_InGame(ClientType clientType) {
         if (GameState.InLobby == state) {
+            if (ClientType.None == clientType) return state;
+
             // If we are in the lobby state, we have to know if we are hosting or joining
-            if (isHost) lobby.OpenLobby();
-            else lobby.JoinLobby();
+            switch (clientType) {
+                case ClientType.Host: lobby.HostLobby(); break;
+                case ClientType.Client: lobby.JoinLobby(); break;
+            }
 
             return lobby.StartGame();
         }
@@ -131,6 +134,9 @@ public class GameManager : MonoBehaviour {
     //? Exposed methods for the Lobby Code
     public void LoadCityScene() {
         LoadScene(SCENE_ID_CITY);
+    }
+    public void UnloadCityScene() {
+        UnloadScene(SCENE_ID_CITY);
     }
 
     // ======================== Events ========================
@@ -158,6 +164,9 @@ public class GameManager : MonoBehaviour {
 
     // ================== Outside Facing API ==================
     public static GameState CurrentState { get => Instance?.state ?? GameState.None; }
+    //public static bool IsPlaying { 
+    //    get => GameState.InGame == CurrentState || ; 
+    //}
 
     //? Preparing to play
     public static void CreateSinglePlayerLobby() {
@@ -169,16 +178,16 @@ public class GameManager : MonoBehaviour {
 
     //? Going into play
     public static void TryHostGame() {
-        Instance?.TryChangeGameState(GameState.InGame, isHost: true);
+        Instance?.TryChangeGameState(GameState.InGame, clientType: ClientType.Host);
     }
 
     public static void TryJoinGame() {
-        Instance?.TryChangeGameState(GameState.InGame, isHost: false);
+        Instance?.TryChangeGameState(GameState.InGame, clientType: ClientType.Client);
     }
 
-    public static void TryStartGame() { 
-        Instance?.TryChangeGameState(GameState.InGame);
-    }
+    //public static void TryStartGame() {
+    //    Instance?.TryChangeGameState(GameState.InGame);
+    //}
 
     //? Exiting
     public static void ExitToTittleScreen() {

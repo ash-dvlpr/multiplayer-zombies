@@ -3,19 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static GameManager;
 
-public enum LobbyType : int {
-    None         = 0,
-    SinglePlayer = 1,
-    MultiPlayer  = 2,
-}
 
 /// <summary>
-/// Generic GameLobby abstraction that provides a 
+/// Generic GameLobby abstraction that provides an easy way to generalize server/client code.
 /// </summary>
-public abstract class GameLobby {
-    public abstract LobbyType Type { get; }
-
-    // ================== Outside Facing API ==================
+public abstract class Lobby {
     /// <summary>
     /// Used to prepare Lobby and/or show the Lobby Menu.
     /// </summary>
@@ -25,7 +17,7 @@ public abstract class GameLobby {
     /// <summary>
     /// Used to open the Lobby.
     /// </summary>
-    public abstract void OpenLobby();
+    public abstract void HostLobby();
 
     /// <summary>
     /// Used to join the Lobby.
@@ -33,12 +25,12 @@ public abstract class GameLobby {
     public abstract void JoinLobby();
 
     /// <summary>
-    /// Used to start the game once the lobby and players are ready.
+    /// Used to start the game once the lobby is ready.
     /// </summary
     public abstract GameState StartGame();
 
     /// <summary>
-    /// Used to start the game once the lobby and players are ready.
+    /// Used to restart the game.
     /// </summary
     public abstract GameState RestartGame();
 
@@ -46,6 +38,4 @@ public abstract class GameLobby {
     /// Used to close the lobby. Should be called whenever we are closing the game or returning to main menu.
     /// </summary>
     public abstract void CloseLobby();
-
 }
-

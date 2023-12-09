@@ -6,11 +6,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public enum MenuID : int {
-    None     = -1,
-    Main     =  0,
-    Settings =  1,
-    Lobby    =  2, // TODO: Lobby Menu for Multiplayer
-    Pause    =  3,
+    None     = 0,
+    Main     = 1,
+    Settings = 2,
+    Lobby    = 3,
+    Pause    = 4,
 }
 
 public static class MenuManager {

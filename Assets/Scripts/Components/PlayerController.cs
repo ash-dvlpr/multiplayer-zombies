@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using FishNet.Object;
 
 [RequireComponent(typeof(PlayerMovement), typeof(Health))]
-public class PlayerController : MonoBehaviour {
+public class PlayerController : NetworkBehaviour {
     // ==================== Configuration ====================
     [Header("Shooting")]
     [SerializeField] Animator weaponHandleAnimator;
@@ -17,12 +17,18 @@ public class PlayerController : MonoBehaviour {
     //[SerializeField] float timeBeforeCorpseRemoval = 4f;
 
     // ====================== Variables ======================
-    public bool CanMove { get; private set; }
+    private bool _canMove = false;
+    public bool CanMove { get => _canMove && IsOwner; private set => _canMove = value; }
 
     // ====================== References =====================
     [SerializeField] Weapon weapon;
     //PlayerMovement playerMovement;
     Health health;
+
+    // ======================= NetCode ========================
+    public override void OnStartClient() { 
+
+    }
 
     // ====================== Unity Code ======================
     void Awake() {
