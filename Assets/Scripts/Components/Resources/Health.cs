@@ -20,14 +20,15 @@ public class Health : AResource {
 
     // ===================== Custom Code =====================
     //[ServerRpc(RequireOwnership = false)]
-    //[Server]
+    [Server]
     public void Heal(int amount) {
         Amount += Math.Max(0, amount);
     }
 
     //[ServerRpc(RequireOwnership = false)]
-    //[Server]
+    [Server]
     public void Damage(int amount) {
+        Debug.Log($"Got hit for {amount} -> now got {Amount} hp");
         Amount -= Math.Max(0, amount);
     }
 

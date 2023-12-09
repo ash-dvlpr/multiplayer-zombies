@@ -61,10 +61,14 @@ public class EnemyController : NetworkBehaviour {
         if (health.IsAlive && !_attacking && other.CompareTag("Player")) {
             StartCoroutine(AttackDelay());
             animator.SetTrigger(AnimatorID.triggerAttack);
-
-            var targetHealth = other.GetComponent<Health>();
-            targetHealth.Damage(attackDamage);
+            Attack(other.transform);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void Attack(Transform other) {
+        var hitHp = other.GetComponent<Health>();
+        hitHp?.Damage(attackDamage);
     }
 
     // ===================== Custom Code =====================
