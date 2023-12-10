@@ -371,7 +371,7 @@ Transform:
   m_GameObject: {fileID: 5078050515333566611}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.050044537, y: 0.7177535, z: 0.046592474}
+  m_LocalPosition: {x: 0.05004453, y: 0.71775365, z: 0.04659249}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -612,6 +612,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1008160082742298438}
+  - component: {fileID: -5421455934804465990}
+  - component: {fileID: 4659324487416073541}
   - component: {fileID: 4509960628881228098}
   - component: {fileID: 379383837749684972}
   - component: {fileID: 4200630878187310317}
@@ -641,6 +643,87 @@ Transform:
   - {fileID: 5651058120435314523}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-5421455934804465990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8270302164475238378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 4659324487416073541}
+  _networkObjectCache: {fileID: 4659324487416073541}
+  _componentConfiguration: 2
+  _synchronizeParent: 0
+  _packing:
+    Position: 1
+    Rotation: 1
+    Scale: 0
+  _interpolation: 2
+  _extrapolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  _scaleThreshold: 1
+  _clientAuthoritative: 1
+  _sendToOwner: 1
+  _enableNetworkLod: 1
+  _interval: 1
+  _synchronizePosition: 1
+  _positionSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeRotation: 1
+  _rotationSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+  _synchronizeScale: 1
+  _scaleSnapping:
+    X: 0
+    Y: 0
+    Z: 0
+--- !u!114 &4659324487416073541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8270302164475238378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsNested>k__BackingField: 0
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  _networkBehaviours:
+  - {fileID: -5421455934804465990}
+  - {fileID: 379383837749684972}
+  - {fileID: 4200630878187310317}
+  - {fileID: 6786355811569176275}
+  <ParentNetworkObject>k__BackingField: {fileID: 0}
+  <ChildNetworkObjects>k__BackingField: []
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    LocalScale: {x: 1, y: 1, z: 1}
+  _isNetworked: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  <PrefabId>k__BackingField: 0
+  <SpawnableCollectionId>k__BackingField: 0
+  _scenePathHash: 0
+  <SceneId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 16829972303354302471
 --- !u!143 &4509960628881228098
 CharacterController:
   m_ObjectHideFlags: 0
@@ -679,9 +762,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c5a940ccab0ac4faac3e05b0787b1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 4659324487416073541}
+  _networkObjectCache: {fileID: 4659324487416073541}
   weaponAnimator: {fileID: 0}
   damageableLayers:
     serializedVersion: 2
@@ -704,9 +787,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4567ba0b77e5c384eac4fe3b08f6c54c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 4659324487416073541}
+  _networkObjectCache: {fileID: 4659324487416073541}
   cameraHandle: {fileID: 7015815664069237034}
   weaponHandle: {fileID: 2105573142140967833}
   lookSpeedX: 0.8
@@ -733,9 +816,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b51fd53ae6b83b468df56cd38fbd535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 2
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 4659324487416073541}
+  _networkObjectCache: {fileID: 4659324487416073541}
   <Max>k__BackingField: 100
   _amount: 100
 --- !u!1 &8471222013267634079

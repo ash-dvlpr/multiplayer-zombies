@@ -4,10 +4,19 @@ using UnityEngine;
 using static GameManager;
 
 
+public enum LobbyType : byte {
+    None         = 0,
+    SinglePlayer = 1,
+    MultiPlayer  = 2,
+}
+
+
 /// <summary>
 /// Generic GameLobby abstraction that provides an easy way to generalize server/client code.
 /// </summary>
 public abstract class ALobby {
+    public abstract LobbyType Type { get; }
+
     /// <summary>
     /// Used to prepare Lobby and/or show the Lobby Menu.
     /// </summary>

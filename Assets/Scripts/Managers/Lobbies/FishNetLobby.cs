@@ -8,12 +8,6 @@ using FishNet.Transporting;
 using FishNet.Transporting.Multipass;
 using FishNet.Managing.Server;
 
-public enum LobbyType : byte {
-    None         = 0,
-    SinglePlayer = 1,
-    MultiPlayer  = 2,
-}
-
 public enum ClientType : byte {
     None   = 0,
     Host   = 1,
@@ -21,8 +15,6 @@ public enum ClientType : byte {
 }
 
 public abstract class FishNetLobby<T> : ALobby where T : Transport {
-
-    public abstract LobbyType Type { get; }
     public LocalConnectionState ServerState { get; protected set; } = LocalConnectionState.Stopped;
     public LocalConnectionState ClientState { get; protected set; } = LocalConnectionState.Stopped;
 

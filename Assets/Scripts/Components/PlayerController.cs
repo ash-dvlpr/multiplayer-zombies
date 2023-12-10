@@ -25,7 +25,7 @@ public class PlayerController : NetworkBehaviour {
     [SyncVar] bool _canShoot = false;
     bool _canMove = false;
     public bool CanMove {
-        get => base.IsOwner && GameManager.IsPlaying && _canMove && !GameManager.IsPaused;
+        get => base.IsOwner && GameManager.IsPlaying && _canMove && !GameManager.ClientInPauseMenu;
         private set => _canMove = value;
     }
     public bool CanShoot { get => _canShoot; private set => _canShoot = value; }

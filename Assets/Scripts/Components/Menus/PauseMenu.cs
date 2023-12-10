@@ -10,11 +10,15 @@ public class PauseMenu : AMenu {
     // TODO: when pause menu open, lock user input
 
     public override void OpenMenu() {
-        GameManager.IsPaused = true;
+        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 0f;
+
+        GameManager.ClientInPauseMenu = true;
         base.OpenMenu();
     }
     public override void CloseMenu() {
-        GameManager.IsPaused = false;
+        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 1f;
+
+        GameManager.ClientInPauseMenu = false;
         base.CloseMenu();
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
     public static bool ApplicationIsQuitting { get; private set; } = false;
-    public static bool IsPaused = false;
+    public static bool ClientInPauseMenu = false;
 
     public const string SCENE_ID_MAIN = "SC_MainScene";
     public const string SCENE_ID_CITY = "SC_City";
@@ -74,12 +74,8 @@ public class GameManager : MonoBehaviour {
     }
 
     private GameState HandleTo_MainMenu() {
-        // TODO: Coming back from the game
         if (null != lobby) {
-            //lobby.LeaveLobby();
             lobby.CloseLobby();
-
-            //NetSceneManager.Instance.UnloadCityScene(true);
         }
 
         MenuManager.OpenMenu(MenuID.Main);
@@ -149,6 +145,7 @@ public class GameManager : MonoBehaviour {
 
     // ================== Outside Facing API ==================
     public static GameState CurrentState { get => Instance?.state ?? GameState.None; }
+    public static LobbyType LobbyType { get => Instance?.lobby?.Type ?? LobbyType.None; }
     public static bool IsPlaying {
         get => GameState.InGame == CurrentState || GameState.GameOver == CurrentState;
     }

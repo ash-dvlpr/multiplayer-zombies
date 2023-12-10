@@ -933,6 +933,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916a4fa95bfa6504496aa6fa9a808c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2129452332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2129452334}
+  - component: {fileID: 2129452333}
+  m_Layer: 0
+  m_Name: SettingsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2129452333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129452332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddb76e5521f0df14fbd0f36194d1d356, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2129452334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129452332}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 495.53116, y: 296.48468, z: 1.461967}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &2141376074 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2913302873625971525, guid: 6c819bb429975554ca9194435e2da3ca,
@@ -1070,11 +1114,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerGUICanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 2473120592916939459, guid: 3b5d79e0f91a63447981a598a948b973,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3414388834844115456, guid: 3b5d79e0f91a63447981a598a948b973,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1174,16 +1213,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4192475787206567363, guid: 3b5d79e0f91a63447981a598a948b973,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4192475787206567363, guid: 3b5d79e0f91a63447981a598a948b973,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1555,6 +1584,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1983851937}
+  - {fileID: 2129452334}
   - {fileID: 529225169}
   - {fileID: 1497007552}
   - {fileID: 808612316}

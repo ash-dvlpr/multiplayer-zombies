@@ -12,7 +12,7 @@ public class MultiPlayerLobby : FishNetLobby<Tugboat> {
     // TODO: When hosting store lobby code and show in GUI
 
     // ===================== Custom Code =====================
-    
+
     public override GameState PrepareLobby() {
         base.PrepareLobby(); // Ignore return type
         

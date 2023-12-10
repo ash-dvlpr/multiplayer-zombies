@@ -7,6 +7,17 @@ public class PlayerUI : AMenu {
 
     // ====================== References =====================
     [field: SerializeField] public ResourceBar Bar { get; private set; }
+    [SerializeField] GameObject onScreenControls;
+
+#if UNITY_ANDROID || UNITY_IOS
+    private void Awake() {
+        UpdateOnScreenControlls();
+    }
+
+    public void UpdateOnScreenControlls() {
+        onScreenControls.SetActive(SettingsManager.OnScreenController);
+    }
+#endif
 
     // ===================== Custom Code =====================
     // TODO: if singleplayer, pause the game when opening the pause menu 
