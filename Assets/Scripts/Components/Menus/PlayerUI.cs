@@ -17,6 +17,7 @@ public class PlayerUI : AMenu {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         base.OpenMenu();
+        Bar.Refresh();
     }
     public override void CloseMenu() { 
         // Unlock Mouse

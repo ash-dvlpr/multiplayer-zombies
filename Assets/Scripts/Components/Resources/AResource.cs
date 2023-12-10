@@ -40,23 +40,27 @@ public abstract class AResource : NetworkBehaviour {
     }
 
     protected virtual void TriggerOnChange(int prev, int next, bool asServer) {
-        Debug.Log($"asServer: {asServer}");
         onChange?.Invoke(this);
     }
 
+    // ======================= NetCode ========================
+    public override void OnStartServer() {
+        base.OnStartServer();
+        Reset();
+    }
+
     // ====================== Unity Code ======================
-#if UNITY_EDITOR
     protected override void OnValidate() {
+#if UNITY_EDITOR
         base.OnValidate();
-        Max = Math.Max(1, Max);
 
         if (!Application.isPlaying) Reset();
-        //else Amount = Amount;
-    }
 #endif
+    }
 
     protected override void Reset() {
-        base.OnValidate();
+        Max = Math.Max(1, Max);
+
         switch (ResType) {
             case ResourceType.Scarse:
                 Amount = 0; break;
@@ -65,10 +69,6 @@ public abstract class AResource : NetworkBehaviour {
             default:
                 throw new NotImplementedException($"'Resource.Reset()': Missing implementation for enum variant: '{ResType}'");
         }
-    }
-
-    protected virtual void Awake() {
-        Reset();
     }
 
     // ================== Outside Facing API ==================

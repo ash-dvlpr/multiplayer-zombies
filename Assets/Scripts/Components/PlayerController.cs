@@ -25,7 +25,7 @@ public class PlayerController : NetworkBehaviour {
     [SyncVar] bool _canShoot = false;
     bool _canMove = false;
     public bool CanMove {
-        get => IsOwner && GameManager.IsPlaying && _canMove && !GameManager.IsPaused;
+        get => base.IsOwner && GameManager.IsPlaying && _canMove && !GameManager.IsPaused;
         private set => _canMove = value;
     }
     public bool CanShoot { get => _canShoot; private set => _canShoot = value; }
@@ -43,7 +43,7 @@ public class PlayerController : NetworkBehaviour {
     public override void OnStartClient() {
         base.OnStartClient();
 
-        if (IsOwner) {
+        if (base.IsOwner) {
             _canMove = _canShoot = GameManager.IsPlaying;
             hpBar.SwapTrackedResource(health);
         }
@@ -91,18 +91,10 @@ public class PlayerController : NetworkBehaviour {
         //Destroy(this, timeBeforeCorpseRemoval);
     }
 
+    [Client]
     void ShootHandler(InputAction.CallbackContext ctx) {
         if (CanMove && CanShoot) {
             StartCoroutine(ApplyShootingDelay());
-        }
-    }
-
-    [ServerRpc]
-    void Shoot(Vector3 cameraPosition, Vector3 direction) {
-        // TODO: consume ammo
-        if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
-            var hitHp = hit.transform.GetComponent<Health>();
-            hitHp?.Damage(shotDamage);
         }
     }
 
@@ -120,5 +112,14 @@ public class PlayerController : NetworkBehaviour {
         }
 
         CanShoot = true;
+    }
+
+    [ServerRpc]
+    void Shoot(Vector3 cameraPosition, Vector3 direction) {
+        // TODO: consume ammo
+        if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
+            var hitHp = hit.transform.GetComponent<Health>();
+            hitHp?.Damage(shotDamage);
+        }
     }
 }

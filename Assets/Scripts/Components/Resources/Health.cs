@@ -13,10 +13,7 @@ public class Health : AResource {
         get => (Amount > 0);
     }
 
-    // ====================== Unity Code ======================
-    protected override void Awake() {
-        base.Awake();
-    }
+    // ======================= NetCode ========================
 
     // ===================== Custom Code =====================
     //[ServerRpc(RequireOwnership = false)]
@@ -28,7 +25,6 @@ public class Health : AResource {
     //[ServerRpc(RequireOwnership = false)]
     [Server]
     public void Damage(int amount) {
-        Debug.Log($"Got hit for {amount} -> now got {Amount} hp");
         Amount -= Math.Max(0, amount);
     }
 

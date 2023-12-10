@@ -1,3 +1,4 @@
+using MonoFN.Cecil;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -45,23 +46,30 @@ public class ResourceBar : MonoBehaviour {
     }
 
     // ===================== Custom Code =====================
+    void OnResourceChanged(AResource resource) => UpdateGUI();
     void ReloadBar() {
         if (displayText) displayText.enabled = showValues;
 
         border.color = borderColor;
         background.color = backgroundColor;
         bar.color = barColor;
+
+        UpdateGUI();
     }
 
-    void OnResourceChanged(AResource resource) {
-        var percent = resource.Amount / (float) resource.Max;
-        barSlider.value = percent;
-        if (showValues && displayText.enabled) {
-            displayText.text = $"{resource.Amount} / {resource.Max}";
+    void UpdateGUI() {
+        if (barSlider && trackedResource) { 
+            var percent = trackedResource.Amount / (float) trackedResource.Max;
+            barSlider.value = percent;
+            if (showValues && displayText.enabled) {
+                displayText.text = $"{trackedResource.Amount} / {trackedResource.Max}";
+            }
         }
     }
 
     // ================== Outside Facing API ==================
+    public void Refresh() => UpdateGUI();
+
     public void SwapTrackedResource(AResource newResource) {
         if (trackedResource) trackedResource.OnChange -= OnResourceChanged;
         trackedResource = newResource;

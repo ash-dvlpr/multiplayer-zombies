@@ -34,17 +34,16 @@ public class PlayerMovement : NetworkBehaviour {
     bool _isGrounded;
 
     // ======================= NetCode ========================
-    public override void OnStartClient() { 
-        base.OnStartClient();
-        if (!IsOwner) enabled = false;
-    }
-
-    // ====================== Unity Code ======================
-    void Awake() {
+    public override void OnStartNetwork() {
         characterController = GetComponent<CharacterController>();
         controller = GetComponent<PlayerController>();
     }
+    
+    public override void OnStartClient() { 
+        base.OnStartClient();
+    }
 
+    // ====================== Unity Code ======================
     void OnDrawGizmosSelected() {
         var feetPos = transform.position;
         feetPos.y -= characterController ? characterController.height / 2 : 0;
@@ -52,6 +51,7 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     void Update() {
+        if (!IsOwner) return;
         if (controller.CanMove) {
             UpdateState();
 
