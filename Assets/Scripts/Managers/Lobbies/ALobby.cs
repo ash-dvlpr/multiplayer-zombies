@@ -25,6 +25,11 @@ public abstract class ALobby {
     public abstract void JoinLobby();
 
     /// <summary>
+    /// Used to disconnect from the Lobby.
+    /// </summary>
+    //public abstract void LeaveLobby();
+
+    /// <summary>
     /// Used to start the game once the lobby is ready.
     /// </summary
     public abstract GameState StartGame();

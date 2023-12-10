@@ -76,8 +76,10 @@ public class GameManager : MonoBehaviour {
     private GameState HandleTo_MainMenu() {
         // TODO: Coming back from the game
         if (null != lobby) {
-            // TODO: Close and Clean up Lobby
+            //lobby.LeaveLobby();
             lobby.CloseLobby();
+
+            //NetSceneManager.Instance.UnloadCityScene(true);
         }
 
         MenuManager.OpenMenu(MenuID.Main);

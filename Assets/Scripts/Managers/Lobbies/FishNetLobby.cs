@@ -52,8 +52,8 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
         serverTransport.StartConnection(true);
     }
     protected virtual void StopServer() {
-        networkManager.ServerManager.OnServerConnectionState -= OnServerConnectionState;
         serverTransport.StopConnection(true);
+        networkManager.ServerManager.OnServerConnectionState -= OnServerConnectionState;
     }
 
     protected virtual void ConnectClient() {
@@ -67,6 +67,7 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
 
     private void OnClientConnectionState(ClientConnectionStateArgs obj) {
         ClientState = obj.ConnectionState;
+        //Debug.Log($"C: {ClientState}");
 
         // Exit the lobby
         if (LocalConnectionState.Stopped == ClientState) {
@@ -75,11 +76,14 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
     }
     private void OnServerConnectionState(ServerConnectionStateArgs obj) {
         ServerState = obj.ConnectionState;
+        //Debug.Log($"S: {ServerState}");
 
         // Join the lobby
-        if (ClientType.Host == clientType && LocalConnectionState.Started == ServerState) { 
-            NetSceneManager.Instance.LoadCityScene();
-            JoinLobby();
+        if (ClientType.Host == clientType) { 
+            if (LocalConnectionState.Started == ServerState) {
+                NetSceneManager.Instance.LoadCityScene();
+                JoinLobby();
+            }
         }
     }
 
@@ -88,8 +92,6 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
         networkManager = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
         multipass = networkManager.TransportManager.GetTransport<Multipass>();
         ConfigTransports();
-
-        
 
         return GameState.InLobby;
     }
@@ -104,10 +106,15 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
     }
 
     public override void CloseLobby() {
-        NetSceneManager.Instance.UnloadCityScene();
-
-        DisconnectClient();
-        if (ClientType.Host == clientType) StopServer();
+        if (ClientType.Host == clientType) {
+            NetSceneManager.Instance.UnloadCityScene();
+            DisconnectClient();
+            StopServer();
+        }
+        else { 
+            DisconnectClient();
+            NetSceneManager.Instance.UnloadCityScene(true);
+        }
     }
 
     public override GameState StartGame() {
