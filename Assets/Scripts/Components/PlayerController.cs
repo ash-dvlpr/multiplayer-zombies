@@ -101,15 +101,20 @@ public class PlayerController : NetworkBehaviour {
 
     // ===================== Custom Code =====================
     void RoundStart() {
-        CanMove = true;
-        CanShoot = true;
-        // TODO: Round start message
         Debug.Log("Round Started");
+        if (base.IsServer) { 
+            CanMove = true;
+            CanShoot = true;
+        }
+
+        // TODO: Round start message
     }
     void RoundEnd() {
-        CanMove = false;
-        CanShoot = false;
         Debug.Log("Round Ended");
+        if (base.IsServer) {
+            CanMove = false;
+            CanShoot = false;
+        }
     }
     void OnDeath() {
         Debug.Log("Player died");

@@ -8,6 +8,7 @@ using UnityEngine.AI;
 using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using FishNet.Component.Animating;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class EnemyController : NetworkBehaviour {
@@ -24,6 +25,7 @@ public class EnemyController : NetworkBehaviour {
 
     NavMeshAgent agent;
     Animator animator;
+    NetworkAnimator netAnimator;
     Health health;
 
     // ====================== Variables ======================
@@ -55,6 +57,7 @@ public class EnemyController : NetworkBehaviour {
     void Awake() {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
+        netAnimator = GetComponentInChildren<NetworkAnimator>();
         health = GetComponent<Health>();
     }
 
@@ -65,6 +68,7 @@ public class EnemyController : NetworkBehaviour {
     void OnDisable() {
         health.OnDeath -= OnDeath;
     }
+
     void Update() {
         if (health.IsAlive && _target) {
             var target = _attacking ? this.transform.position : _target.position;
@@ -80,11 +84,13 @@ public class EnemyController : NetworkBehaviour {
     void OnTriggerEnter(Collider other) {
         if (health.IsAlive && !_attacking && other.CompareTag("Player")) {
             StartCoroutine(AttackDelay());
-            animator.SetTrigger(AnimatorID.triggerAttack);
-            Attack(other.transform);
+            netAnimator.SetTrigger(AnimatorID.triggerAttack);
+            if (base.IsServer) Attack(other.transform);
         }
     }
 
+
+    // ===================== Custom Code =====================
     void OnDeath() {
         if (IsServer) StopAllCoroutines();
 
@@ -95,31 +101,13 @@ public class EnemyController : NetworkBehaviour {
         if (base.IsServer) StartCoroutine(DelayCorposeRemoval());
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Server]
     void Attack(Transform other) {
         var hitHp = other.GetComponent<Health>();
         hitHp?.Damage(attackDamage);
     }
 
-    // ===================== Custom Code =====================
-    /* TODO: config
-     * - Serializable Transform for attack position + radious
-     * - Draw Attack range gizmo
-     * 
-     * TODO: attack rework
-     * - If round has started, start coroutine to replace the target objective every couple seconds
-     * - Then, on Update, chech distance to target, and if target on attac range, trigger an attack.
-     */
-
-    //void Attack() {
-    //    if (!_attacking) {
-    //        Physics.OverlapSphere();
-    //        // if player in range, continue attacking
-    //        AttackDelay();
-
-    //        // TODO: damage
-    //    }
-    //}
+    [Server]
     IEnumerator SearchTargets() {
         while (true) { 
             ChangeTarget();
@@ -172,4 +160,22 @@ public class EnemyController : NetworkBehaviour {
     public void ChangeTarget(Transform newTarget) {
         _target = newTarget;
     }
+
+    /* TODO: config
+     * - Serializable Transform for attack position + radious
+     * - Draw Attack range gizmo
+     * 
+     * TODO: attack rework
+     * - If round has started, start coroutine to replace the target objective every couple seconds
+     * - Then, on Update, chech distance to target, and if target on attac range, trigger an attack.
+     */
+
+    //void Attack() {
+    //    if (!_attacking) {
+    //        Physics.OverlapSphere();
+    //        // if player in range, continue attacking
+    //        AttackDelay();
+    //        // TODO: damage
+    //    }
+    //}
 }

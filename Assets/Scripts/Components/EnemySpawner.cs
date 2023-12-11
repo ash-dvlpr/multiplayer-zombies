@@ -21,10 +21,12 @@ public class EnemySpawner : NetworkBehaviour {
 
     [SyncObject]
     public readonly SyncList<EnemyController> Enemies = new();
-    [SyncVar(OnChange = nameof(Round_OnChange))] int _round;
-    bool _roundTriggered;
-
+    
+    
     public int Round { get => _round; }
+    [SyncVar(OnChange = nameof(Round_OnChange))] int _round;
+
+    bool _roundTriggered;
 
     // ======================= NetCode ========================
     public override void OnStartServer() {
@@ -53,6 +55,9 @@ public class EnemySpawner : NetworkBehaviour {
 
     public void Round_OnChange(int prev, int next, bool asServer) {
         // Round changed
+        if (base.IsClient) { 
+        
+        }
     }
 
     [Server]
