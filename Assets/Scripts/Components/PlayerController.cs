@@ -30,6 +30,8 @@ public class PlayerController : NetworkBehaviour {
     }
     public bool CanShoot { get => _canShoot; private set => _canShoot = value; }
 
+    public Health PlayerHealth { get => health; }
+
     // ====================== References =====================
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] Weapon weapon;
@@ -40,6 +42,21 @@ public class PlayerController : NetworkBehaviour {
     Health health;
 
     // ======================= NetCode ========================
+    public override void OnStartServer() { 
+        base.OnStartServer(); 
+
+        // Register player on the enemy spawner
+        EnemySpawner.Instance?.Players.Add(this);
+    }
+
+    public override void OnStopServer() { 
+        base.OnStartServer(); 
+
+        // Deregister player on the enemy spawner
+        EnemySpawner.Instance?.Players.Remove(this);
+    }
+
+
     public override void OnStartClient() {
         base.OnStartClient();
 

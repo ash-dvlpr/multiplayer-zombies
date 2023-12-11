@@ -1,8 +1,11 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+
+using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 
@@ -14,9 +17,11 @@ public class EnemyController : NetworkBehaviour {
     [SerializeField] int attackDamage = 10;
 
     [Header("Death")]
-    [SerializeField] float timeBeforeCorpseRemoval = 4f;
+    [SerializeField] float timeBeforeCorpseRemoval = 3f;
 
     // ====================== References =====================
+    public Health EnemyHealth { get => health; }
+
     NavMeshAgent agent;
     Animator animator;
     Health health;
@@ -29,7 +34,22 @@ public class EnemyController : NetworkBehaviour {
     // ====================== Unity Code ======================
     public override void OnStartServer() {
         base.OnStartServer();
+
+        // Register enemy on the enemy spawner
+        EnemySpawner.Instance?.Enemies.Add(this);
+
+        // Start searching for targets
         StartCoroutine(SearchTargets());
+    }
+
+    public override void OnStopServer() { 
+        base.OnStopServer(); 
+
+        // Deregister enemy on the enemy spawner
+        EnemySpawner.Instance?.Enemies.Remove(this);
+
+        // Cleaup
+        StopAllCoroutines();
     }
 
     void Awake() {
@@ -63,6 +83,16 @@ public class EnemyController : NetworkBehaviour {
             animator.SetTrigger(AnimatorID.triggerAttack);
             Attack(other.transform);
         }
+    }
+
+    void OnDeath() {
+        if (IsServer) StopAllCoroutines();
+
+        animator.SetBool(AnimatorID.isRunning, false);
+        agent.destination = this.transform.position;
+        agent.isStopped = true;
+
+        if (base.IsServer) StartCoroutine(DelayCorposeRemoval());
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -104,42 +134,42 @@ public class EnemyController : NetworkBehaviour {
     }
 
     [Server]
+    IEnumerator DelayCorposeRemoval() {
+        yield return new WaitForSeconds(timeBeforeCorpseRemoval);
+        base.Despawn(this.gameObject);
+    }
+
+    [Server]
     private void ChangeTarget() {
-        // TODO: Get players from GameManager's cached player list
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        // Get players from EnemySpawner's cached player list
+        // And filter for alive players
+        var players = EnemySpawner.Instance?.Players.Where(
+            p => p.PlayerHealth.IsAlive
+        ).ToList();
+
+
         GameObject nearestPlayer = null;
+        if (players.Count > 0) { 
+            var shortestDistance = Mathf.Infinity;
 
-        // TODO: Skip if no alive players
-        var shortestDistance = Mathf.Infinity;
-
-        foreach (var p in players) {
-            var vDistance = p.transform.position - transform.position;
-            // We are just comparing distances, we don't need precision, so we can save up on a Mathf.Sqrt()
-            var distance = vDistance.sqrMagnitude;
+            foreach (var p in players) {
+                var vDistance = p.transform.position - transform.position;
+                // We are just comparing distances, we don't need precision, so we can save up on a Mathf.Sqrt()
+                var distance = vDistance.sqrMagnitude;
             
-            if (shortestDistance > distance) {
-                nearestPlayer = p;
-                shortestDistance = distance;
+                if (shortestDistance > distance) {
+                    nearestPlayer = p.gameObject;
+                    shortestDistance = distance;
+                }
             }
         }
 
-        if (nearestPlayer != null) {
-            _target= nearestPlayer.transform;
-        }
+        // If no targets found, stay in place
+        _target = nearestPlayer != null ? nearestPlayer.transform : this.transform;
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeTarget(Transform newTarget) {
         _target = newTarget;
-    }
-
-    void OnDeath() {
-        if (IsServer) StopAllCoroutines();
-
-        animator.SetBool(AnimatorID.isRunning, false);
-        agent.destination = this.transform.position;
-        agent.isStopped = true;
-
-        Destroy(this.gameObject, timeBeforeCorpseRemoval);
     }
 }

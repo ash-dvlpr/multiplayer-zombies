@@ -17,8 +17,6 @@ public class SettingsMenu : AMenu {
     }
     public override void CloseMenu() {
         base.CloseMenu();
-
-        // Handle Going back to the main menu or closing the menu depending 
     }
 
     // ====================== Unity Code ======================
