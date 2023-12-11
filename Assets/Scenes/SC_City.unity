@@ -1549,8 +1549,8 @@ MonoBehaviour:
   NetworkObserver: {fileID: 0}
   <PrefabId>k__BackingField: 0
   <SpawnableCollectionId>k__BackingField: 0
-  _scenePathHash: 857840854
-  <SceneId>k__BackingField: 3684398416510289238
+  _scenePathHash: 3820546922
+  <SceneId>k__BackingField: 16409124083053575044
   <AssetPathHash>k__BackingField: 0
 --- !u!1001 &1825303799
 PrefabInstance:
@@ -2382,18 +2382,28 @@ PrefabInstance:
     - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
         type: 3}
       propertyPath: _scenePathHash
-      value: 857840854
+      value: 3820546922
       objectReference: {fileID: 0}
     - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
         type: 3}
       propertyPath: <SceneId>k__BackingField
-      value: 3684398414757191557
+      value: 16409124085454816338
       objectReference: {fileID: 0}
     - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
         type: 3}
       propertyPath: <IsNested>k__BackingField
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
+        type: 3}
+      propertyPath: <ComponentIndex>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
+        type: 3}
+      propertyPath: <ParentNetworkObject>k__BackingField
+      value: 
+      objectReference: {fileID: 1810760187}
     - target: {fileID: 6788303286049567042, guid: e2b695d7512921245ab06fd7191ceeb6,
         type: 3}
       propertyPath: m_Name
