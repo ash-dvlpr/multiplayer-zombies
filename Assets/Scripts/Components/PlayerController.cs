@@ -67,8 +67,17 @@ public class PlayerController : NetworkBehaviour {
         else {
             virtualCamera.enabled = false;
         }
+
+        GameManager.Instance.OnRoundStart += RoundStart;
+        GameManager.Instance.OnRoundEnd += RoundEnd;
     }
 
+    public override void OnStopClient() {
+        base.OnStopClient();
+
+        GameManager.Instance.OnRoundStart -= RoundStart;
+        GameManager.Instance.OnRoundEnd += RoundEnd;
+    }
     // ====================== Unity Code ======================
     void Awake() {
         if (!virtualCamera) virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
@@ -82,15 +91,11 @@ public class PlayerController : NetworkBehaviour {
 
     void OnEnable() {
         health.OnDeath += OnDeath;
-        GameManager.Instance.OnRoundStart += RoundStart;
-        GameManager.Instance.OnRoundEnd += RoundEnd;
         InputManager.InGame_OnShoot += ShootHandler;
     }
 
     void OnDisable() {
         health.OnDeath -= OnDeath;
-        GameManager.Instance.OnRoundStart -= RoundStart;
-        GameManager.Instance.OnRoundEnd += RoundEnd;
         InputManager.InGame_OnShoot -= ShootHandler;
     }
 
@@ -98,9 +103,13 @@ public class PlayerController : NetworkBehaviour {
     void RoundStart() {
         CanMove = true;
         CanShoot = true;
+        // TODO: Round start message
+        Debug.Log("Round Started");
     }
     void RoundEnd() {
         CanMove = false;
+        CanShoot = false;
+        Debug.Log("Round Ended");
     }
     void OnDeath() {
         Debug.Log("Player died");

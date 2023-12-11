@@ -21,7 +21,7 @@ public class EnemySpawner : NetworkBehaviour {
 
     [SyncObject]
     public readonly SyncList<EnemyController> Enemies = new();
-    [SyncVar(OnChange = nameof(Round_OnChange))] int _round; 
+    [SyncVar(OnChange = nameof(Round_OnChange))] int _round;
     bool _roundTriggered;
 
     public int Round { get => _round; }
@@ -51,14 +51,14 @@ public class EnemySpawner : NetworkBehaviour {
         }
     }
 
-    public void Round_OnChange(int prev, int next, bool asServer) { 
+    public void Round_OnChange(int prev, int next, bool asServer) {
         // Round changed
     }
 
     [Server]
-    public void RestartGame() { 
+    public void RestartGame() {
         StopAllCoroutines();
-        _roundTriggered = false; 
+        _roundTriggered = false;
         _round = 0;
 
         StartCoroutine(RoundStartDelay());
@@ -66,10 +66,10 @@ public class EnemySpawner : NetworkBehaviour {
 
     [Server]
     public void StartRound() {
-        Debug.Log("S: Round Started");
         // Increase the round counter, then spawn round*2 enemies
         _round++;
-        for (int i = 0 ; i < _round*2 ; i++) {
+        CL_NotifyRoundStart();
+        for (int i = 0 ; i < _round * 2 ; i++) {
             SpawnEnemy();
         }
     }
@@ -77,10 +77,16 @@ public class EnemySpawner : NetworkBehaviour {
     [Server]
     public void EndRound() {
         _roundTriggered = false;
-        Debug.Log("S: Round Ended");
-        // TODO: trigger round end events
+        CL_NotifyRoundEnd();
         StartCoroutine(RoundStartDelay());
     }
+
+    [ObserversRpc]
+    void CL_NotifyRoundStart() => GameManager.Instance?.NotifyRoundStart();
+
+    [ObserversRpc]
+    void CL_NotifyRoundEnd() => GameManager.Instance?.NotifyRoundEnd();
+
 
     [Server]
     IEnumerator RoundStartDelay() {

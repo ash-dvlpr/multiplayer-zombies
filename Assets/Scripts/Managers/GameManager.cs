@@ -167,10 +167,6 @@ public class GameManager : MonoBehaviour {
         Instance?.TryChangeGameState(GameState.InGame, clientType: ClientType.Client);
     }
 
-    //public static void TryStartGame() {
-    //    Instance?.TryChangeGameState(GameState.InGame);
-    //}
-
     //? Exiting
     public static void ExitToTittleScreen() {
         Instance?.TryChangeGameState(GameState.MainMenu);
