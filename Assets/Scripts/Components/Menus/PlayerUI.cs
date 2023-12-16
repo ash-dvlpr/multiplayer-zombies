@@ -6,7 +6,9 @@ public class PlayerUI : AMenu {
     public override MenuID MenuKey { get => MenuID.PlayerUI; }
 
     // ====================== References =====================
-    [field: SerializeField] public ResourceBar Bar { get; private set; }
+    [field: SerializeField] public ResourceBar HPBar { get; private set; }
+    [field: SerializeField] public ResourceBar AmmoBar { get; private set; }
+    
     [SerializeField] GameObject onScreenControls;
 
 #if UNITY_ANDROID || UNITY_IOS
@@ -28,7 +30,7 @@ public class PlayerUI : AMenu {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         base.OpenMenu();
-        Bar.Refresh();
+        HPBar.Refresh();
     }
     public override void CloseMenu() { 
         // Unlock Mouse

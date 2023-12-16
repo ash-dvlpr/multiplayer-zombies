@@ -73,5 +73,6 @@ public class ResourceBar : MonoBehaviour {
         if (trackedResource) trackedResource.OnChange -= OnResourceChanged;
         trackedResource = newResource;
         trackedResource.OnChange += OnResourceChanged;
+        ReloadBar();
     }
 }

@@ -8,7 +8,7 @@ using FishNet.Object.Synchronizing;
 using FishNet.Connection;
 using FishNet.Component.Animating;
 
-[RequireComponent(typeof(PlayerMovement), typeof(Health))]
+[RequireComponent(typeof(PlayerMovement), typeof(Health), typeof(Ammo))]
 public class PlayerController : NetworkBehaviour {
     // ==================== Configuration ====================
     [Header("Shooting")]
@@ -28,9 +28,10 @@ public class PlayerController : NetworkBehaviour {
         get => base.IsOwner && GameManager.IsPlaying && _canMove && !GameManager.ClientInPauseMenu;
         private set => _canMove = value;
     }
-    public bool CanShoot { get => _canShoot; private set => _canShoot = value; }
+    public bool CanShoot { get => _canShoot && ammo.HasAmmo; private set => _canShoot = value; }
 
     public Health PlayerHealth { get => health; }
+    public Ammo PlayerAmmo { get => ammo; }
 
     // ====================== References =====================
     [SerializeField] CinemachineVirtualCamera virtualCamera;
@@ -39,7 +40,9 @@ public class PlayerController : NetworkBehaviour {
 
     PlayerUI playerUI;
     ResourceBar hpBar;
+    ResourceBar ammoBar;
     Health health;
+    Ammo ammo;
 
     // ======================= NetCode ========================
     public override void OnStartServer() { 
@@ -63,6 +66,7 @@ public class PlayerController : NetworkBehaviour {
         if (base.IsOwner) {
             _canMove = _canShoot = GameManager.IsPlaying;
             hpBar.SwapTrackedResource(health);
+            ammoBar.SwapTrackedResource(ammo);
         }
         else {
             virtualCamera.enabled = false;
@@ -85,8 +89,11 @@ public class PlayerController : NetworkBehaviour {
 
         //playerMovement = GetComponent<PlayerMovement>();
         health = GetComponent<Health>();
+        ammo = GetComponent<Ammo>();
+
         playerUI = (PlayerUI) MenuManager.Get(MenuID.PlayerUI);
-        hpBar = playerUI.Bar;
+        hpBar = playerUI.HPBar;
+        ammoBar = playerUI.AmmoBar;
     }
 
     void OnEnable() {
@@ -147,6 +154,7 @@ public class PlayerController : NetworkBehaviour {
 
     [ServerRpc]
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
+        ammo.Consume(1);
         // TODO: consume ammo
         if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
             var hitHp = hit.transform.GetComponent<Health>();
