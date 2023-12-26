@@ -175,4 +175,10 @@ public class GameManager : MonoBehaviour {
     public static void CloseGame() {
         Application.Quit();
     }
+
+    public static void GlobalStartCorroutine(IEnumerator routine) {
+        if (Instance) {
+            Instance.StartCoroutine(routine);
+        }
+    }
 }

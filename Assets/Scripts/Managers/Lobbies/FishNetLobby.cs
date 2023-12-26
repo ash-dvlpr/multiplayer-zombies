@@ -19,9 +19,9 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
     public LocalConnectionState ClientState { get; protected set; } = LocalConnectionState.Stopped;
 
     // ====================== Variables ======================
-    private NetworkManager networkManager;
     private Multipass multipass;
-    private Transport serverTransport;
+    protected NetworkManager networkManager;
+    protected Transport serverTransport;
     protected ClientType clientType;
 
     // ==================== Configuration ====================
