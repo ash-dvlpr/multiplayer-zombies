@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -52,6 +53,10 @@ public class PauseMenu : AMenu {
     }
 
     // ===================== UI Actions ======================
+    public void OnClick_CopyCode() {
+        GUIUtility.systemCopyBuffer = roomCodeDisplay.text;
+        Debug.Log($"Code copied to clipboard: {GUIUtility.systemCopyBuffer}");
+    }
     public void OnClick_Resume() {
         MenuManager.OpenMenu(MenuID.PlayerUI);
     }
