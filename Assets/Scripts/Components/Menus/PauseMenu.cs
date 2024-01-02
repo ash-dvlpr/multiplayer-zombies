@@ -10,8 +10,6 @@ public class PauseMenu : AMenu {
     [SerializeField] TMP_Text roomCodeDisplay;
 
     // ===================== Custom Code =====================
-    // TODO: if singleplayer, pause the game when opening the pause menu 
-    // TODO: when pause menu open, lock user input
 
     public override void OpenMenu() {
         GameManager.ClientInPauseMenu = true;

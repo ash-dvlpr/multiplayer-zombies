@@ -155,7 +155,6 @@ public class PlayerController : NetworkBehaviour {
     [ServerRpc]
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
         ammo.Consume(1);
-        // TODO: consume ammo
         if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
             var hitHp = hit.transform.GetComponent<Health>();
             hitHp?.Damage(shotDamage);

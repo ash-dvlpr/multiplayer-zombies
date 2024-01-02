@@ -22,8 +22,6 @@ public class PlayerUI : AMenu {
 #endif
 
     // ===================== Custom Code =====================
-    // TODO: if singleplayer, pause the game when opening the pause menu 
-    // TODO: when pause menu open, lock user input
 
     public override void OpenMenu() { 
         // Lock Mouse

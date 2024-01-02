@@ -25,7 +25,6 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
     bool utpInit = false;
 
     public string LobbyCode { get; private set; } = "";
-    // TODO: When hosting store lobby code and show in GUI
 
     // ===================== Custom Code =====================
     protected override void StartServer() {
