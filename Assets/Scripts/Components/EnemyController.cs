@@ -136,6 +136,7 @@ public class EnemyController : NetworkBehaviour {
         ).ToList();
 
 
+
         GameObject nearestPlayer = null;
         if (players.Count > 0) { 
             var shortestDistance = Mathf.Infinity;

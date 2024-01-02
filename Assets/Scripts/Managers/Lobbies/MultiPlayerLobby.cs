@@ -41,7 +41,6 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
 
     protected override void ConnectClient() {
         // Extract the lobby code if we are joining another lobby
-        Debug.Log($"LobbyCode before join: {LobbyCode}");
         Debug.Log($"Lobby Type: {clientType}");
         if (ClientType.Client == clientType) {
             var code = ( (LobbyMenu) MenuManager.Get(MenuID.Lobby) ).LobbyCodeFieldText;
@@ -49,8 +48,6 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
             if (null != code.NullIfEmpty()) { 
                 LobbyCode = code;
             }
-            //97BWCJ
-            Debug.Log($"LobbyCode after join attempt: {LobbyCode}");
         }
 
         WaitForTaskRoutine(CreateUTPCientAllocation(LobbyCode), base.ConnectClient);
@@ -105,7 +102,6 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
     private IEnumerator WaitForTask(Task task, Action actionAfterWait = null) {
         //var task = asyncMethod?.Invoke();
         yield return new WaitUntil(() => task.IsCompleted);
-        Debug.Log("[][][][][][] task completed");
         actionAfterWait?.Invoke();
     }
 }

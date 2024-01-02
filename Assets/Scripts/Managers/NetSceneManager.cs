@@ -4,6 +4,7 @@ using UnityEngine;
 using FishNet;
 using FishNet.Managing.Scened;
 using UnityEngine.SceneManagement;
+using System;
 
 public class NetSceneManager : MonoBehaviour {
     public static NetSceneManager Instance { get; private set; }
@@ -33,7 +34,11 @@ public class NetSceneManager : MonoBehaviour {
         if (!IsServer && !@override) return;
 
         if (@override) {
-            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneName);
+            try { 
+                UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(sceneName);
+            } catch (ArgumentException e) {
+                Debug.LogWarning($"NetSceneManager.UnloadScene({sceneName}, {@override}): {e}");
+            }
         }
         else {
             SceneUnloadData sud = new SceneUnloadData(sceneName);
