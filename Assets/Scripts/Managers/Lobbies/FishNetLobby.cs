@@ -94,6 +94,7 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
     }
 
     public override void JoinLobby() {
+        if (ClientType.None == clientType) clientType = ClientType.Client; 
         ConnectClient();
     }
 

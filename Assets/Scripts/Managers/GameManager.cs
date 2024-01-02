@@ -146,6 +146,7 @@ public class GameManager : MonoBehaviour {
     // ================== Outside Facing API ==================
     public static GameState CurrentState { get => Instance?.state ?? GameState.None; }
     public static LobbyType LobbyType { get => Instance?.lobby?.Type ?? LobbyType.None; }
+    public static ALobby GetLobby { get => Instance?.lobby; }
     public static bool IsPlaying {
         get => GameState.InGame == CurrentState || GameState.GameOver == CurrentState;
     }

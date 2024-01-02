@@ -1,25 +1,56 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PauseMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Pause; }
+
+    [SerializeField] GameObject roomCodePanel;
+    [SerializeField] TMP_Text roomCodeDisplay;
 
     // ===================== Custom Code =====================
     // TODO: if singleplayer, pause the game when opening the pause menu 
     // TODO: when pause menu open, lock user input
 
     public override void OpenMenu() {
-        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 0f;
-
         GameManager.ClientInPauseMenu = true;
+
+        PauseGame();
+        UpdateRoomCode();
         base.OpenMenu();
     }
     public override void CloseMenu() {
-        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 1f;
-
         GameManager.ClientInPauseMenu = false;
+
+        UnpauseGame();
+        ClearRoomCode();
         base.CloseMenu();
+    }
+
+    // ===================== Custom Code =====================
+    private void UpdateRoomCode() {
+        if (LobbyType.MultiPlayer == GameManager.LobbyType) { 
+            // Set lobby code text
+            var lobby = (MultiPlayerLobby) GameManager.GetLobby;
+            roomCodeDisplay.text = $"{lobby.LobbyCode}";
+
+            roomCodePanel.SetActive(true);
+        } else {
+            ClearRoomCode();
+        }
+    }
+    
+    private void ClearRoomCode() { 
+        roomCodePanel.SetActive(false);
+    }
+
+    private void PauseGame() { 
+        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 0f;
+    }
+    
+    private void UnpauseGame() { 
+        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 1f;
     }
 
     // ===================== UI Actions ======================

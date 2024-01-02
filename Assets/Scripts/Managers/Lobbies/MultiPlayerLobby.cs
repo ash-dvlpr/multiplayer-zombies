@@ -12,6 +12,7 @@ using Unity.Services.Relay.Models;
 using Unity.Networking.Transport.Relay;
 using Unity.Services.Relay;
 using System;
+using Unity.VisualScripting;
 
 public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
     public override LobbyType Type { get => LobbyType.MultiPlayer; }
@@ -23,34 +24,44 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
 
     bool utpInit = false;
 
-    public string lobbyCode { get; private set; } = "";
+    public string LobbyCode { get; private set; } = "";
     // TODO: When hosting store lobby code and show in GUI
 
     // ===================== Custom Code =====================
     protected override void StartServer() {
         // TODO: Hardcoded value
-        WaitForTastRoutine(CreateUTPHostAllocation(4), base.StartServer);
+        WaitForTaskRoutine(CreateUTPHostAllocation(4), base.StartServer);
     }
     private async Task CreateUTPHostAllocation(int maxPlayers) {
         hostAllocation = await RelayService.Instance.CreateAllocationAsync(maxConnections: maxPlayers);
 
         utp.SetRelayServerData(new RelayServerData(hostAllocation, "dtls"));
 
-        lobbyCode = await RelayService.Instance.GetJoinCodeAsync(hostAllocation.AllocationId);
+        LobbyCode = await RelayService.Instance.GetJoinCodeAsync(hostAllocation.AllocationId);
     }
 
     protected override void ConnectClient() {
-        // TODO: clients get join code from text field
-        // if (_roomIdField.text.Trim() != "") {
-        // }
-        WaitForTastRoutine(CreateUTPCientAllocation(lobbyCode), base.ConnectClient);
+        // Extract the lobby code if we are joining another lobby
+        Debug.Log($"LobbyCode before join: {LobbyCode}");
+        Debug.Log($"Lobby Type: {clientType}");
+        if (ClientType.Client == clientType) {
+            var code = ( (LobbyMenu) MenuManager.Get(MenuID.Lobby) ).LobbyCodeFieldText;
+            // If a code was supplied
+            if (null != code.NullIfEmpty()) { 
+                LobbyCode = code;
+            }
+            //97BWCJ
+            Debug.Log($"LobbyCode after join attempt: {LobbyCode}");
+        }
+
+        WaitForTaskRoutine(CreateUTPCientAllocation(LobbyCode), base.ConnectClient);
     }
-    private async Task CreateUTPCientAllocation(string lobbyCode = null) {
+    private async Task CreateUTPCientAllocation(string lobbyCode) {
         // Clients make a new allocation, hosts use their own host allocation
         if (ClientType.Host == clientType) {
             utp.SetRelayServerData(new RelayServerData(hostAllocation, "dtls"));
         }
-        else { 
+        else if (ClientType.Client == clientType) { 
             clientAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode: lobbyCode);
             utp.SetRelayServerData(new RelayServerData(clientAllocation, "dtls"));
         }
@@ -63,7 +74,7 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
         utp = (FishyUnityTransport) serverTransport;
 
         // TODO: Enable buttons if unity services initialized
-        WaitForTastRoutine(InitUnityServices());
+        WaitForTaskRoutine(InitUnityServices());
 
         // Show Lobby UI
         MenuManager.OpenMenu(MenuID.Lobby);
@@ -88,7 +99,7 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
         throw new System.NotImplementedException();
     }
 
-    private void WaitForTastRoutine(Task task, Action actionAfterWait = null) {
+    private void WaitForTaskRoutine(Task task, Action actionAfterWait = null) {
         GlobalStartCorroutine(WaitForTask(task, actionAfterWait));
     }
 
