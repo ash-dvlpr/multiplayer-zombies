@@ -9,6 +9,7 @@ using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Component.Animating;
+using System.IO;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class EnemyController : NetworkBehaviour {
@@ -30,6 +31,7 @@ public class EnemyController : NetworkBehaviour {
 
     // ====================== Variables ======================
     [SyncVar] Transform _target;
+    //NavMeshPath path;
     bool _attacking = false;
 
 
@@ -44,8 +46,8 @@ public class EnemyController : NetworkBehaviour {
         StartCoroutine(SearchTargets());
     }
 
-    public override void OnStopServer() { 
-        base.OnStopServer(); 
+    public override void OnStopServer() {
+        base.OnStopServer();
 
         // Deregister enemy on the enemy spawner
         EnemySpawner.Instance?.Enemies.Remove(this);
@@ -70,7 +72,12 @@ public class EnemyController : NetworkBehaviour {
     }
 
     void Update() {
-        if (health.IsAlive && _target) {
+        if (
+            // Is alive and has a target
+            health.IsAlive && null != _target 
+            // and singleplayer player has not paused the game
+            && !(GameManager.ClientInPauseMenu && LobbyType.SinglePlayer == GameManager.LobbyType)
+        ) {
             var target = _attacking ? this.transform.position : _target.position;
             if (null != target) {
                 agent.destination = target;
@@ -92,7 +99,7 @@ public class EnemyController : NetworkBehaviour {
 
     // ===================== Custom Code =====================
     void OnDeath() {
-        if (IsServer) StopAllCoroutines();
+        if (base.IsServer) StopAllCoroutines();
 
         animator.SetBool(AnimatorID.isRunning, false);
         agent.destination = this.transform.position;
@@ -109,7 +116,7 @@ public class EnemyController : NetworkBehaviour {
 
     [Server]
     IEnumerator SearchTargets() {
-        while (true) { 
+        while (true) {
             ChangeTarget();
             yield return new WaitForSeconds(1f);
         }
@@ -135,23 +142,31 @@ public class EnemyController : NetworkBehaviour {
             p => p.PlayerHealth.IsAlive
         ).ToList();
 
-
-
         GameObject nearestPlayer = null;
-        if (players.Count > 0) { 
+        if (players.Count > 0) {
             var shortestDistance = Mathf.Infinity;
+            //nearestPlayer = players.First().gameObject;
 
             foreach (var p in players) {
                 var vDistance = p.transform.position - transform.position;
                 // We are just comparing distances, we don't need precision, so we can save up on a Mathf.Sqrt()
                 var distance = vDistance.sqrMagnitude;
-            
+
+                // Check if that player is reachable
+                var path = new NavMeshPath();
+                agent.CalculatePath(p.transform.position, path);
+
+                // Skip unreachable targets
+                if (NavMeshPathStatus.PathComplete != path.status) continue;
+
                 if (shortestDistance > distance) {
                     nearestPlayer = p.gameObject;
                     shortestDistance = distance;
                 }
             }
         }
+
+        Debug.Log($"Nearest Player: {nearestPlayer}");
 
         // If no targets found, stay in place
         _target = nearestPlayer != null ? nearestPlayer.transform : this.transform;
