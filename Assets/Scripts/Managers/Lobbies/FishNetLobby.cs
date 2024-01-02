@@ -59,7 +59,6 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
 
     private void OnClientConnectionState(ClientConnectionStateArgs obj) {
         ClientState = obj.ConnectionState;
-        //Debug.Log($"C: {ClientState}");
 
         // Exit the lobby
         if (LocalConnectionState.Stopped == ClientState) {
@@ -68,7 +67,6 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
     }
     private void OnServerConnectionState(ServerConnectionStateArgs obj) {
         ServerState = obj.ConnectionState;
-        //Debug.Log($"S: {ServerState}");
 
         // Join the lobby
         if (ClientType.Host == clientType) { 

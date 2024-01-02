@@ -79,19 +79,7 @@ public class PlayerMovement : NetworkBehaviour {
         cameraHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
         weaponHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
         transform.rotation *= Quaternion.Euler(0, lookDelta.x * lookSpeedX, 0);
-
-        //CL_HandleCameraLook(_cameraPitch);
     }
-
-    //[ServerRpc]
-    //void SV_HandleCameraLook() { 
-        
-    //}
-
-    //[ObserversRpc(ExcludeOwner = true, BufferLast = true)]
-    //void CL_HandleCameraLook(float _cameraPitch) {
-    //    Debug.Log("CL_HandleCameraLook", this);
-    //}
 
     void HandleMovement() {
         var speed = InputManager.InGame_RunPressed ? runSpeed : walkSpeed;
