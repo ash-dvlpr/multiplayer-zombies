@@ -22,8 +22,6 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
     Allocation hostAllocation;
     JoinAllocation clientAllocation;
 
-    bool utpInit = false;
-
     public string LobbyCode { get; private set; } = "";
 
     // ===================== Custom Code =====================

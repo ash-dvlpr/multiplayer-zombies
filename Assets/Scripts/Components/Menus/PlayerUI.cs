@@ -26,13 +26,16 @@ public class PlayerUI : AMenu {
     // ===================== Custom Code =====================
 
     public override void OpenMenu() {
+        RegisterEvents();
         base.LockCursor();
         base.OpenMenu();
 
+        // Update UI elements
         HPBar.Refresh();
-
+        OnRoundChange(EnemySpawner.Instance.Round);
     }
-    public override void CloseMenu() { 
+    public override void CloseMenu() {
+        DeregisterEvents();
         base.UnlockCursor();
         base.CloseMenu();
     }

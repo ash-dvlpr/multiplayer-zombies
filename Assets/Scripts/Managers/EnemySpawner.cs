@@ -63,9 +63,9 @@ public class EnemySpawner : NetworkBehaviour {
     }
 
     public void Round_OnChange(int prev, int next, bool asServer) {
-        // Round changed
         if (base.IsClient) {
-            onRoundChange?.Invoke(next);
+            // Notify event to client side subscribers
+            if (!GameManager.ApplicationIsQuitting) onRoundChange?.Invoke(next);
         }
     }
 
