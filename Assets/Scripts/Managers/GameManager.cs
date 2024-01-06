@@ -1,11 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
     public static bool ApplicationIsQuitting { get; private set; } = false;
+    public static bool UnityServicesInitialised { get; private set; } = false;
     public static bool ClientInMenu = false;
 
     public const string SCENE_ID_MAIN = "SC_MainScene";
@@ -68,6 +72,9 @@ public class GameManager : MonoBehaviour {
         // Initialization of services
         InputManager.Init();
         MenuManager.Init();
+
+        // Initialise Multiplayeer services (will fail if no internet)
+        WaitForTaskRoutine(InitUnityServices(), UpdateMultiplayerButtonState);
 
         // Go to the MainMenu State
         return HandleTo_MainMenu();
@@ -143,6 +150,30 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    private async Task InitUnityServices() {
+        try { 
+            // Initialize UnityServices for the UnityTransport
+            await UnityServices.InitializeAsync();
+
+            // If not already logged, log the user in
+            if (!AuthenticationService.Instance.IsSignedIn) {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+
+            UnityServicesInitialised = true;
+            Debug.Log("Finished initializing Unity Services");
+        } catch (ServicesInitializationException e) {
+            UnityServicesInitialised = false;
+            Debug.LogError($"GameManager.InitUnityServices(): Error initializing UnityServices: {e}");
+        }
+    }
+
+    private void UpdateMultiplayerButtonState() {
+        var mainMenu = (MainMenu) MenuManager.Get(MenuID.Main);
+        mainMenu.MultiplayerButtonState = UnityServicesInitialised;
+    }
+
+
     // ================== Outside Facing API ==================
     public static GameState CurrentState { get => Instance?.state ?? GameState.None; }
     public static LobbyType LobbyType { get => Instance?.lobby?.Type ?? LobbyType.None; }
@@ -181,5 +212,15 @@ public class GameManager : MonoBehaviour {
         if (Instance) {
             Instance.StartCoroutine(routine);
         }
+    }
+
+    public static void WaitForTaskRoutine(Task task, Action actionAfterWait = null) {
+        GlobalStartCorroutine(WaitForTask(task, actionAfterWait));
+    }
+
+    public static IEnumerator WaitForTask(Task task, Action actionAfterWait = null) {
+        //var task = asyncMethod?.Invoke();
+        yield return new WaitUntil(() => task.IsCompleted);
+        actionAfterWait?.Invoke();
     }
 }

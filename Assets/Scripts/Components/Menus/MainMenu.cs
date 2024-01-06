@@ -1,9 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class MainMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Main; }
+
+    // ====================== References =====================
+    [field: SerializeField] public Button MultiplayerButton { get; private set; }
+    public bool MultiplayerButtonState {
+        get => MultiplayerButton?.interactable ?? false;
+        set {
+            if (MultiplayerButton) { 
+                MultiplayerButton.interactable = value;
+            }
+        }
+    }
 
     // ===================== Custom Code =====================
     public override void OpenMenu() { 
