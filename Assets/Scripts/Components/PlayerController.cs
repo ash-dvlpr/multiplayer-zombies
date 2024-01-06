@@ -25,7 +25,7 @@ public class PlayerController : NetworkBehaviour {
     [SyncVar] bool _canShoot = false;
     bool _canMove = false;
     public bool CanMove {
-        get => base.IsOwner && GameManager.IsPlaying && _canMove && !GameManager.ClientInPauseMenu;
+        get => base.IsOwner && GameManager.IsPlaying && _canMove && !GameManager.ClientInMenu;
         private set => _canMove = value;
     }
     public bool CanShoot { get => _canShoot && ammo.HasAmmo; private set => _canShoot = value; }
@@ -154,10 +154,13 @@ public class PlayerController : NetworkBehaviour {
 
     [ServerRpc]
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
-        ammo.Consume(1);
-        if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
-            var hitHp = hit.transform.GetComponent<Health>();
-            hitHp?.Damage(shotDamage);
+        if (ammo.HasAmmo) { 
+            ammo.Consume(1);
+            
+            if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
+                var hitHp = hit.transform.GetComponent<Health>();
+                hitHp?.Damage(shotDamage);
+            }
         }
     }
 }

@@ -76,7 +76,7 @@ public class EnemyController : NetworkBehaviour {
             // Is alive and has a target
             health.IsAlive && null != _target 
             // and singleplayer player has not paused the game
-            && !(GameManager.ClientInPauseMenu && LobbyType.SinglePlayer == GameManager.LobbyType)
+            && !(GameManager.ClientInMenu && LobbyType.SinglePlayer == GameManager.LobbyType)
         ) {
             var target = _attacking ? this.transform.position : _target.position;
             if (null != target) {

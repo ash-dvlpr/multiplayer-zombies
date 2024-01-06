@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
     public static bool ApplicationIsQuitting { get; private set; } = false;
-    public static bool ClientInPauseMenu = false;
+    public static bool ClientInMenu = false;
 
     public const string SCENE_ID_MAIN = "SC_MainScene";
     public const string SCENE_ID_CITY = "SC_City";

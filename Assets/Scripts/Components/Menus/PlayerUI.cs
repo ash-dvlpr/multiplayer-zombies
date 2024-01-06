@@ -23,17 +23,13 @@ public class PlayerUI : AMenu {
 
     // ===================== Custom Code =====================
 
-    public override void OpenMenu() { 
-        // Lock Mouse
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+    public override void OpenMenu() {
+        base.LockCursor();
         base.OpenMenu();
         HPBar.Refresh();
     }
     public override void CloseMenu() { 
-        // Unlock Mouse
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        base.UnlockCursor();
         base.CloseMenu();
     }
 

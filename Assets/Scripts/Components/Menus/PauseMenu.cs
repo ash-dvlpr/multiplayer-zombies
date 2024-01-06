@@ -13,14 +13,14 @@ public class PauseMenu : AMenu {
     // ===================== Custom Code =====================
 
     public override void OpenMenu() {
-        GameManager.ClientInPauseMenu = true;
+        GameManager.ClientInMenu = true;
 
         PauseGame();
         UpdateRoomCode();
         base.OpenMenu();
     }
     public override void CloseMenu() {
-        GameManager.ClientInPauseMenu = false;
+        GameManager.ClientInMenu = false;
 
         UnpauseGame();
         ClearRoomCode();

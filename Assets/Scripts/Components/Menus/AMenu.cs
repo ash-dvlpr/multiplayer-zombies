@@ -20,4 +20,13 @@ public abstract class AMenu : MonoBehaviour {
     public virtual void CloseMenu() {
         gameObject.SetActive(false);
     }
+
+    protected void LockCursor() {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+    protected void UnlockCursor() {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
 }
