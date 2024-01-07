@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerUI : AMenu {
     public override MenuID MenuKey { get => MenuID.PlayerUI; }
 
     // ====================== References =====================
+    [field: SerializeField] public TMP_Text RoundDisplay { get; private set; }
     [field: SerializeField] public ResourceBar HPBar { get; private set; }
     [field: SerializeField] public ResourceBar AmmoBar { get; private set; }
     
@@ -23,18 +25,30 @@ public class PlayerUI : AMenu {
 
     // ===================== Custom Code =====================
 
-    public override void OpenMenu() { 
-        // Lock Mouse
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+    public override void OpenMenu() {
+        RegisterEvents();
+        base.LockCursor();
         base.OpenMenu();
+
+        // Update UI elements
         HPBar.Refresh();
+        OnRoundChange(EnemySpawner.Instance.Round);
     }
-    public override void CloseMenu() { 
-        // Unlock Mouse
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+    public override void CloseMenu() {
+        DeregisterEvents();
+        base.UnlockCursor();
         base.CloseMenu();
+    }
+
+    private void RegisterEvents() {
+        EnemySpawner.Instance.OnRoundChange += OnRoundChange;
+    }
+    private void DeregisterEvents() { 
+        EnemySpawner.Instance.OnRoundChange -= OnRoundChange;
+    }
+
+    private void OnRoundChange(int newValue) {
+        RoundDisplay.text = $"{newValue}";
     }
 
     // ===================== UI Actions ======================

@@ -5,12 +5,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public enum MenuID : int {
-    None     = 0,
-    Main     = 1,
-    Settings = 2,
-    Lobby    = 3,
-    Pause    = 4,
-    PlayerUI = 5,
+    None       = 0,
+    Main       = 1,
+    Settings   = 2,
+    Lobby      = 3,
+    Pause      = 4,
+    PlayerUI   = 5,
+    GameOverUI = 6,
 }
 
 public static class MenuManager {
@@ -72,14 +73,17 @@ public static class MenuManager {
     /// After opening a menu it caches it.
     /// </summary>
     /// <param name="menu"><see cref="MenuID">MenuID</see> of the menu that you want to open.</param>
-    public static void OpenMenu(MenuID menu) {
+    /// <param name="ignoreOldMenu">If set to true, will just show the menu without closing other menus or setting it as the last open menu.</param>
+    public static void OpenMenu(MenuID menu, bool ignoreOldMenu = false) {
         if (!Initialised) Init();
         var previous = CurrentMenu;
-        CurrentMenu = menu;
+        if (!ignoreOldMenu) {
+            CurrentMenu = menu;
+        }
 
         try {
             // Hide old Menu
-            if (menuChache.TryGetValue(previous, out var currentMenu)) {
+            if (!ignoreOldMenu && menuChache.TryGetValue(previous, out var currentMenu)) {
                 currentMenu.CloseMenu();
             }
 
@@ -97,14 +101,20 @@ public static class MenuManager {
     }
 
     /// <summary>
-    /// Closes up the currently open menu.
+    /// Closes up the currently <see cref="CurrentMenu">opened menu</see>.
+    /// Will only alter the <see cref="CurrentMenu">cached menu</see> only if you don't specify a menuID.
     /// </summary>
-    public static void CloseMenu() {
+    /// <param name="menuID"><see cref="MenuID">MenuID</see> of the menu that you want to close.</param>
+    public static void CloseMenu(MenuID menuID = MenuID.None) {
         if (!Initialised) Init();
+        var targetMenu = MenuID.None == menuID ? CurrentMenu : menuID;
+
 
         try {
-            if (menuChache.TryGetValue(CurrentMenu, out var menu)) {
-                CurrentMenu = MenuID.None;
+            if (menuChache.TryGetValue(targetMenu, out var menu)) {
+                if (MenuID.None == menuID) { 
+                    CurrentMenu = MenuID.None;
+                }
                 menu.CloseMenu();
             }
         }

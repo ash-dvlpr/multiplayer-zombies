@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 using FishNet;
 using FishNet.Object;
@@ -25,6 +28,12 @@ public class EnemySpawner : NetworkBehaviour {
     
     public int Round { get => _round; }
     [SyncVar(OnChange = nameof(Round_OnChange))] int _round;
+
+    private event Action<int> onRoundChange;
+    public event Action<int> OnRoundChange {
+        add    { lock(this) { onRoundChange += value; } }
+        remove { lock(this) { onRoundChange -= value; } }
+    }
 
     bool _roundTriggered;
 
@@ -54,9 +63,9 @@ public class EnemySpawner : NetworkBehaviour {
     }
 
     public void Round_OnChange(int prev, int next, bool asServer) {
-        // Round changed
-        if (base.IsClient) { 
-        
+        if (base.IsClient) {
+            // Notify event to client side subscribers
+            if (!GameManager.ApplicationIsQuitting) onRoundChange?.Invoke(next);
         }
     }
 
