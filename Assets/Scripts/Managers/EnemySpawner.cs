@@ -46,6 +46,7 @@ public class EnemySpawner : NetworkBehaviour {
 
     public override void OnStopServer() {
         base.OnStopServer();
+        Enemies.OnChange -= Enemies_OnChange;
         StopAllCoroutines();
     }
 
@@ -71,6 +72,7 @@ public class EnemySpawner : NetworkBehaviour {
 
     [Server]
     public void RestartGame() {
+
         StopAllCoroutines();
         _roundTriggered = false;
         _round = 0;
@@ -101,6 +103,12 @@ public class EnemySpawner : NetworkBehaviour {
     [ObserversRpc]
     void CL_NotifyRoundEnd() => GameManager.Instance?.NotifyRoundEnd();
 
+    [ObserversRpc]
+    void CL_NotifyGameOver() => GameManager.Instance?.NotifyGameOver();
+
+    //[ObserversRpc]
+    //void CL_NotifyRestart() => GameManager.Instance?.NotifyRestart();
+
 
     [Server]
     IEnumerator RoundStartDelay() {
@@ -120,6 +128,28 @@ public class EnemySpawner : NetworkBehaviour {
 
         var spawned = Instantiate(enemyPrefab, position, Quaternion.identity);
         InstanceFinder.ServerManager.Spawn(spawned);
+    }
+
+    [Server]
+    public void OnPlayerDied() {
+        // Get the remaining alive players
+        //var players = EnemySpawner.Instance?.Players.Where(
+        //    p => p.PlayerHealth.IsAlive
+        //).ToList();
+
+        // TODO: move game over to when all players are dead
+        var isGameOver = true;
+
+        // Trigger GameOver
+        if (isGameOver) {
+            CL_NotifyGameOver();
+        }
+    }
+
+    private void OnDestroy() {
+        foreach (var enemy in Enemies) {
+            base.Despawn(enemy.gameObject);
+        }
     }
 
     // ====================== Unity Code ======================

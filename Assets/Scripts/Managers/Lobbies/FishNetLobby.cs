@@ -17,6 +17,7 @@ public enum ClientType : byte {
 public abstract class FishNetLobby<T> : ALobby where T : Transport {
     public LocalConnectionState ServerState { get; protected set; } = LocalConnectionState.Stopped;
     public LocalConnectionState ClientState { get; protected set; } = LocalConnectionState.Stopped;
+    public override ClientType CurrentClientType { get => clientType; }
 
     // ====================== Variables ======================
     private Multipass multipass;
@@ -112,6 +113,18 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
         GameManager.Instance.NotifyRoundStart();
         MenuManager.OpenMenu(MenuID.PlayerUI);
         return GameState.InGame;
+    }
+
+    public override GameState RestartGame() {
+        // If I'm the host
+            // 
+        if (ClientType.Host == clientType) {
+        
+        }
+
+
+
+        throw new System.NotImplementedException();
     }
 }
 

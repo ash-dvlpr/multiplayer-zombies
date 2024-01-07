@@ -1,17 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
 using static GameManager;
 using FishNet.Transporting.UTP;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
-using FishNet.Managing;
 using Unity.Services.Relay.Models;
 using Unity.Networking.Transport.Relay;
 using Unity.Services.Relay;
-using System;
 using Unity.VisualScripting;
 
 public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
@@ -27,7 +24,7 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
     // ===================== Custom Code =====================
     protected override void StartServer() {
         // TODO: Hardcoded value
-        WaitForTaskRoutine(CreateUTPHostAllocation(4), base.StartServer);
+        WaitForTaskCorroutine(CreateUTPHostAllocation(4), base.StartServer);
     }
     private async Task CreateUTPHostAllocation(int maxPlayers) {
         hostAllocation = await RelayService.Instance.CreateAllocationAsync(maxConnections: maxPlayers);
@@ -48,7 +45,7 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
             }
         }
 
-        WaitForTaskRoutine(CreateUTPCientAllocation(LobbyCode), base.ConnectClient);
+        WaitForTaskCorroutine(CreateUTPCientAllocation(LobbyCode), base.ConnectClient);
     }
     private async Task CreateUTPCientAllocation(string lobbyCode) {
         // Clients make a new allocation, hosts use their own host allocation
@@ -71,10 +68,6 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
         MenuManager.OpenMenu(MenuID.Lobby);
 
         return GameState.InLobby;
-    }
-
-    public override GameState RestartGame() {
-        throw new System.NotImplementedException();
     }
 }
 

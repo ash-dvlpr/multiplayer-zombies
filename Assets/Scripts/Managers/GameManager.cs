@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour {
             GameState.MainMenu => HandleTo_MainMenu(),
             GameState.InLobby => HandleTo_InLobby(newLobbyType),
             GameState.InGame => HandleTo_InGame(clientType),
+            GameState.GameOver => HandleTo_GameOver(),
             _ => Handle_Unimplemented(newState),
         };
     }
@@ -74,7 +75,7 @@ public class GameManager : MonoBehaviour {
         MenuManager.Init();
 
         // Initialise Multiplayeer services (will fail if no internet)
-        WaitForTaskRoutine(InitUnityServices(), UpdateMultiplayerButtonState);
+        WaitForTaskCorroutine(InitUnityServices(), UpdateMultiplayerButtonState);
 
         // Go to the MainMenu State
         return HandleTo_MainMenu();
@@ -118,6 +119,8 @@ public class GameManager : MonoBehaviour {
             return lobby.StartGame();
         }
         else if (GameState.InGame == state || GameState.GameOver == state) {
+            // TODO: 
+            Debug.Log("GameManager: Restarting Game");
             return lobby.RestartGame();
         }
 
@@ -125,7 +128,17 @@ public class GameManager : MonoBehaviour {
         throw new NotImplementedException($"GameManager.HandleTo_InGame(): Not yet implemented for current state: '{state}'.");
     }
 
-    //private GameState HandleTo_GameOver() { }
+    private GameState HandleTo_GameOver() {
+        if (GameState.InGame == state) {
+            // Show GameOver UI
+            MenuManager.OpenMenu(MenuID.GameOverUI);
+            
+            return GameState.GameOver;
+        }
+        else { 
+            return CurrentState;
+        }
+    }
 
     // ======================== Events ========================
     private event Action onRoundStart;
@@ -150,6 +163,29 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    private event Action onGameOver;
+    public event Action OnGameOver {
+        add    { lock(this) { onGameOver += value; } }
+        remove { lock(this) { onGameOver -= value; } }
+    }
+    public void NotifyGameOver() {
+        if (!ApplicationIsQuitting) {
+            onGameOver?.Invoke();
+            TryGameOver();
+        }
+    }
+
+    //private event Action onRestart;
+    //public event Action OnRestart {
+    //    add    { lock(this) { onRestart += value; } }
+    //    remove { lock(this) { onRestart -= value; } }
+    //}
+    //public void NotifyRestart() {
+    //    if (!ApplicationIsQuitting) {
+    //        onRestart?.Invoke();
+    //    }
+    //}
+    
     private async Task InitUnityServices() {
         try { 
             // Initialize UnityServices for the UnityTransport
@@ -177,6 +213,7 @@ public class GameManager : MonoBehaviour {
     // ================== Outside Facing API ==================
     public static GameState CurrentState { get => Instance?.state ?? GameState.None; }
     public static LobbyType LobbyType { get => Instance?.lobby?.Type ?? LobbyType.None; }
+    public static ClientType LobbyClientType { get => Instance?.lobby?.CurrentClientType ?? ClientType.None; }
     public static ALobby GetLobby { get => Instance?.lobby; }
     public static bool IsPlaying {
         get => GameState.InGame == CurrentState || GameState.GameOver == CurrentState;
@@ -199,6 +236,16 @@ public class GameManager : MonoBehaviour {
         Instance?.TryChangeGameState(GameState.InGame, clientType: ClientType.Client);
     }
 
+    public static void TryGameOver() { 
+        Instance?.TryChangeGameState(GameState.GameOver);
+    }
+
+    public static void TryRestartGame() {
+        if (GameState.InGame == CurrentState || GameState.GameOver == CurrentState) { 
+            Instance?.TryChangeGameState(GameState.InGame);
+        }
+    }
+
     //? Exiting
     public static void ExitToTittleScreen() {
         Instance?.TryChangeGameState(GameState.MainMenu);
@@ -208,13 +255,17 @@ public class GameManager : MonoBehaviour {
         Application.Quit();
     }
 
+
+
+
+    //? Utilities for running async tasks
     public static void GlobalStartCorroutine(IEnumerator routine) {
         if (Instance) {
             Instance.StartCoroutine(routine);
         }
     }
 
-    public static void WaitForTaskRoutine(Task task, Action actionAfterWait = null) {
+    public static void WaitForTaskCorroutine(Task task, Action actionAfterWait = null) {
         GlobalStartCorroutine(WaitForTask(task, actionAfterWait));
     }
 

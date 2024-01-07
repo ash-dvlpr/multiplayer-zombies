@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,7 +8,6 @@ using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Component.Animating;
-using System.IO;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class EnemyController : NetworkBehaviour {

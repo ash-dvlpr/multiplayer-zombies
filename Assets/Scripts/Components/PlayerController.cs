@@ -50,6 +50,8 @@ public class PlayerController : NetworkBehaviour {
 
         // Register player on the enemy spawner
         EnemySpawner.Instance?.Players.Add(this);
+
+        health.OnDeath += EnemySpawner.Instance.OnPlayerDied;
     }
 
     public override void OnStopServer() { 
@@ -57,6 +59,8 @@ public class PlayerController : NetworkBehaviour {
 
         // Deregister player on the enemy spawner
         EnemySpawner.Instance?.Players.Remove(this);
+
+        health.OnDeath -= EnemySpawner.Instance.OnPlayerDied;
     }
 
 
@@ -126,6 +130,8 @@ public class PlayerController : NetworkBehaviour {
     void OnDeath() {
         Debug.Log("Player died");
         CanMove = false;
+        // TODO: trigger death animation
+
         //Destroy(this, timeBeforeCorpseRemoval);
     }
 

@@ -16,6 +16,7 @@ public enum LobbyType : byte {
 /// </summary>
 public abstract class ALobby {
     public abstract LobbyType Type { get; }
+    public abstract ClientType CurrentClientType { get; }
 
     /// <summary>
     /// Used to prepare Lobby and/or show the Lobby Menu.
