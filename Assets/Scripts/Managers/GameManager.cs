@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour {
     public static bool UnityServicesInitialised { get; private set; } = false;
     public static bool ClientInMenu = false;
 
-    public const string SCENE_ID_MAIN = "SC_MainScene";
-    public const string SCENE_ID_CITY = "SC_City";
+    public const string SCENE_ID_MAIN      = "SC_MainScene";
+    public const string SCENE_ID_GRAVEYARD = "SC_Graveyard";
 
     // ====================== Variables ======================
     private GameState state = GameState.None;

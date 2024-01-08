@@ -771,7 +771,7 @@ PrefabInstance:
     - target: {fileID: 2255180425518087325, guid: 06b319151078938418604eb5fdb1e60f,
         type: 3}
       propertyPath: m_text
-      value: Resume
+      value: Restart
       objectReference: {fileID: 0}
     - target: {fileID: 2255180425518087325, guid: 06b319151078938418604eb5fdb1e60f,
         type: 3}

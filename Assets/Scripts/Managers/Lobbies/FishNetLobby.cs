@@ -72,7 +72,7 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
         // Join the lobby
         if (ClientType.Host == clientType) { 
             if (LocalConnectionState.Started == ServerState) {
-                NetSceneManager.Instance.LoadCityScene();
+                NetSceneManager.Instance.LoadGraveyardScene();
                 JoinLobby();
             }
         }
@@ -99,13 +99,13 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
 
     public override void CloseLobby() {
         if (ClientType.Host == clientType) {
-            NetSceneManager.Instance.UnloadCityScene();
+            NetSceneManager.Instance.UnloadGraveyardScene();
             DisconnectClient();
             StopServer();
         }
         else { 
             DisconnectClient();
-            NetSceneManager.Instance.UnloadCityScene(true);
+            NetSceneManager.Instance.UnloadGraveyardScene(true);
         }
     }
 

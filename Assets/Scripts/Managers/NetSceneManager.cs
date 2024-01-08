@@ -47,10 +47,10 @@ public class NetSceneManager : MonoBehaviour {
     }
 
     //? Exposed methods for the Lobby Code
-    public void LoadCityScene(bool @override = false) {
-        LoadScene(GameManager.SCENE_ID_CITY, @override);
+    public void LoadGraveyardScene(bool @override = false) {
+        LoadScene(GameManager.SCENE_ID_GRAVEYARD, @override);
     }
-    public void UnloadCityScene(bool @override = false) {
-        UnloadScene(GameManager.SCENE_ID_CITY, @override);
+    public void UnloadGraveyardScene(bool @override = false) {
+        UnloadScene(GameManager.SCENE_ID_GRAVEYARD, @override);
     }
 }
