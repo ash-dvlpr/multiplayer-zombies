@@ -36,17 +36,24 @@ public class EnemyController : NetworkBehaviour {
     // ====================== Unity Code ======================
     public override void OnStartNetwork() {
         base.OnStartNetwork();
-        health.OnDeath += OnDeath;
+        //health.OnDeath += OnDeath;
+
+        if (!base.IsServer) { 
+            agent.enabled = false;
+        }
     }
     public override void OnStopNetwork() {
         base.OnStopNetwork();
-        health.OnDeath -= OnDeath;
+        //health.OnDeath -= OnDeath;
     }
     public override void OnStartServer() {
         base.OnStartServer();
 
         // Register enemy on the enemy spawner
         EnemySpawner.Instance?.Enemies.Add(this);
+
+        // Register events
+        health.OnDeath += OnDeath;
 
         // Start searching for targets
         StartCoroutine(SearchTargets());
@@ -57,6 +64,9 @@ public class EnemyController : NetworkBehaviour {
 
         // Deregister enemy on the enemy spawner
         EnemySpawner.Instance?.Enemies.Remove(this);
+
+        // Deregister events
+        health.OnDeath -= OnDeath;
 
         // Cleaup
         StopAllCoroutines();
@@ -72,7 +82,7 @@ public class EnemyController : NetworkBehaviour {
     void Update() {
         if (
             // Is alive and has a target
-            health.IsAlive && null != _target
+            base.IsServer && health.IsAlive && null != _target
             // and singleplayer player has not paused the game
             && GameManager.IsPlaying
         ) {

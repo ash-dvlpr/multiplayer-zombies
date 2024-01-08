@@ -201,6 +201,7 @@ MonoBehaviour:
   - {fileID: 7264522708794332463}
   - {fileID: 2333305395235521766}
   - {fileID: 6812358286670298681}
+  - {fileID: 5792455643307601657}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
@@ -337,7 +338,7 @@ GameObject:
   - component: {fileID: 5996394988174273362}
   - component: {fileID: 5718935844449441193}
   - component: {fileID: 5024897733352334275}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Attack Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2763,9 +2764,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: -5908798485125680831}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: -5908798485125680831}
   IgnoredParameters: []
   _animator: {fileID: 8714140931525407551}
   _smoothFloats: 1
