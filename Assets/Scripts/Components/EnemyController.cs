@@ -34,6 +34,14 @@ public class EnemyController : NetworkBehaviour {
 
 
     // ====================== Unity Code ======================
+    public override void OnStartNetwork() {
+        base.OnStartNetwork();
+        health.OnDeath += OnDeath;
+    }
+    public override void OnStopNetwork() {
+        base.OnStopNetwork();
+        health.OnDeath -= OnDeath;
+    }
     public override void OnStartServer() {
         base.OnStartServer();
 
@@ -61,20 +69,12 @@ public class EnemyController : NetworkBehaviour {
         health = GetComponent<Health>();
     }
 
-    void OnEnable() {
-        health.OnDeath += OnDeath;
-    }
-
-    void OnDisable() {
-        health.OnDeath -= OnDeath;
-    }
-
     void Update() {
         if (
             // Is alive and has a target
-            health.IsAlive && null != _target 
+            health.IsAlive && null != _target
             // and singleplayer player has not paused the game
-            && !(GameManager.ClientInMenu && LobbyType.SinglePlayer == GameManager.LobbyType)
+            && GameManager.IsPlaying
         ) {
             var target = _attacking ? this.transform.position : _target.position;
             if (null != target) {
@@ -163,8 +163,6 @@ public class EnemyController : NetworkBehaviour {
                 }
             }
         }
-
-        Debug.Log($"Nearest Player: {nearestPlayer}");
 
         // If no targets found, stay in place
         _target = nearestPlayer != null ? nearestPlayer.transform : this.transform;

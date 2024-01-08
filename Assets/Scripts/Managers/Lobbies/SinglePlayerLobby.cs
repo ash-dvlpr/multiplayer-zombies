@@ -23,9 +23,5 @@ public class SinglePlayerLobby : FishNetLobby<Yak> {
         HostLobby();
         return StartGame();
     }
-
-    public override GameState RestartGame() {
-        throw new System.NotImplementedException();
-    }
 }
 

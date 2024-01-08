@@ -27,7 +27,7 @@ public static class MenuManager {
         if (!Initialised) { 
             menuChache = new Dictionary<MenuID, AMenu>();
             mainCanvas = GameObject.Find("MainCanvas");
-            GameObject.DontDestroyOnLoad(mainCanvas);
+            //GameObject.DontDestroyOnLoad(mainCanvas);
             mainCanvas.SetActive(true);
 
             // Cache all menu objects

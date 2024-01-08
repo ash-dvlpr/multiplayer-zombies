@@ -36,7 +36,6 @@ public class MultiPlayerLobby : FishNetLobby<FishyUnityTransport> {
 
     protected override void ConnectClient() {
         // Extract the lobby code if we are joining another lobby
-        Debug.Log($"Lobby Type: {clientType}");
         if (ClientType.Client == clientType) {
             var code = ( (LobbyMenu) MenuManager.Get(MenuID.Lobby) ).LobbyCodeFieldText;
             // If a code was supplied

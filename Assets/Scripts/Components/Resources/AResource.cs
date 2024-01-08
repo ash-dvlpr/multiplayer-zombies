@@ -77,4 +77,8 @@ public abstract class AResource : NetworkBehaviour {
         add    { lock(this) { onChange += value; } }
         remove { lock(this) { onChange -= value; } }
     }
+
+    public void ResetValues() {
+        Reset();
+    }
 }

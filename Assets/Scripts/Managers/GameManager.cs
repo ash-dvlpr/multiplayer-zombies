@@ -119,8 +119,6 @@ public class GameManager : MonoBehaviour {
             return lobby.StartGame();
         }
         else if (GameState.InGame == state || GameState.GameOver == state) {
-            // TODO: 
-            Debug.Log("GameManager: Restarting Game");
             return lobby.RestartGame();
         }
 
@@ -132,10 +130,10 @@ public class GameManager : MonoBehaviour {
         if (GameState.InGame == state) {
             // Show GameOver UI
             MenuManager.OpenMenu(MenuID.GameOverUI);
-            
+
             return GameState.GameOver;
         }
-        else { 
+        else {
             return CurrentState;
         }
     }
@@ -147,6 +145,7 @@ public class GameManager : MonoBehaviour {
         remove { lock(this) { onRoundStart -= value; } }
     }
     public void NotifyRoundStart() {
+        // TODO: Show fade in (remove transition)
         if (!ApplicationIsQuitting) {
             onRoundStart?.Invoke();
         }
@@ -158,6 +157,7 @@ public class GameManager : MonoBehaviour {
         remove { lock(this) { onRoundEnd -= value; } }
     }
     public void NotifyRoundEnd() {
+        // TODO: Show fade out (start transition)
         if (!ApplicationIsQuitting) {
             onRoundEnd?.Invoke();
         }
@@ -175,19 +175,24 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    //private event Action onRestart;
-    //public event Action OnRestart {
-    //    add    { lock(this) { onRestart += value; } }
-    //    remove { lock(this) { onRestart -= value; } }
-    //}
-    //public void NotifyRestart() {
-    //    if (!ApplicationIsQuitting) {
-    //        onRestart?.Invoke();
-    //    }
-    //}
-    
+    private event Action onRestart;
+    public event Action OnRestart {
+        add    { lock(this) { onRestart += value; } }
+        remove { lock(this) { onRestart -= value; } }
+    }
+
+    // Restart code for clients, it's not in HandleTo_InGame because of networking code
+    public void NotifyRestart() {
+        if (!ApplicationIsQuitting) {
+            state = GameState.InGame;
+            MenuManager.CloseMenu(MenuID.GameOverUI);
+            MenuManager.OpenMenu(MenuID.PlayerUI);
+            onRestart?.Invoke();
+        }
+    }
+
     private async Task InitUnityServices() {
-        try { 
+        try {
             // Initialize UnityServices for the UnityTransport
             await UnityServices.InitializeAsync();
 
@@ -197,8 +202,9 @@ public class GameManager : MonoBehaviour {
             }
 
             UnityServicesInitialised = true;
-            Debug.Log("Finished initializing Unity Services");
-        } catch (ServicesInitializationException e) {
+            Debug.Log("GameManager.InitUnityServices(): Finished initializing Unity Services");
+        }
+        catch (ServicesInitializationException e) {
             UnityServicesInitialised = false;
             Debug.LogError($"GameManager.InitUnityServices(): Error initializing UnityServices: {e}");
         }
@@ -213,10 +219,12 @@ public class GameManager : MonoBehaviour {
     // ================== Outside Facing API ==================
     public static GameState CurrentState { get => Instance?.state ?? GameState.None; }
     public static LobbyType LobbyType { get => Instance?.lobby?.Type ?? LobbyType.None; }
+    public static bool IsMultiplayerGame { get => LobbyType.MultiPlayer == LobbyType; }
     public static ClientType LobbyClientType { get => Instance?.lobby?.CurrentClientType ?? ClientType.None; }
     public static ALobby GetLobby { get => Instance?.lobby; }
     public static bool IsPlaying {
-        get => GameState.InGame == CurrentState || GameState.GameOver == CurrentState;
+        get => ( IsMultiplayerGame && GameState.GameOver != CurrentState )
+            || ( !IsMultiplayerGame && GameState.InGame == CurrentState );
     }
 
     //? Preparing to play
@@ -236,12 +244,12 @@ public class GameManager : MonoBehaviour {
         Instance?.TryChangeGameState(GameState.InGame, clientType: ClientType.Client);
     }
 
-    public static void TryGameOver() { 
+    public static void TryGameOver() {
         Instance?.TryChangeGameState(GameState.GameOver);
     }
 
     public static void TryRestartGame() {
-        if (GameState.InGame == CurrentState || GameState.GameOver == CurrentState) { 
+        if (GameState.InGame == CurrentState || GameState.GameOver == CurrentState) {
             Instance?.TryChangeGameState(GameState.InGame);
         }
     }

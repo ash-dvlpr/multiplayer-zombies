@@ -7,6 +7,7 @@ using FishNet.Managing;
 using FishNet.Transporting;
 using FishNet.Transporting.Multipass;
 using FishNet.Managing.Server;
+using FishNet;
 
 public enum ClientType : byte {
     None   = 0,
@@ -116,15 +117,13 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
     }
 
     public override GameState RestartGame() {
-        // If I'm the host
-            // 
-        if (ClientType.Host == clientType) {
+        var localConnection = InstanceFinder.ClientManager.Connection;
         
+        if (localConnection.IsHost) {
+            EnemySpawner.Instance?.RequestRestartGame(localConnection);   
         }
 
-
-
-        throw new System.NotImplementedException();
+        return GameState.GameOver;
     }
 }
 

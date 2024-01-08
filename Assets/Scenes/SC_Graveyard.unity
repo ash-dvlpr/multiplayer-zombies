@@ -470,7 +470,7 @@ PrefabInstance:
     - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
         type: 3}
       propertyPath: <ComponentIndex>k__BackingField
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
         type: 3}
@@ -523,6 +523,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 975356941}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &975356943 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
+    type: 3}
+  m_PrefabInstance: {fileID: 975356941}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1031604852
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,6 +732,7 @@ MonoBehaviour:
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField:
   - {fileID: 1398671352}
+  - {fileID: 975356943}
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
@@ -912,13 +925,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
         type: 3}
-      propertyPath: _scenePathHash
-      value: 3820546922
-      objectReference: {fileID: 0}
-    - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
-        type: 3}
       propertyPath: <SceneId>k__BackingField
-      value: 16409124085454816338
+      value: 12738790212776940359
       objectReference: {fileID: 0}
     - target: {fileID: 2346704924742227738, guid: e2b695d7512921245ab06fd7191ceeb6,
         type: 3}
@@ -939,21 +947,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PF_ZombieSpawnPoint
-      objectReference: {fileID: 0}
-    - target: {fileID: 8858427399199018744, guid: e2b695d7512921245ab06fd7191ceeb6,
-        type: 3}
-      propertyPath: _scenePathHash
-      value: 857840854
-      objectReference: {fileID: 0}
-    - target: {fileID: 8858427399199018744, guid: e2b695d7512921245ab06fd7191ceeb6,
-        type: 3}
-      propertyPath: <SceneId>k__BackingField
-      value: 3684398414800674051
-      objectReference: {fileID: 0}
-    - target: {fileID: 8858427399199018744, guid: e2b695d7512921245ab06fd7191ceeb6,
-        type: 3}
-      propertyPath: <IsNested>k__BackingField
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

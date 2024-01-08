@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 5
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 5011034186560501455}
   _networkObjectCache: {fileID: 5011034186560501455}
   _componentConfiguration: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 6
+  _componentIndexCache: 7
   _addedNetworkObject: {fileID: 5011034186560501455}
   _networkObjectCache: {fileID: 5011034186560501455}
   IgnoredParameters: []
@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 5011034186560501455}
   _networkObjectCache: {fileID: 5011034186560501455}
   _componentConfiguration: 0
@@ -564,6 +564,7 @@ MonoBehaviour:
   - {fileID: 379383837749684972}
   - {fileID: 4200630878187310317}
   - {fileID: 6786355811569176275}
+  - {fileID: 7016435354447742659}
   - {fileID: 161103381740093129}
   - {fileID: 5100028596328449331}
   - {fileID: 5043371318861110613}
@@ -578,7 +579,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 0
+  <PrefabId>k__BackingField: 4
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
@@ -642,11 +643,12 @@ MonoBehaviour:
   weaponAnimator: {fileID: 5043371318861110613}
   damageableLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 6144
   maxShotDistance: 200
   shootingRate: 0.3
   shotDamage: 20
   _canShoot: 1
+  _canMove: 0
   virtualCamera: {fileID: 4561794382584809056}
   weapon: {fileID: 6394904917938065769}
 --- !u!114 &4200630878187310317
@@ -707,9 +709,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3353b0910b63e840a05799fc869e4a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 5011034186560501455}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5011034186560501455}
   <Max>k__BackingField: 30
   _amount: 30
 --- !u!1 &8395028571652949898

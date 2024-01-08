@@ -38,8 +38,8 @@ public class PlayerMovement : NetworkBehaviour {
         characterController = GetComponent<CharacterController>();
         controller = GetComponent<PlayerController>();
     }
-    
-    public override void OnStartClient() { 
+
+    public override void OnStartClient() {
         base.OnStartClient();
     }
 
@@ -72,46 +72,65 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
     void HandleCameraLook() {
-        var lookDelta = InputManager.InGame_LookDelta;
-        _cameraPitch -= lookDelta.y * lookSpeedY;
-        _cameraPitch = Mathf.Clamp(_cameraPitch, -lookMaxAngleUp, lookMaxAngleDown);
+        if (controller.CanControl) {
+            var lookDelta = InputManager.InGame_LookDelta;
+            _cameraPitch -= lookDelta.y * lookSpeedY;
+            _cameraPitch = Mathf.Clamp(_cameraPitch, -lookMaxAngleUp, lookMaxAngleDown);
 
-        cameraHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
-        weaponHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
-        transform.rotation *= Quaternion.Euler(0, lookDelta.x * lookSpeedX, 0);
+            cameraHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
+            weaponHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
+            transform.rotation *= Quaternion.Euler(0, lookDelta.x * lookSpeedX, 0);
+        }
     }
 
     void HandleMovement() {
         var speed = InputManager.InGame_RunPressed ? runSpeed : walkSpeed;
-        var moveAxis = InputManager.InGame_Movement;
+        // User input only considered if player can control
+        var moveAxis = controller.CanControl ? InputManager.InGame_Movement : Vector2.zero;
+
 
         var mY = _moveDirection.y;
-        _moveDirection = (transform.forward * moveAxis.y) + (transform.right * moveAxis.x);
+        _moveDirection = ( transform.forward * moveAxis.y ) + ( transform.right * moveAxis.x );
         _moveDirection *= speed; // Scale with current move speed
         _moveDirection.y = mY;
     }
 
     void ApplyMovementForces() {
         var g = Physics.gravity.y * gravityScale;
+        var jumpPressed = controller.CanControl && InputManager.InGame_JumpPressed;
 
         // Apply movement
         characterController.Move(_moveDirection * Time.deltaTime);
 
         //! Vertical Movements + Gravity
-        if (_isGrounded && InputManager.InGame_JumpPressed) {
+        if (_isGrounded && jumpPressed) {
             // Height to Velocity Formula => v = sqrt(H * -2g)
-            _velocity.y = Mathf.Sqrt(jumpHeigh * (-2*g));
-        } else {
+            _velocity.y = Mathf.Sqrt(jumpHeigh * ( -2 * g ));
+        }
+        else {
             // Time.deltaTime applied twice on gravity because of freeFall formula => deltaY = (1/2) * g * t^2
             // Acceleration split in two to average out frame inconsistencies
             _velocity.y += g * Time.deltaTime / 2;
 
             // Cancel velocity when grounded
-            if(_isGrounded) _velocity.y = -0.5f;
+            if (_isGrounded) _velocity.y = -0.5f;
         }
 
         characterController.Move(_velocity * Time.deltaTime);
         // Apply the rest of the acceleration
         _velocity.y += g * Time.deltaTime / 2;
+    }
+
+
+    [Server, ServerRpc(RequireOwnership = false)]
+    public void RequestTeleport(Vector3 position) {
+        Teleport(position);
+    }
+
+    [Server]
+    void Teleport(Vector3 position) {
+        characterController.enabled = false;
+        transform.position = position;
+        characterController.enabled = true;
     }
 }

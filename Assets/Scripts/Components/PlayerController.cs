@@ -22,21 +22,28 @@ public class PlayerController : NetworkBehaviour {
     //[SerializeField] float timeBeforeCorpseRemoval = 4f;
 
     // ====================== Variables ======================
+    [SyncVar] bool _canControl = false;
     [SyncVar] bool _canShoot = false;
-    bool _canMove = false;
-    public bool CanMove {
-        get => base.IsOwner && GameManager.IsPlaying && _canMove && !GameManager.ClientInMenu;
-        private set => _canMove = value;
+
+    public bool CanMove { get => base.IsOwner && GameManager.IsPlaying; }
+    public bool CanControl {
+        get => _canControl && !GameManager.ClientInMenu;
+        [Server]
+        set => _canControl = value;
     }
-    public bool CanShoot { get => _canShoot && ammo.HasAmmo; private set => _canShoot = value; }
+    public bool CanShoot { 
+        get => CanControl && ammo.HasAmmo && _canShoot; 
+        private set => _canShoot = value;
+    }
 
     public Health PlayerHealth { get => health; }
     public Ammo PlayerAmmo { get => ammo; }
+    Vector3 _spawnPosition;
 
     // ====================== References =====================
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] Weapon weapon;
-    //PlayerMovement playerMovement;
+    PlayerMovement playerMovement;
 
     PlayerUI playerUI;
     ResourceBar hpBar;
@@ -45,8 +52,11 @@ public class PlayerController : NetworkBehaviour {
     Ammo ammo;
 
     // ======================= NetCode ========================
-    public override void OnStartServer() { 
-        base.OnStartServer(); 
+    public override void OnStartServer() {
+        base.OnStartServer();
+
+        CanControl = CanShoot = true;
+        _spawnPosition = this.transform.position;
 
         // Register player on the enemy spawner
         EnemySpawner.Instance?.Players.Add(this);
@@ -54,8 +64,8 @@ public class PlayerController : NetworkBehaviour {
         health.OnDeath += EnemySpawner.Instance.OnPlayerDied;
     }
 
-    public override void OnStopServer() { 
-        base.OnStartServer(); 
+    public override void OnStopServer() {
+        base.OnStartServer();
 
         // Deregister player on the enemy spawner
         EnemySpawner.Instance?.Players.Remove(this);
@@ -68,7 +78,6 @@ public class PlayerController : NetworkBehaviour {
         base.OnStartClient();
 
         if (base.IsOwner) {
-            _canMove = _canShoot = GameManager.IsPlaying;
             hpBar.SwapTrackedResource(health);
             ammoBar.SwapTrackedResource(ammo);
         }
@@ -91,7 +100,7 @@ public class PlayerController : NetworkBehaviour {
         if (!virtualCamera) virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
         if (!weapon) weapon = GetComponentInChildren<Weapon>();
 
-        //playerMovement = GetComponent<PlayerMovement>();
+        playerMovement = GetComponent<PlayerMovement>();
         health = GetComponent<Health>();
         ammo = GetComponent<Ammo>();
 
@@ -111,11 +120,18 @@ public class PlayerController : NetworkBehaviour {
     }
 
     // ===================== Custom Code =====================
+    [Server]
+    public void Restore() {
+        CanShoot = true;
+        CanControl = true;
+        health.ResetValues();
+        ammo.ResetValues();
+        playerMovement.RequestTeleport(_spawnPosition);
+    }
     void RoundStart() {
         Debug.Log("Round Started");
-        if (base.IsServer) { 
-            CanMove = true;
-            CanShoot = true;
+        if (base.IsServer) {
+            CanControl = CanShoot = true;
         }
 
         // TODO: Round start message
@@ -123,13 +139,13 @@ public class PlayerController : NetworkBehaviour {
     void RoundEnd() {
         Debug.Log("Round Ended");
         if (base.IsServer) {
-            CanMove = false;
+            CanControl = false;
             CanShoot = false;
         }
     }
     void OnDeath() {
         Debug.Log("Player died");
-        CanMove = false;
+        CanControl = false;
         // TODO: trigger death animation
 
         //Destroy(this, timeBeforeCorpseRemoval);
@@ -160,9 +176,9 @@ public class PlayerController : NetworkBehaviour {
 
     [ServerRpc]
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
-        if (ammo.HasAmmo) { 
+        if (ammo.HasAmmo) {
             ammo.Consume(1);
-            
+
             if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
                 var hitHp = hit.transform.GetComponent<Health>();
                 hitHp?.Damage(shotDamage);

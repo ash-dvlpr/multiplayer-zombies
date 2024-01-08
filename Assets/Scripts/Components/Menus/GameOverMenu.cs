@@ -40,7 +40,6 @@ public class GameOverMenu : AMenu {
     public void OnClick_Restart() {
         // If we are the host
         if (ClientType.Host == GameManager.LobbyClientType) { 
-            Debug.Log("TODO: Restart Game");
             GameManager.TryRestartGame();
         }
     }

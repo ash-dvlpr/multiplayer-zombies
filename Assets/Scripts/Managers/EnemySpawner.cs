@@ -9,6 +9,8 @@ using Random = UnityEngine.Random;
 using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using FishNet.Connection;
+using Unity.VisualScripting;
 
 public class EnemySpawner : NetworkBehaviour {
     public static EnemySpawner Instance { get; private set; }
@@ -25,9 +27,9 @@ public class EnemySpawner : NetworkBehaviour {
     [SyncObject]
     public readonly SyncList<EnemyController> Enemies = new();
     
-    
     public int Round { get => _round; }
     [SyncVar(OnChange = nameof(Round_OnChange))] int _round;
+    bool _roundTriggered;
 
     private event Action<int> onRoundChange;
     public event Action<int> OnRoundChange {
@@ -35,7 +37,18 @@ public class EnemySpawner : NetworkBehaviour {
         remove { lock(this) { onRoundChange -= value; } }
     }
 
-    bool _roundTriggered;
+
+    [ObserversRpc]
+    void CL_NotifyRoundStart() => GameManager.Instance?.NotifyRoundStart();
+
+    [ObserversRpc]
+    void CL_NotifyRoundEnd() => GameManager.Instance?.NotifyRoundEnd();
+
+    [ObserversRpc]
+    void CL_NotifyGameOver() => GameManager.Instance?.NotifyGameOver();
+
+    [ObserversRpc]
+    void CL_NotifyRestart() => GameManager.Instance?.NotifyRestart();
 
     // ======================= NetCode ========================
     public override void OnStartServer() {
@@ -71,11 +84,44 @@ public class EnemySpawner : NetworkBehaviour {
     }
 
     [Server]
-    public void RestartGame() {
+    public void OnPlayerDied() {
+        // Get the remaining alive players
+        // TODO: GameOver when all players are dead
+        //var players = EnemySpawner.Instance?.Players.Where(
+        //    p => p.PlayerHealth.IsAlive
+        //).ToList();
 
+        var isGameOver = true;
+
+        // Trigger GameOver
+        if (isGameOver) {
+            foreach (var player in Players) {
+                player.CanControl = false;
+            }
+            CL_NotifyGameOver();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestRestartGame(NetworkConnection connection = null) {
+        if (connection.IsHost) {
+            RestartGame(true);
+        }
+    } 
+
+    [Server]
+    public void RestartGame(bool notify = false) {
         StopAllCoroutines();
         _roundTriggered = false;
         _round = 0;
+
+        DespawnEnemies();
+        foreach (var player in Players) { 
+            player.Restore();
+        }
+        
+        if (notify) CL_NotifyRestart();
+        // TODO: Transition
 
         StartCoroutine(RoundStartDelay());
     }
@@ -97,19 +143,6 @@ public class EnemySpawner : NetworkBehaviour {
         StartCoroutine(RoundStartDelay());
     }
 
-    [ObserversRpc]
-    void CL_NotifyRoundStart() => GameManager.Instance?.NotifyRoundStart();
-
-    [ObserversRpc]
-    void CL_NotifyRoundEnd() => GameManager.Instance?.NotifyRoundEnd();
-
-    [ObserversRpc]
-    void CL_NotifyGameOver() => GameManager.Instance?.NotifyGameOver();
-
-    //[ObserversRpc]
-    //void CL_NotifyRestart() => GameManager.Instance?.NotifyRestart();
-
-
     [Server]
     IEnumerator RoundStartDelay() {
         yield return new WaitForSeconds(graceTime);
@@ -127,27 +160,19 @@ public class EnemySpawner : NetworkBehaviour {
         var enemyPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)].gameObject;
 
         var spawned = Instantiate(enemyPrefab, position, Quaternion.identity);
+        //Enemies.Add(spawned.GetComponent<EnemyController>());
+
         InstanceFinder.ServerManager.Spawn(spawned);
     }
 
     [Server]
-    public void OnPlayerDied() {
-        // Get the remaining alive players
-        //var players = EnemySpawner.Instance?.Players.Where(
-        //    p => p.PlayerHealth.IsAlive
-        //).ToList();
+    private void DespawnEnemies() {
+        Debug.Log($"Enemies count: {Enemies.Count}");
+        Enemies.Clear();
 
-        // TODO: move game over to when all players are dead
-        var isGameOver = true;
+        var allEnemies = Resources.FindObjectsOfTypeAll<EnemyController>();
 
-        // Trigger GameOver
-        if (isGameOver) {
-            CL_NotifyGameOver();
-        }
-    }
-
-    private void OnDestroy() {
-        foreach (var enemy in Enemies) {
+        foreach (var enemy in allEnemies) {
             base.Despawn(enemy.gameObject);
         }
     }
