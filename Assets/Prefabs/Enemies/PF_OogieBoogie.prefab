@@ -325,7 +325,7 @@ Transform:
   - {fileID: 1266913379055870537}
   - {fileID: 1770184843554359557}
   m_Father: {fileID: 9182020136672265319}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -76.4182, y: -171.24881, z: 168.02245}
 --- !u!95 &9067926537736382236
 Animator:
   serializedVersion: 5
@@ -337,7 +337,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 93f175331b13808429d4b085140d308c, type: 3}
   m_Controller: {fileID: 9100000, guid: 6fd8d11eaea377b4b8afd90bca5e6394, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -359,9 +359,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 3019101839091719879}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3019101839091719879}
   IgnoredParameters: []
   _animator: {fileID: 9067926537736382236}
   _smoothFloats: 1
@@ -2304,7 +2304,7 @@ MonoBehaviour:
   - {fileID: 4434292780548331545}
   - {fileID: 1715607964653209714}
   - {fileID: 4018162430315475779}
-  - {fileID: 0}
+  - {fileID: 3273553702375586254}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
