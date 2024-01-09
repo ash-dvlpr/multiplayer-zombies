@@ -299,8 +299,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 389977992387563202}
-  - component: {fileID: 9067926537736382236}
-  - component: {fileID: 3273553702375586254}
   m_Layer: 0
   m_Name: OogieBoogie
   m_TagString: Untagged
@@ -326,48 +324,6 @@ Transform:
   - {fileID: 1770184843554359557}
   m_Father: {fileID: 9182020136672265319}
   m_LocalEulerAnglesHint: {x: -76.4182, y: -171.24881, z: 168.02245}
---- !u!95 &9067926537736382236
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153736433287564161}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 93f175331b13808429d4b085140d308c, type: 3}
-  m_Controller: {fileID: 9100000, guid: 6fd8d11eaea377b4b8afd90bca5e6394, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3273553702375586254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153736433287564161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 3
-  _addedNetworkObject: {fileID: 3019101839091719879}
-  _networkObjectCache: {fileID: 3019101839091719879}
-  IgnoredParameters: []
-  _animator: {fileID: 9067926537736382236}
-  _smoothFloats: 1
-  _interpolation: 2
-  _clientAuthoritative: 1
-  _sendToOwner: 0
 --- !u!1 &1561225999337178171
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,6 +1201,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1266913379055870537}
+  - component: {fileID: 6853294831848772095}
+  - component: {fileID: 849079749377006094}
   m_Layer: 0
   m_Name: Armature_Halloween
   m_TagString: Untagged
@@ -1268,6 +1226,48 @@ Transform:
   - {fileID: 650004190063324894}
   m_Father: {fileID: 389977992387563202}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &6853294831848772095
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4571224049706294552}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 93f175331b13808429d4b085140d308c, type: 3}
+  m_Controller: {fileID: 9100000, guid: 6fd8d11eaea377b4b8afd90bca5e6394, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &849079749377006094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4571224049706294552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 3019101839091719879}
+  _networkObjectCache: {fileID: 3019101839091719879}
+  IgnoredParameters: []
+  _animator: {fileID: 0}
+  _smoothFloats: 1
+  _interpolation: 2
+  _clientAuthoritative: 1
+  _sendToOwner: 0
 --- !u!1 &4764234008642973520
 GameObject:
   m_ObjectHideFlags: 0
@@ -2304,7 +2304,7 @@ MonoBehaviour:
   - {fileID: 4434292780548331545}
   - {fileID: 1715607964653209714}
   - {fileID: 4018162430315475779}
-  - {fileID: 3273553702375586254}
+  - {fileID: 0}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
