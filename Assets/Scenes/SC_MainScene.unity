@@ -934,7 +934,8 @@ MonoBehaviour:
   <IsNested>k__BackingField: 0
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
-  _networkBehaviours: []
+  _networkBehaviours:
+  - {fileID: 1879741954}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
@@ -963,11 +964,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abbc5b2b36fc37f4a8dc4a8ccd4a73e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 1879741953}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 1879741953}
   enemyPrefabs:
-  - {fileID: 2333305395235521766, guid: 707e5c9d5367afe47aebf1a1b10e9908, type: 3}
+  - {fileID: 1240511255445063419, guid: 1533c8802c7097241a810e640735d199, type: 3}
+  - {fileID: 4864014939293851938, guid: 162a4a5f436d6dd44a4228208ed72ab6, type: 3}
+  - {fileID: 3262030402614685867, guid: 781b2a1b9c290a44db43358def5cc8b9, type: 3}
+  - {fileID: 1299489859864051062, guid: 906c326b95f9f824b99b9d298f1a76db, type: 3}
   spawnPoints: []
   graceTime: 1
   _round: 0

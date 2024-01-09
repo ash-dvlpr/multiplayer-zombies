@@ -44,14 +44,6 @@ public class PauseMenu : AMenu {
         roomCodePanel.SetActive(false);
     }
 
-    private void PauseGame() { 
-        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 0f;
-    }
-    
-    private void UnpauseGame() { 
-        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 1f;
-    }
-
     // ===================== UI Actions ======================
     public void OnClick_CopyCode() {
         GUIUtility.systemCopyBuffer = roomCodeDisplay.text;

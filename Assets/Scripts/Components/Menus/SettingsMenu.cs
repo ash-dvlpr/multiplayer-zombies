@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static GameManager;
 
 public class SettingsMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Settings; }
@@ -13,9 +12,15 @@ public class SettingsMenu : AMenu {
 
     // ===================== Custom Code =====================
     public override void OpenMenu() {
+        GameManager.ClientInMenu = true;
+        PauseGame();
+
         base.OpenMenu();
     }
     public override void CloseMenu() {
+        GameManager.ClientInMenu = false;
+        UnpauseGame();
+
         base.CloseMenu();
     }
 
@@ -44,7 +49,7 @@ public class SettingsMenu : AMenu {
     //? Normal actions
     public void OnClick_Back() {
         // Return to Main Menu
-        if (GameState.MainMenu == GameManager.CurrentState) {
+        if (GameManager.GameState.MainMenu == GameManager.CurrentState) {
             MenuManager.OpenMenu(MenuID.Main);
         }
         // Return to Pause Menu

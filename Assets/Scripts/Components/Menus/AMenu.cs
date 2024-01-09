@@ -9,7 +9,7 @@ public abstract class AMenu : MonoBehaviour {
     /// <summary>
     /// Used for showing the menu. Can be extended to do additional setup.
     /// </summary>
-    public virtual void OpenMenu() { 
+    public virtual void OpenMenu() {
         // Show Menu
         gameObject.SetActive(true);
     }
@@ -28,5 +28,13 @@ public abstract class AMenu : MonoBehaviour {
     protected void UnlockCursor() {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    protected void PauseGame() {
+        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 0f;
+    }
+
+    protected void UnpauseGame() {
+        if (LobbyType.SinglePlayer == GameManager.LobbyType) Time.timeScale = 1f;
     }
 }

@@ -5,8 +5,9 @@ using UnityEngine;
 public static class AnimatorID {
 
     // ====================== Variables ======================
-    public static readonly int isMoving = Animator.StringToHash("IsMoving");
+    public static readonly int isAlive = Animator.StringToHash("IsAlive");
+    //public static readonly int isMoving = Animator.StringToHash("IsMoving");
     public static readonly int isRunning = Animator.StringToHash("IsRunning");
-    public static readonly int triggerDeath = Animator.StringToHash("TriggerDeath");
+    //public static readonly int triggerDeath = Animator.StringToHash("TriggerDeath");
     public static readonly int triggerAttack = Animator.StringToHash("TriggerAttack");
 }

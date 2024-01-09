@@ -170,7 +170,7 @@ public class EnemyController : NetworkBehaviour {
                 agent.CalculatePath(p.transform.position, path);
 
                 // Skip unreachable targets
-                if (NavMeshPathStatus.PathComplete != path.status) continue;
+                if (NavMeshPathStatus.PathInvalid == path.status) continue;
 
                 if (shortestDistance > distance) {
                     nearestPlayer = p.gameObject;
