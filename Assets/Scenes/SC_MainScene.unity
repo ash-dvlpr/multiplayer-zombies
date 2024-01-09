@@ -896,9 +896,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1879741951}
   - component: {fileID: 1879741953}
-  - component: {fileID: 1879741952}
+  - component: {fileID: 1879741954}
   m_Layer: 0
-  m_Name: EnemySpawner
+  m_Name: NetGameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -919,52 +919,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1879741952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1879741950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52c084da5d78add4780e02cd8a101096, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <OnStartServerCalled>k__BackingField: 0
-  <OnStartClientCalled>k__BackingField: 0
-  _onStartNetworkCalled: 0
-  _onStopNetworkCalled: 0
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 1879741953}
-  _transportManagerCache: {fileID: 0}
-  _networkObjectCache: {fileID: 1879741953}
-  _initializedOnceServer: 0
-  _initializedOnceClient: 0
-  ClientHasReconcileData: 0
-  _lastReplicateTick: 0
-  <IsReconciling>k__BackingField: 0
-  _predictionInitialized: 0
-  _predictionRigidbody: {fileID: 0}
-  _predictionRigidbody2d: {fileID: 0}
-  _lastMayChangePosition: {x: 0, y: 0, z: 0}
-  _lastMayChangeRotation: {x: 0, y: 0, z: 0, w: 0}
-  _lastMayChangeScale: {x: 0, y: 0, z: 0}
-  _remainingResends: 0
-  _lastSentReplicateTick: 0
-  _lastReceivedReplicateTick: 0
-  _lastReceivedReconcileTick: 0
-  _lastReconcileTick: 0
-  _rpcMethodCount: 0
-  _rpcHashSize: 1
-  _syncVarDirty: 0
-  _syncObjectDirty: 0
-  enemyPrefabs:
-  - {fileID: 2333305395235521766, guid: 707e5c9d5367afe47aebf1a1b10e9908, type: 3}
-  spawnPoints: []
-  graceTime: 2
-  _round: 0
-  _roundTriggered: 0
 --- !u!114 &1879741953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -997,6 +951,26 @@ MonoBehaviour:
   _scenePathHash: 857840854
   <SceneId>k__BackingField: 3684398413934097020
   <AssetPathHash>k__BackingField: 0
+--- !u!114 &1879741954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879741950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abbc5b2b36fc37f4a8dc4a8ccd4a73e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1879741953}
+  _networkObjectCache: {fileID: 0}
+  enemyPrefabs:
+  - {fileID: 2333305395235521766, guid: 707e5c9d5367afe47aebf1a1b10e9908, type: 3}
+  spawnPoints: []
+  graceTime: 1
+  _round: 0
 --- !u!1 &1983851936
 GameObject:
   m_ObjectHideFlags: 0
@@ -1816,10 +1790,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1983851937}
+  - {fileID: 1879741951}
   - {fileID: 2129452334}
   - {fileID: 1497007552}
   - {fileID: 529225169}
-  - {fileID: 1879741951}
   - {fileID: 808612316}
   - {fileID: 624701618}
   - {fileID: 1562369084}
