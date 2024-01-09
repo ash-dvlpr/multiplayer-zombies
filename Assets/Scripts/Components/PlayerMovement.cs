@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FishNet.Object;
+using FishNet.Connection;
 
 [RequireComponent(typeof(CharacterController), typeof(PlayerController))]
 public class PlayerMovement : NetworkBehaviour {
@@ -122,13 +123,13 @@ public class PlayerMovement : NetworkBehaviour {
     }
 
 
-    [Server, ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
     public void RequestTeleport(Vector3 position) {
-        Teleport(position);
+        Teleport(base.Owner, position);
     }
 
-    [Server]
-    void Teleport(Vector3 position) {
+    [TargetRpc]
+    void Teleport(NetworkConnection target, Vector3 position) {
         characterController.enabled = false;
         transform.position = position;
         characterController.enabled = true;
