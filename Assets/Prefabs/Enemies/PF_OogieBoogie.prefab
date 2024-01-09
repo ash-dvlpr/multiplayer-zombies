@@ -2304,7 +2304,7 @@ MonoBehaviour:
   - {fileID: 4434292780548331545}
   - {fileID: 1715607964653209714}
   - {fileID: 4018162430315475779}
-  - {fileID: 0}
+  - {fileID: 849079749377006094}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
@@ -2318,7 +2318,7 @@ MonoBehaviour:
   NetworkObserver: {fileID: 0}
   <PrefabId>k__BackingField: 5
   <SpawnableCollectionId>k__BackingField: 0
-  _scenePathHash: 221360987
+  _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 7316545888257002828
 --- !u!54 &8552969721437099
@@ -2409,7 +2409,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 3019101839091719879}
   _networkObjectCache: {fileID: 3019101839091719879}
   attackRate: 2.5
-  attackDamage: 10
+  attackDamage: 25
   timeBeforeCorpseRemoval: 4
   _target: {fileID: 0}
 --- !u!114 &4018162430315475779
@@ -2427,8 +2427,8 @@ MonoBehaviour:
   _componentIndexCache: 2
   _addedNetworkObject: {fileID: 3019101839091719879}
   _networkObjectCache: {fileID: 3019101839091719879}
-  <Max>k__BackingField: 100
-  _amount: 100
+  <Max>k__BackingField: 200
+  _amount: 200
 --- !u!1 &8804188404362369086
 GameObject:
   m_ObjectHideFlags: 0

@@ -972,6 +972,7 @@ MonoBehaviour:
   - {fileID: 4864014939293851938, guid: 162a4a5f436d6dd44a4228208ed72ab6, type: 3}
   - {fileID: 3262030402614685867, guid: 781b2a1b9c290a44db43358def5cc8b9, type: 3}
   - {fileID: 1299489859864051062, guid: 906c326b95f9f824b99b9d298f1a76db, type: 3}
+  - {fileID: 1715607964653209714, guid: 5754eafd012b47a449489cbfaff3074d, type: 3}
   spawnPoints: []
   graceTime: 1
   _round: 0
