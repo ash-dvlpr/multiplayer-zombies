@@ -32,7 +32,7 @@ public class PlayerUI : AMenu {
 
         // Update UI elements
         HPBar.Refresh();
-        OnRoundChange(EnemySpawner.Instance.Round);
+        OnRoundChange(NetGameManager.Instance.Round);
     }
     public override void CloseMenu() {
         DeregisterEvents();
@@ -41,10 +41,10 @@ public class PlayerUI : AMenu {
     }
 
     private void RegisterEvents() {
-        EnemySpawner.Instance.OnRoundChange += OnRoundChange;
+        NetGameManager.Instance.OnRoundChange += OnRoundChange;
     }
     private void DeregisterEvents() { 
-        EnemySpawner.Instance.OnRoundChange -= OnRoundChange;
+        NetGameManager.Instance.OnRoundChange -= OnRoundChange;
     }
 
     private void OnRoundChange(int newValue) {

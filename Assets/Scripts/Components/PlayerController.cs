@@ -59,18 +59,18 @@ public class PlayerController : NetworkBehaviour {
         _spawnPosition = this.transform.position;
 
         // Register player on the enemy spawner
-        EnemySpawner.Instance?.Players.Add(this);
+        NetGameManager.Instance?.Players.Add(this);
 
-        health.OnDeath += EnemySpawner.Instance.OnPlayerDied;
+        health.OnDeath += NetGameManager.Instance.OnPlayerDied;
     }
 
     public override void OnStopServer() {
         base.OnStartServer();
 
         // Deregister player on the enemy spawner
-        EnemySpawner.Instance?.Players.Remove(this);
+        NetGameManager.Instance?.Players.Remove(this);
 
-        health.OnDeath -= EnemySpawner.Instance.OnPlayerDied;
+        health.OnDeath -= NetGameManager.Instance.OnPlayerDied;
     }
 
 

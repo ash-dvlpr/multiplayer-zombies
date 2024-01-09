@@ -931,14 +931,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c084da5d78add4780e02cd8a101096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <OnStartServerCalled>k__BackingField: 0
+  <OnStartClientCalled>k__BackingField: 0
+  _onStartNetworkCalled: 0
+  _onStopNetworkCalled: 0
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 1879741953}
+  _transportManagerCache: {fileID: 0}
   _networkObjectCache: {fileID: 1879741953}
+  _initializedOnceServer: 0
+  _initializedOnceClient: 0
+  ClientHasReconcileData: 0
+  _lastReplicateTick: 0
+  <IsReconciling>k__BackingField: 0
+  _predictionInitialized: 0
+  _predictionRigidbody: {fileID: 0}
+  _predictionRigidbody2d: {fileID: 0}
+  _lastMayChangePosition: {x: 0, y: 0, z: 0}
+  _lastMayChangeRotation: {x: 0, y: 0, z: 0, w: 0}
+  _lastMayChangeScale: {x: 0, y: 0, z: 0}
+  _remainingResends: 0
+  _lastSentReplicateTick: 0
+  _lastReceivedReplicateTick: 0
+  _lastReceivedReconcileTick: 0
+  _lastReconcileTick: 0
+  _rpcMethodCount: 0
+  _rpcHashSize: 1
+  _syncVarDirty: 0
+  _syncObjectDirty: 0
   enemyPrefabs:
   - {fileID: 2333305395235521766, guid: 707e5c9d5367afe47aebf1a1b10e9908, type: 3}
   spawnPoints: []
   graceTime: 2
   _round: 0
+  _roundTriggered: 0
 --- !u!114 &1879741953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,8 +980,7 @@ MonoBehaviour:
   <IsNested>k__BackingField: 0
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
-  _networkBehaviours:
-  - {fileID: 1879741952}
+  _networkBehaviours: []
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:

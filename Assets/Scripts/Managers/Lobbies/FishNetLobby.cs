@@ -120,7 +120,7 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
         var localConnection = InstanceFinder.ClientManager.Connection;
         
         if (localConnection.IsHost) {
-            EnemySpawner.Instance?.RequestRestartGame(localConnection);   
+            NetGameManager.Instance?.RequestRestartGame(localConnection);   
         }
 
         return GameState.GameOver;

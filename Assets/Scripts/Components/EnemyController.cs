@@ -50,7 +50,7 @@ public class EnemyController : NetworkBehaviour {
         base.OnStartServer();
 
         // Register enemy on the enemy spawner
-        EnemySpawner.Instance?.Enemies.Add(this);
+        NetGameManager.Instance?.Enemies.Add(this);
 
         // Register events
         health.OnDeath += OnDeath;
@@ -63,7 +63,7 @@ public class EnemyController : NetworkBehaviour {
         base.OnStopServer();
 
         // Deregister enemy on the enemy spawner
-        EnemySpawner.Instance?.Enemies.Remove(this);
+        NetGameManager.Instance?.Enemies.Remove(this);
 
         // Deregister events
         health.OnDeath -= OnDeath;
@@ -146,7 +146,7 @@ public class EnemyController : NetworkBehaviour {
     private void ChangeTarget() {
         // Get players from EnemySpawner's cached player list
         // And filter for alive players
-        var players = EnemySpawner.Instance?.Players.Where(
+        var players = NetGameManager.Instance?.Players.Where(
             p => p.PlayerHealth.IsAlive
         ).ToList();
 

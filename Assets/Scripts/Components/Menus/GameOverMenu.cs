@@ -28,7 +28,7 @@ public class GameOverMenu : AMenu {
 
     private void UpdateGUIElements() {
         // Set round's display text
-        RoundsDisplay.text = $"{EnemySpawner.Instance?.Round ?? 0}";
+        RoundsDisplay.text = $"{NetGameManager.Instance?.Round ?? 0}";
 
         // Enable the restart button if we are the host
         var buttonActive = 

@@ -10,10 +10,9 @@ using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Connection;
-using Unity.VisualScripting;
 
-public class EnemySpawner : NetworkBehaviour {
-    public static EnemySpawner Instance { get; private set; }
+public class NetGameManager : NetworkBehaviour {
+    public static NetGameManager Instance { get; private set; }
 
     // ==================== Configuration ====================
     [SerializeField] List<EnemyController> enemyPrefabs = new();
@@ -37,6 +36,9 @@ public class EnemySpawner : NetworkBehaviour {
         remove { lock(this) { onRoundChange -= value; } }
     }
 
+    // Events used to syncronize state across server and clients (because GameManager can't be a NetworkBehaviour)
+    // NOTE: ObserversRpc (remote method call on all clients)
+    // NOTE: "=>": https://stackoverflow.com/questions/39453610/what-does-operator-pointing-from-field-or-a-method-mean-c-sharp
 
     [ObserversRpc]
     void CL_NotifyRoundStart() => GameManager.Instance?.NotifyRoundStart();
@@ -61,26 +63,6 @@ public class EnemySpawner : NetworkBehaviour {
         base.OnStopServer();
         Enemies.OnChange -= Enemies_OnChange;
         StopAllCoroutines();
-    }
-
-    [Server]
-    public void Enemies_OnChange(SyncListOperation op, int index, EnemyController oldItem, EnemyController newItem, bool asServer) {
-        // If an enemy died/was removed
-        if (SyncListOperation.RemoveAt == op) {
-            var remainingEnemies = Enemies;
-
-            // If there are no enemies remaining
-            if (remainingEnemies.Count == 0) {
-                EndRound();
-            }
-        }
-    }
-
-    public void Round_OnChange(int prev, int next, bool asServer) {
-        if (base.IsClient) {
-            // Notify event to client side subscribers
-            if (!GameManager.ApplicationIsQuitting) onRoundChange?.Invoke(next);
-        }
     }
 
     [Server]
@@ -126,6 +108,14 @@ public class EnemySpawner : NetworkBehaviour {
         StartCoroutine(RoundStartDelay());
     }
 
+    // ======================== Rounds ========================
+    public void Round_OnChange(int prev, int next, bool asServer) {
+        if (base.IsClient) {
+            // Notify event to client side subscribers
+            if (!GameManager.ApplicationIsQuitting) onRoundChange?.Invoke(next);
+        }
+    }
+
     [Server]
     public void StartRound() {
         // Increase the round counter, then spawn round*2 enemies
@@ -149,6 +139,20 @@ public class EnemySpawner : NetworkBehaviour {
         if (!_roundTriggered) {
             _roundTriggered = true;
             StartRound();
+        }
+    }
+
+    // ======================== Enemies =======================
+    [Server]
+    public void Enemies_OnChange(SyncListOperation op, int index, EnemyController oldItem, EnemyController newItem, bool asServer) {
+        // If an enemy died/was removed
+        if (SyncListOperation.RemoveAt == op) {
+            var remainingEnemies = Enemies;
+
+            // If there are no enemies remaining
+            if (remainingEnemies.Count == 0) {
+                EndRound();
+            }
         }
     }
 
