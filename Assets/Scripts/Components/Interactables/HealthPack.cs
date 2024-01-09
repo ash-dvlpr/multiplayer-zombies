@@ -14,5 +14,7 @@ public class HealthPack : ACollectible<Health> {
     public override void Collect(Health interactorResource) {
         var amount = restoreAll ? interactorResource.Max : healthAmount;
         interactorResource.Heal(amount);
+
+        base.Collect(interactorResource);
     }
 }

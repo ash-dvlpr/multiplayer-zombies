@@ -67,8 +67,9 @@ public class NetGameManager : NetworkBehaviour {
 
     [Server]
     public void OnPlayerDied() {
-        // Get the remaining alive players
         // TODO: GameOver when all players are dead
+
+        // Get the remaining alive players
         //var players = EnemySpawner.Instance?.Players.Where(
         //    p => p.PlayerHealth.IsAlive
         //).ToList();

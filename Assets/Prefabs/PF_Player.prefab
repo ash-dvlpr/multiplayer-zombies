@@ -647,8 +647,9 @@ MonoBehaviour:
   maxShotDistance: 200
   shootingRate: 0.3
   shotDamage: 20
+  interactableTag: Interactable
+  _canControl: 0
   _canShoot: 1
-  _canMove: 0
   virtualCamera: {fileID: 4561794382584809056}
   weapon: {fileID: 6394904917938065769}
 --- !u!114 &4200630878187310317

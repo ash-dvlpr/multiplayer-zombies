@@ -14,5 +14,7 @@ public class AmmoPack : ACollectible<Ammo> {
     public override void Collect(Ammo interactorResource) {
         var amount = restoreAll ? interactorResource.Max : ammoAmount;
         interactorResource.Reload(amount);
+
+        base.Collect(interactorResource);
     }
 }

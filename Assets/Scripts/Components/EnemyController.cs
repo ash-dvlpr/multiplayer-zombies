@@ -147,7 +147,12 @@ public class EnemyController : NetworkBehaviour {
         // Get players from EnemySpawner's cached player list
         // And filter for alive players
         var players = NetGameManager.Instance?.Players.Where(
-            p => p.PlayerHealth.IsAlive
+            p =>{
+                // Skip if no health component found
+                if (!p.TryGet<Health>(out var health)) return false;
+                // Skip dead players
+                return health.IsAlive;
+            } 
         ).ToList();
 
         GameObject nearestPlayer = null;

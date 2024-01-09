@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 643542fe4c49e304f90538f0f081d867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <MultiplayerButton>k__BackingField: {fileID: 0}
+  <MultiplayerButton>k__BackingField: {fileID: 3544786676562246518}
 --- !u!1 &8083248591711684727
 GameObject:
   m_ObjectHideFlags: 0
@@ -745,6 +745,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06b319151078938418604eb5fdb1e60f, type: 3}
+--- !u!114 &3544786676562246518 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1198324070676572933, guid: 06b319151078938418604eb5fdb1e60f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2418663721975779443}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5852692171184562018 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8117774966425374481, guid: 06b319151078938418604eb5fdb1e60f,

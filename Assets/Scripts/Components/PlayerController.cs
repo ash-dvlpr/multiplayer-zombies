@@ -1,15 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
+
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
-using FishNet.Connection;
 using FishNet.Component.Animating;
+using FishNet.Connection;
+
 
 [RequireComponent(typeof(PlayerMovement), typeof(Health), typeof(Ammo))]
-public class PlayerController : NetworkBehaviour {
+public class PlayerController : NetworkBehaviour, IInteractor {
     // ==================== Configuration ====================
     [Header("Shooting")]
     [SerializeField] NetworkAnimator weaponAnimator;
@@ -21,9 +26,18 @@ public class PlayerController : NetworkBehaviour {
     //[Header("Death")]
     //[SerializeField] float timeBeforeCorpseRemoval = 4f;
 
+    //[Header("Interaction")]
+    //[SerializeField] string interactableTag;
+
+
     // ====================== Variables ======================
-    [SyncVar] bool _canControl = false;
-    [SyncVar] bool _canShoot = false;
+    // Here interactable componets are cached
+    readonly Dictionary<Type, object> componentCache = new();
+
+    [Header("Other")]
+    [SyncVar, ShowOnly] bool _canControl = false;
+    [SyncVar, ShowOnly] bool _canShoot = false;
+    Vector3 _spawnPosition;
 
     public bool CanMove { get => base.IsOwner && GameManager.IsPlaying; }
     public bool CanControl {
@@ -31,16 +45,14 @@ public class PlayerController : NetworkBehaviour {
         [Server]
         set => _canControl = value;
     }
-    public bool CanShoot { 
-        get => CanControl && ammo.HasAmmo && _canShoot; 
+    public bool CanShoot {
+        get => CanControl && ammo.HasAmmo && _canShoot;
         private set => _canShoot = value;
     }
-
-    public Health PlayerHealth { get => health; }
-    public Ammo PlayerAmmo { get => ammo; }
-    Vector3 _spawnPosition;
+    public List<Type> AllowedInteractableTypes { get => componentCache.Keys.ToList(); }
 
     // ====================== References =====================
+    [Header("References")]
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] Weapon weapon;
     PlayerMovement playerMovement;
@@ -50,6 +62,20 @@ public class PlayerController : NetworkBehaviour {
     ResourceBar ammoBar;
     Health health;
     Ammo ammo;
+
+    // ======================== ICache =======================
+    public void Register<T>(T resource) {
+        var type = typeof(T);
+        componentCache[type] = resource;
+    }
+    public bool TryGet<T>(out T resource) {
+        var type = typeof(T);
+        var result = componentCache.TryGetValue(type, out var cachedObj);
+        resource = (T) cachedObj;
+
+        return result;
+    }
+
 
     // ======================= NetCode ========================
     public override void OnStartServer() {
@@ -61,6 +87,7 @@ public class PlayerController : NetworkBehaviour {
         // Register player on the enemy spawner
         NetGameManager.Instance?.Players.Add(this);
 
+        health.OnDeath += OnDeath;
         health.OnDeath += NetGameManager.Instance.OnPlayerDied;
     }
 
@@ -70,6 +97,7 @@ public class PlayerController : NetworkBehaviour {
         // Deregister player on the enemy spawner
         NetGameManager.Instance?.Players.Remove(this);
 
+        health.OnDeath -= OnDeath;
         health.OnDeath -= NetGameManager.Instance.OnPlayerDied;
     }
 
@@ -101,8 +129,11 @@ public class PlayerController : NetworkBehaviour {
         if (!weapon) weapon = GetComponentInChildren<Weapon>();
 
         playerMovement = GetComponent<PlayerMovement>();
-        health = GetComponent<Health>();
-        ammo = GetComponent<Ammo>();
+
+        // Cache reference, then pass variable as parameter
+        Register(health = GetComponent<Health>());
+        Register(ammo = GetComponent<Ammo>());
+
 
         playerUI = (PlayerUI) MenuManager.Get(MenuID.PlayerUI);
         hpBar = playerUI.HPBar;
@@ -110,13 +141,26 @@ public class PlayerController : NetworkBehaviour {
     }
 
     void OnEnable() {
-        health.OnDeath += OnDeath;
+        //health.OnDeath += OnDeath;
         InputManager.InGame_OnShoot += ShootHandler;
     }
 
     void OnDisable() {
-        health.OnDeath -= OnDeath;
+        //health.OnDeath -= OnDeath;
         InputManager.InGame_OnShoot -= ShootHandler;
+    }
+
+
+    void OnTriggerEnter(Collider other) {
+        if (!base.IsClient) return;
+
+        // If the object is interactable
+        if (other.TryGetComponent<IInteractable>(out var interactable)) { 
+            // Treat Collectibles
+            if (interactable is ABaseCollectible) {
+                TryInteract((ABaseCollectible) interactable);
+            }
+        }
     }
 
     // ===================== Custom Code =====================
@@ -128,20 +172,19 @@ public class PlayerController : NetworkBehaviour {
         ammo.ResetValues();
         playerMovement.RequestTeleport(_spawnPosition);
     }
+    [Server]
     void RoundStart() {
         Debug.Log("Round Started");
-        if (base.IsServer) {
-            CanControl = CanShoot = true;
-        }
 
+        
         // TODO: Round start message
+        CanControl = CanShoot = true;
     }
+    [Server]
     void RoundEnd() {
         Debug.Log("Round Ended");
-        if (base.IsServer) {
-            CanControl = false;
-            CanShoot = false;
-        }
+
+        CanControl = CanShoot = false;
     }
     void OnDeath() {
         Debug.Log("Player died");
@@ -150,6 +193,8 @@ public class PlayerController : NetworkBehaviour {
 
         //Destroy(this, timeBeforeCorpseRemoval);
     }
+
+    // ====================== Shooting =======================
 
     [Client]
     void ShootHandler(InputAction.CallbackContext ctx) {
@@ -184,5 +229,31 @@ public class PlayerController : NetworkBehaviour {
                 hitHp?.Damage(shotDamage);
             }
         }
+    }
+
+    // ===================== IInteractor =====================
+    /// <summary>
+    /// A cast is necessary from IInteractable to NetworkBehaviour because of some contrains on FishNet's RPCs.
+    /// </summary>
+    /// <param name="interactor">Must implement the <see cref="IInteractable">IInteractable</see> interface</param>
+    //[ServerRpc(RequireOwnership = false)]
+    [ServerRpc]
+    public void TryInteract(NetworkBehaviour collectible) {
+        try {
+            // Will fail if the interactor doesn't implement the interface
+            var interactable = collectible as IInteractable;
+
+            if (( (IInteractor) this ).CanInteract(interactable)) {
+                Interact(interactable);
+            }
+        }
+        catch (InvalidCastException e) {
+            Debug.LogError($"PlayerController.TryInteract(): Collectible doesn't implement the IInteractable interface.\n{e}");
+        }
+    }
+
+    [Server]
+    public void Interact(IInteractable interactable) {
+        interactable.Interact(this);
     }
 }
