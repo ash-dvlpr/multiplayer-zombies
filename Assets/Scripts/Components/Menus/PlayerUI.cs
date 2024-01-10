@@ -10,7 +10,7 @@ public class PlayerUI : AMenu {
     [field: SerializeField] public TMP_Text RoundDisplay { get; private set; }
     [field: SerializeField] public ResourceBar HPBar { get; private set; }
     [field: SerializeField] public ResourceBar AmmoBar { get; private set; }
-    
+
     [SerializeField] GameObject onScreenControls;
 
 #if UNITY_ANDROID || UNITY_IOS
@@ -43,7 +43,7 @@ public class PlayerUI : AMenu {
     private void RegisterEvents() {
         NetGameManager.Instance.OnRoundChange += OnRoundChange;
     }
-    private void DeregisterEvents() { 
+    private void DeregisterEvents() {
         NetGameManager.Instance.OnRoundChange -= OnRoundChange;
     }
 
@@ -52,5 +52,5 @@ public class PlayerUI : AMenu {
     }
 
     // ===================== UI Actions ======================
-    
+
 }

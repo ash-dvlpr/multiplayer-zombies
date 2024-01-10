@@ -89,11 +89,13 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
     }
 
     public override void HostLobby() {
+        MenuManager.FadeOut(true);
         clientType = ClientType.Host;
         StartServer();
     }
 
     public override void JoinLobby() {
+        MenuManager.FadeOut(true);
         if (ClientType.None == clientType) clientType = ClientType.Client; 
         ConnectClient();
     }
@@ -108,11 +110,11 @@ public abstract class FishNetLobby<T> : ALobby where T : Transport {
             DisconnectClient();
             NetSceneManager.Instance.UnloadGraveyardScene(true);
         }
+        MenuManager.FadeIn(true);
     }
 
     public override GameState StartGame() {
         GameManager.Instance.NotifyRoundStart();
-        MenuManager.OpenMenu(MenuID.PlayerUI);
         return GameState.InGame;
     }
 

@@ -167,32 +167,28 @@ public class PlayerController : NetworkBehaviour, IInteractor {
 
     // ===================== Custom Code =====================
     [Server]
-    public void Restore() {
+    public void Restore(bool hardReset = true) {
         CanShoot = true;
         CanControl = true;
-        health.ResetValues();
-        ammo.ResetValues();
+
+        if (hardReset) { 
+            health.ResetValues();
+            ammo.ResetValues();
+        }
         playerMovement.RequestTeleport(_spawnPosition);
     }
     [Server]
     void RoundStart() {
-        Debug.Log("Round Started");
-
-        
-        // TODO: Round start message
         CanControl = CanShoot = true;
     }
     [Server]
     void RoundEnd() {
-        Debug.Log("Round Ended");
-
         CanControl = CanShoot = false;
     }
     void OnDeath() {
-        Debug.Log("Player died");
         CanControl = false;
-        // TODO: trigger death animation
 
+        // TODO: trigger death animation
         //Destroy(this, timeBeforeCorpseRemoval);
     }
 

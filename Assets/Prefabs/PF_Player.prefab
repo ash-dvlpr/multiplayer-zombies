@@ -645,7 +645,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 6144
   maxShotDistance: 200
-  shootingRate: 0.3
+  shootingRate: 0.2
   shotDamage: 20
   _canControl: 0
   _canShoot: 1

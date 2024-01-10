@@ -282,4 +282,11 @@ public class GameManager : MonoBehaviour {
         yield return new WaitUntil(() => task.IsCompleted);
         actionAfterWait?.Invoke();
     }
+
+    // Left here because it can be usefull for sequencing events
+    public static IEnumerator SequentialCorroutines(params IEnumerator[] corroutines) {
+        foreach (var coroutine in corroutines) {
+            yield return coroutine;
+        }
+    }
 }

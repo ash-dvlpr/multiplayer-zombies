@@ -29,18 +29,19 @@ public class PauseMenu : AMenu {
 
     // ===================== Custom Code =====================
     private void UpdateRoomCode() {
-        if (GameManager.IsMultiplayerGame) { 
+        if (GameManager.IsMultiplayerGame) {
             // Set lobby code text
             var lobby = (MultiPlayerLobby) GameManager.GetLobby;
             roomCodeDisplay.text = $"{lobby.LobbyCode}";
 
             roomCodePanel.SetActive(true);
-        } else {
+        }
+        else {
             ClearRoomCode();
         }
     }
-    
-    private void ClearRoomCode() { 
+
+    private void ClearRoomCode() {
         roomCodePanel.SetActive(false);
     }
 

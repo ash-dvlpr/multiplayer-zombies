@@ -76,13 +76,27 @@ public class NetGameManager : NetworkBehaviour {
         StopAllCoroutines();
     }
 
+    public override void OnStartClient() {
+        base.OnStartClient();
+        MenuManager.OpenMenu(MenuID.PlayerUI);
+    }
+
+    public override void OnStopClient() {
+        base.OnStartClient();
+    }
+
     [Server]
     public void OnPlayerDied() {
         // TODO: GameOver when all players are dead
 
         // Get the remaining alive players
-        //var players = EnemySpawner.Instance?.Players.Where(
-        //    p => p.PlayerHealth.IsAlive
+        //var players = Players.Where(
+        //    p => {
+        //        // Skip if no health component found
+        //        if (!p.TryGet<Health>(out var health)) return false;
+        //        // Skip dead players
+        //        return health.IsAlive;
+        //    } 
         //).ToList();
 
         var isGameOver = true;
@@ -110,18 +124,23 @@ public class NetGameManager : NetworkBehaviour {
 
     [Server]
     public void RestartGame(bool notify = false) {
+        FadeOutClients(true);
+
+        // Start preparing the scene and 
         StopAllCoroutines();
         _roundTriggered = false;
         _round = 0;
 
-        DespawnAllConsumibles();
-        DespawnAllEnemies();
+        DespawnAllConsumibles<ABaseCollectible>();
+
+        Enemies.Clear();
+        DespawnAllNet<EnemyController>();
+
         foreach (var player in Players) {
             player.Restore();
         }
 
         if (notify) CL_NotifyRestart();
-        // TODO: Transition
 
         StartCoroutine(RoundStartDelay());
     }
@@ -135,7 +154,23 @@ public class NetGameManager : NetworkBehaviour {
     }
 
     [Server]
-    public void StartRound() {
+    IEnumerator RoundStartDelay() {
+        yield return new WaitForSeconds(graceTime);
+        FadeOutClients();
+        yield return new WaitForSeconds(0.3f); // Give time for the animation to play
+        if (!_roundTriggered) {
+            _roundTriggered = true;
+            StartRound();
+        }
+    }
+
+    [Server]
+    private void StartRound() {
+        foreach (var player in Players) {
+            // 
+            player.Restore(false);
+        }
+
         // Increase the round counter, then spawn n enemies. [n = round]
         _round++;
         for (int i = 0 ; i < _round ; i++) {
@@ -143,29 +178,34 @@ public class NetGameManager : NetworkBehaviour {
         }
 
         // After the enemies have spawned, if we passed the first wave, spawn a HealthPack
+        DespawnAllConsumibles<HealthPack>(); // Ensure only one medpack per round
         if (_round > 1) {
             SpawnHealthPack();
         }
 
         // Then notify the round start.
         CL_NotifyRoundStart();
+        // Fade In
+        FadeInClients();
     }
 
     [Server]
-    public void EndRound() {
+    private void EndRound() {
         _roundTriggered = false;
         CL_NotifyRoundEnd();
         StartCoroutine(RoundStartDelay());
     }
 
-    [Server]
-    IEnumerator RoundStartDelay() {
-        yield return new WaitForSeconds(graceTime);
-        if (!_roundTriggered) {
-            _roundTriggered = true;
-            StartRound();
-        }
-    }
+    // ====================== Transitions =====================
+    /// <summary>
+    /// Plays a fade out animation on client's screens. 
+    /// </summary>
+    [ObserversRpc]
+    private void FadeOutClients(bool forced = false) => MenuManager.FadeOut(forced);
+
+    [ObserversRpc(BufferLast = true)]
+    private void FadeInClients(bool forced = false) => MenuManager.FadeIn(forced);
+
 
     // ======================= Entities =======================
     [Server]
@@ -175,37 +215,41 @@ public class NetGameManager : NetworkBehaviour {
         return spawned;
     }
 
+    [Server]
+    private GameObject SpawnRandomThingNet(List<GameObject> prefabs, List<SpawnPoint> spawnPoints) {
+        if (spawnPoints.Count == 0 || prefabs.Count == 0) return default;
+
+        // This uses a custom extension method (C# feature)
+        var position = spawnPoints.GetRandom().transform.position;
+        var prefab = prefabs.GetRandom().gameObject;
+
+        return SpawnThingNet(prefab, position);
+    }
+
+    [Server]
+    private void DespawnAllNet<T>() where T : NetworkBehaviour { 
+        var objects = Resources.FindObjectsOfTypeAll<T>();
+        // TODO: skip already dinitializing enemies
+
+        foreach (var obj in objects) {
+            base.Despawn(obj.gameObject);
+        }
+    }
+
     // ===================== Consumibles ======================
     [Server]
     private void SpawnHealthPack() {
-        if (resourceSpawnPoints.Count == 0 || healthPackPrefabs.Count == 0) return;
-
-        // This uses a custom extension method (C# feature)
-        var position = resourceSpawnPoints.GetRandom().transform.position;
-        var prefab = healthPackPrefabs.GetRandom().gameObject;
-
-        var spawned = SpawnThingNet(prefab, position);
+        SpawnRandomThingNet(healthPackPrefabs, resourceSpawnPoints);
     }
 
     [Server]
     private void SpawnAmmoPack() {
-        if (resourceSpawnPoints.Count == 0 || ammoPackPrefabs.Count == 0) return;
-
-        // This uses a custom extension method (C# feature)
-        var position = resourceSpawnPoints.GetRandom().transform.position;
-        var prefab = ammoPackPrefabs.GetRandom().gameObject;
-
-        var spawned = SpawnThingNet(prefab, position);
+        SpawnRandomThingNet(ammoPackPrefabs, resourceSpawnPoints);
     }
 
     [Server]
-    private void DespawnAllConsumibles() {
-        var allConsumables = Resources.FindObjectsOfTypeAll<ABaseCollectible>();
+    private void DespawnAllConsumibles<C>() where C : ABaseCollectible => DespawnAllNet<C>();
 
-        foreach (var c in allConsumables) {
-            base.Despawn(c.gameObject);
-        }
-    }
 
     // ======================== Enemies =======================
     [Server]
@@ -230,18 +274,6 @@ public class NetGameManager : NetworkBehaviour {
         var enemyPrefab = enemyPrefabs.GetRandom().gameObject;
 
         var spawned = SpawnThingNet(enemyPrefab, position);
-    }
-
-    [Server]
-    private void DespawnAllEnemies() {
-        Debug.Log($"Enemies count: {Enemies.Count}");
-        Enemies.Clear();
-
-        var allEnemies = Resources.FindObjectsOfTypeAll<EnemyController>();
-
-        foreach (var enemy in allEnemies) {
-            base.Despawn(enemy.gameObject);
-        }
     }
     
     // ====================== Unity Code ======================
