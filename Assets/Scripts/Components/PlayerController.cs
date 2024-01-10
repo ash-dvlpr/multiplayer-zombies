@@ -89,6 +89,7 @@ public class PlayerController : NetworkBehaviour, IInteractor {
 
         health.OnDeath += OnDeath;
         health.OnDeath += NetGameManager.Instance.OnPlayerDied;
+        ammo.OnNoAmmoLeft += NetGameManager.Instance.OnPlayerNoAmmoLeft;
     }
 
     public override void OnStopServer() {
@@ -99,6 +100,7 @@ public class PlayerController : NetworkBehaviour, IInteractor {
 
         health.OnDeath -= OnDeath;
         health.OnDeath -= NetGameManager.Instance.OnPlayerDied;
+        ammo.OnNoAmmoLeft -= NetGameManager.Instance.OnPlayerNoAmmoLeft;
     }
 
 

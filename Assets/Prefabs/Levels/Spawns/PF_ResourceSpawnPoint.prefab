@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 850116712652443291}
   - component: {fileID: 2346704924742227738}
-  - component: {fileID: 6862776847547661592}
+  - component: {fileID: 1460499649379544841}
   m_Layer: 0
-  m_Name: PF_ZombieSpawnPoint
+  m_Name: PF_ResourceSpawnPoint
   m_TagString: Untagged
-  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -48,7 +48,8 @@ MonoBehaviour:
   <IsNested>k__BackingField: 0
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
-  _networkBehaviours: []
+  _networkBehaviours:
+  - {fileID: 1460499649379544841}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
@@ -64,8 +65,8 @@ MonoBehaviour:
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 10853462135032326554
---- !u!114 &6862776847547661592
+  <AssetPathHash>k__BackingField: 13214629377374245974
+--- !u!114 &1460499649379544841
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,9 +75,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6788303286049567042}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b24b1b6ae98db1f448e55bbd49f36f25, type: 3}
+  m_Script: {fileID: 11500000, guid: 28991d6e95c16da4abd1ff00bd6901c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 2346704924742227738}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 2346704924742227738}

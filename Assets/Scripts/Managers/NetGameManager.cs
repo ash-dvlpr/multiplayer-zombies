@@ -16,30 +16,37 @@ public class NetGameManager : NetworkBehaviour {
     public static NetGameManager Instance { get; private set; }
 
     // ==================== Configuration ====================
+    [Header("Enemies and Rounds")]
     [SerializeField] List<EnemyController> enemyPrefabs = new();
-    [SerializeField] public List<Transform> enemySpawnPoints = new();
     [SerializeField] float graceTime = 1f;
 
+    [Header("Resources")]
+    [SerializeField] List<GameObject> healthPackPrefabs = new();
+    [SerializeField] List<GameObject> ammoPackPrefabs = new();
+
     // ====================== Variables ======================
-    [SyncObject]
-    public readonly SyncList<PlayerController> Players = new();
+    [Header("Variables")]
+    [SyncVar(OnChange = nameof(Round_OnChange)), ShowOnly] int _round;
+    public int Round { get => _round; }
+    
+    [HideInInspector] public List<SpawnPoint> enemySpawnPoints = new();
+    [HideInInspector] public List<SpawnPoint> resourceSpawnPoints = new();
+    bool _roundTriggered;
 
     [SyncObject]
+    public readonly SyncList<PlayerController> Players = new();
+    [SyncObject]
     public readonly SyncList<EnemyController> Enemies = new();
-    
-    public int Round { get => _round; }
-    [SyncVar(OnChange = nameof(Round_OnChange))] int _round;
-    bool _roundTriggered;
+
+    // Events used to syncronize state across server and clients (because GameManager can't be a NetworkBehaviour)
+    // NOTE: ObserversRpc (remote method call on all clients)
+    // NOTE: "=>": https://stackoverflow.com/questions/39453610/what-does-operator-pointing-from-field-or-a-method-mean-c-sharp
 
     private event Action<int> onRoundChange;
     public event Action<int> OnRoundChange {
         add    { lock(this) { onRoundChange += value; } }
         remove { lock(this) { onRoundChange -= value; } }
     }
-
-    // Events used to syncronize state across server and clients (because GameManager can't be a NetworkBehaviour)
-    // NOTE: ObserversRpc (remote method call on all clients)
-    // NOTE: "=>": https://stackoverflow.com/questions/39453610/what-does-operator-pointing-from-field-or-a-method-mean-c-sharp
 
     [ObserversRpc]
     void CL_NotifyRoundStart() => GameManager.Instance?.NotifyRoundStart();
@@ -86,12 +93,17 @@ public class NetGameManager : NetworkBehaviour {
         }
     }
 
+    [Server]
+    public void OnPlayerNoAmmoLeft() {
+        SpawnAmmoPack();
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void RequestRestartGame(NetworkConnection connection = null) {
         if (connection.IsHost) {
             RestartGame(true);
         }
-    } 
+    }
 
     [Server]
     public void RestartGame(bool notify = false) {
@@ -100,10 +112,10 @@ public class NetGameManager : NetworkBehaviour {
         _round = 0;
 
         DespawnEnemies();
-        foreach (var player in Players) { 
+        foreach (var player in Players) {
             player.Restore();
         }
-        
+
         if (notify) CL_NotifyRestart();
         // TODO: Transition
 
@@ -120,12 +132,19 @@ public class NetGameManager : NetworkBehaviour {
 
     [Server]
     public void StartRound() {
-        // Increase the round counter, then spawn round*2 enemies
+        // Increase the round counter, then spawn n enemies. [n = round]
         _round++;
-        CL_NotifyRoundStart();
-        for (int i = 0 ; i < _round * 2 ; i++) {
+        for (int i = 0 ; i < _round ; i++) {
             SpawnEnemy();
         }
+
+        // After the enemies have spawned, if we passed the first wave, spawn a HealthPack
+        if (_round > 1) {
+            SpawnHealthPack();
+        }
+
+        // Then notify the round start.
+        CL_NotifyRoundStart();
     }
 
     [Server]
@@ -146,10 +165,32 @@ public class NetGameManager : NetworkBehaviour {
 
     // ======================= Entities =======================
     [Server]
-    private GameObject SpawnThingNet(GameObject prefab, Vector3 position) { 
+    private GameObject SpawnThingNet(GameObject prefab, Vector3 position) {
         var spawned = Instantiate(prefab, position, Quaternion.identity);
         InstanceFinder.ServerManager.Spawn(spawned);
         return spawned;
+    }
+
+    [Server]
+    private void SpawnHealthPack() {
+        if (resourceSpawnPoints.Count == 0 || healthPackPrefabs.Count == 0) return;
+
+        // This uses a custom extension method (C# feature)
+        var position = resourceSpawnPoints.GetRandom().transform.position;
+        var prefab = healthPackPrefabs.GetRandom().gameObject;
+
+        var spawned = SpawnThingNet(prefab, position);
+    }
+
+    [Server]
+    private void SpawnAmmoPack() {
+        if (resourceSpawnPoints.Count == 0 || ammoPackPrefabs.Count == 0) return;
+
+        // This uses a custom extension method (C# feature)
+        var position = resourceSpawnPoints.GetRandom().transform.position;
+        var prefab = ammoPackPrefabs.GetRandom().gameObject;
+
+        var spawned = SpawnThingNet(prefab, position);
     }
 
     // ======================== Enemies =======================
@@ -171,9 +212,9 @@ public class NetGameManager : NetworkBehaviour {
         if (enemySpawnPoints.Count == 0 || enemyPrefabs.Count == 0) return;
 
         // This uses a custom extension method (C# feature)
-        var position = enemySpawnPoints.GetRandom().position;
+        var position = enemySpawnPoints.GetRandom().transform.position;
         var enemyPrefab = enemyPrefabs.GetRandom().gameObject;
-        
+
         var spawned = SpawnThingNet(enemyPrefab, position);
     }
 

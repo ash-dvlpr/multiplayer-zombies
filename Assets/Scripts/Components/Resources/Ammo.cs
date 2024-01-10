@@ -30,8 +30,8 @@ public class Ammo : AResource {
     protected override void TriggerOnChange(int prev, int next, bool asServer) {
         base.TriggerOnChange(prev, next, asServer);
 
-        if (Amount.Equals(0)) {
-            onNoAmmoLeft?.Invoke();
+        if (Amount.Equals(0) && prev > 0) {
+            if (asServer) onNoAmmoLeft?.Invoke();
         }
     }
 

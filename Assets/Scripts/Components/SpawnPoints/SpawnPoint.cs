@@ -5,15 +5,17 @@ using UnityEngine;
 using FishNet;
 using FishNet.Object;
 
-public class EnemySpawnPoint : NetworkBehaviour {
+public abstract class SpawnPoint : NetworkBehaviour {
+    protected abstract List<SpawnPoint> SpawnPointRegistry { get; }
+
     public override void OnStartServer() {
         base.OnStartServer();
 
-        NetGameManager.Instance?.enemySpawnPoints.Add(this.transform);
+        SpawnPointRegistry.Add(this);
     }
 
     public override void OnStopServer() {
         base.OnStartServer();
-        NetGameManager.Instance?.enemySpawnPoints.Remove(this.transform);
+        SpawnPointRegistry.Remove(this);
     }
 }

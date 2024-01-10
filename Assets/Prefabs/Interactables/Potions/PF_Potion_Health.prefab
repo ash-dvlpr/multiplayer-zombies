@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: 2a7aeccaf51cb44258e96e4127ac8d7e, type: 3}
+    - target: {fileID: 6860578513223280182, guid: c97831beb4c226c46b920908b81daadd,
+        type: 3}
+      propertyPath: <AssetPathHash>k__BackingField
+      value: 7493189837121069568
+      objectReference: {fileID: 0}
     - target: {fileID: 8305810661101041532, guid: c97831beb4c226c46b920908b81daadd,
         type: 3}
       propertyPath: <PrefabId>k__BackingField
