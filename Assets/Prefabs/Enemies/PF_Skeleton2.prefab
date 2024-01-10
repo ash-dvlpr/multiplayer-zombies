@@ -2662,9 +2662,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 1
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 3328473713853456097}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3328473713853456097}
   IgnoredParameters: []
   _animator: {fileID: 306186967204834090}
   _smoothFloats: 1
@@ -2839,9 +2839,9 @@ MonoBehaviour:
   - {fileID: 7186341303837325160}
   - {fileID: 4864014939293851938}
   - {fileID: 8758703748825856661}
+  - {fileID: 6325287373545133201}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
-  <ChildNetworkObjects>k__BackingField:
-  - {fileID: 0}
+  <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2851,7 +2851,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 5
+  <PrefabId>k__BackingField: 19
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
@@ -2916,13 +2916,13 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -334000983
   m_Radius: 0.3
-  m_Speed: 3
-  m_Acceleration: 10
+  m_Speed: 5
+  m_Acceleration: 12
   avoidancePriority: 50
-  m_AngularSpeed: 600
-  m_StoppingDistance: 1.6
+  m_AngularSpeed: 800
+  m_StoppingDistance: 1.4
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 1.9
   m_BaseOffset: -0.02
@@ -2943,7 +2943,7 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3328473713853456097}
   _networkObjectCache: {fileID: 3328473713853456097}
-  attackRate: 2.5
+  attackRate: 1
   attackDamage: 10
   timeBeforeCorpseRemoval: 4
   _target: {fileID: 0}
