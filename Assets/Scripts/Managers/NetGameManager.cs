@@ -20,7 +20,10 @@ public class NetGameManager : NetworkBehaviour {
     [SerializeField] List<EnemyController> enemyPrefabs = new();
     [SerializeField] float graceTime = 1f;
 
-    [Header("Resources")]
+    [field: Header("Performance")]
+    [field: SerializeField] public float TimeBetweenPathRecalculations { get; private set; } = 0.5f;
+
+    [Space(20), Header("Resources")]
     [SerializeField] List<GameObject> healthPackPrefabs = new();
     [SerializeField] List<GameObject> ammoPackPrefabs = new();
 
@@ -111,7 +114,8 @@ public class NetGameManager : NetworkBehaviour {
         _roundTriggered = false;
         _round = 0;
 
-        DespawnEnemies();
+        DespawnAllConsumibles();
+        DespawnAllEnemies();
         foreach (var player in Players) {
             player.Restore();
         }
@@ -171,6 +175,7 @@ public class NetGameManager : NetworkBehaviour {
         return spawned;
     }
 
+    // ===================== Consumibles ======================
     [Server]
     private void SpawnHealthPack() {
         if (resourceSpawnPoints.Count == 0 || healthPackPrefabs.Count == 0) return;
@@ -191,6 +196,15 @@ public class NetGameManager : NetworkBehaviour {
         var prefab = ammoPackPrefabs.GetRandom().gameObject;
 
         var spawned = SpawnThingNet(prefab, position);
+    }
+
+    [Server]
+    private void DespawnAllConsumibles() {
+        var allConsumables = Resources.FindObjectsOfTypeAll<ABaseCollectible>();
+
+        foreach (var c in allConsumables) {
+            base.Despawn(c.gameObject);
+        }
     }
 
     // ======================== Enemies =======================
@@ -219,7 +233,7 @@ public class NetGameManager : NetworkBehaviour {
     }
 
     [Server]
-    private void DespawnEnemies() {
+    private void DespawnAllEnemies() {
         Debug.Log($"Enemies count: {Enemies.Count}");
         Enemies.Clear();
 
@@ -229,7 +243,7 @@ public class NetGameManager : NetworkBehaviour {
             base.Despawn(enemy.gameObject);
         }
     }
-
+    
     // ====================== Unity Code ======================
     void Awake() {
         // Mantain a single Instance

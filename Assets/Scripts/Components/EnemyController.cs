@@ -91,7 +91,7 @@ public class EnemyController : NetworkBehaviour {
                 agent.destination = target;
             }
 
-            bool moving = agent.velocity.magnitude > 1;
+            bool moving = agent.velocity.magnitude > 0.1f;
             animator.SetBool(AnimatorID.isRunning, moving);
         }
     }
@@ -126,7 +126,7 @@ public class EnemyController : NetworkBehaviour {
     IEnumerator SearchTargets() {
         while (true) {
             ChangeTarget();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(NetGameManager.Instance?.TimeBetweenPathRecalculations ?? 1);
         }
     }
 
@@ -156,10 +156,12 @@ public class EnemyController : NetworkBehaviour {
         ).ToList();
 
         GameObject nearestPlayer = null;
+        GameObject nearestPathablePlayer = null;
         if (players.Count > 0) {
             var shortestDistance = Mathf.Infinity;
-            //nearestPlayer = players.First().gameObject;
+            var shortestPathableDistance = Mathf.Infinity;
 
+            // Calculate closest pathabe player and the mathematically closest player
             foreach (var p in players) {
                 var vDistance = p.transform.position - transform.position;
                 // We are just comparing distances, we don't need precision, so we can save up on a Mathf.Sqrt()
@@ -169,18 +171,28 @@ public class EnemyController : NetworkBehaviour {
                 var path = new NavMeshPath();
                 agent.CalculatePath(p.transform.position, path);
 
-                // Skip unreachable targets
-                if (NavMeshPathStatus.PathInvalid == path.status) continue;
-
+                // Store the true shortest distance in case there are no players with a full path
                 if (shortestDistance > distance) {
                     nearestPlayer = p.gameObject;
                     shortestDistance = distance;
                 }
-            }
-        }
 
-        // If no targets found, stay in place
-        _target = nearestPlayer != null ? nearestPlayer.transform : this.transform;
+                // Skip unreachable targets
+                if (NavMeshPathStatus.PathInvalid == path.status) continue;
+
+                if (shortestPathableDistance > distance) {
+                    nearestPathablePlayer = p.gameObject;
+                    shortestPathableDistance = distance;
+                }
+            }
+
+            // If there were no pathable players, use the mathematically closest player
+            _target = nearestPathablePlayer == null ? nearestPlayer.transform : nearestPathablePlayer.transform;
+        }
+        // If there are no alive players
+        else {
+            _target = this.transform;
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
