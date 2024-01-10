@@ -9,11 +9,11 @@ public class EnemySpawnPoint : NetworkBehaviour {
     public override void OnStartServer() {
         base.OnStartServer();
 
-        NetGameManager.Instance?.spawnPoints.Add(this.transform);
+        NetGameManager.Instance?.enemySpawnPoints.Add(this.transform);
     }
 
     public override void OnStopServer() {
         base.OnStartServer();
-        NetGameManager.Instance?.spawnPoints.Remove(this.transform);
+        NetGameManager.Instance?.enemySpawnPoints.Remove(this.transform);
     }
 }

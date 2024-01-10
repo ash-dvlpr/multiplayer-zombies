@@ -5,6 +5,7 @@ using System.Linq;
 
 using UnityEngine;
 using Random = UnityEngine.Random;
+using CustomExtensions.Collections;
 
 using FishNet;
 using FishNet.Object;
@@ -16,7 +17,7 @@ public class NetGameManager : NetworkBehaviour {
 
     // ==================== Configuration ====================
     [SerializeField] List<EnemyController> enemyPrefabs = new();
-    [SerializeField] public List<Transform> spawnPoints;
+    [SerializeField] public List<Transform> enemySpawnPoints = new();
     [SerializeField] float graceTime = 1f;
 
     // ====================== Variables ======================
@@ -143,6 +144,14 @@ public class NetGameManager : NetworkBehaviour {
         }
     }
 
+    // ======================= Entities =======================
+    [Server]
+    private GameObject SpawnThingNet(GameObject prefab, Vector3 position) { 
+        var spawned = Instantiate(prefab, position, Quaternion.identity);
+        InstanceFinder.ServerManager.Spawn(spawned);
+        return spawned;
+    }
+
     // ======================== Enemies =======================
     [Server]
     public void Enemies_OnChange(SyncListOperation op, int index, EnemyController oldItem, EnemyController newItem, bool asServer) {
@@ -159,15 +168,13 @@ public class NetGameManager : NetworkBehaviour {
 
     [Server]
     void SpawnEnemy() {
-        if (spawnPoints.Count == 0 || enemyPrefabs.Count == 0) return;
+        if (enemySpawnPoints.Count == 0 || enemyPrefabs.Count == 0) return;
 
-        var position = spawnPoints[Random.Range(0, spawnPoints.Count)].position;
-        var enemyPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)].gameObject;
-
-        var spawned = Instantiate(enemyPrefab, position, Quaternion.identity);
-        //Enemies.Add(spawned.GetComponent<EnemyController>());
-
-        InstanceFinder.ServerManager.Spawn(spawned);
+        // This uses a custom extension method (C# feature)
+        var position = enemySpawnPoints.GetRandom().position;
+        var enemyPrefab = enemyPrefabs.GetRandom().gameObject;
+        
+        var spawned = SpawnThingNet(enemyPrefab, position);
     }
 
     [Server]
