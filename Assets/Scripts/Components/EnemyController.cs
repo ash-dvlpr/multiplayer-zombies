@@ -36,7 +36,6 @@ public class EnemyController : NetworkBehaviour {
     // ====================== Unity Code ======================
     public override void OnStartNetwork() {
         base.OnStartNetwork();
-        //health.OnDeath += OnDeath;
 
         if (!base.IsServer) { 
             agent.enabled = false;
@@ -44,7 +43,6 @@ public class EnemyController : NetworkBehaviour {
     }
     public override void OnStopNetwork() {
         base.OnStopNetwork();
-        //health.OnDeath -= OnDeath;
     }
     public override void OnStartServer() {
         base.OnStartServer();

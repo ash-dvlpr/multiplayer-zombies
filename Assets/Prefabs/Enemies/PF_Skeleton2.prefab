@@ -1552,7 +1552,7 @@ GameObject:
   - component: {fileID: 7900116984341768026}
   - component: {fileID: 3564724057640134477}
   - component: {fileID: 3629903982140387601}
-  - component: {fileID: 7117736816172991350}
+  - component: {fileID: 2054444816867033615}
   m_Layer: 0
   m_Name: Attack Area
   m_TagString: Untagged
@@ -1625,8 +1625,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &7117736816172991350
-SphereCollider:
+--- !u!136 &2054444816867033615
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1643,9 +1643,11 @@ SphereCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.5864466
+  m_Height: 1.3362075
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.084997356, z: 0}
 --- !u!1 &6007803590636603208
 GameObject:
   m_ObjectHideFlags: 0

@@ -316,7 +316,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 383788569288210502}
@@ -1473,7 +1473,7 @@ GameObject:
   - component: {fileID: 383788569288210502}
   - component: {fileID: 3461784607992860762}
   - component: {fileID: 7382742148008318238}
-  - component: {fileID: 2697211409298761995}
+  - component: {fileID: 5193132447139141083}
   m_Layer: 0
   m_Name: Attack Area
   m_TagString: Untagged
@@ -1546,8 +1546,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &2697211409298761995
-SphereCollider:
+--- !u!136 &5193132447139141083
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1564,9 +1564,11 @@ SphereCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.5864466
+  m_Height: 1.3362075
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.084997356, z: 0}
 --- !u!1 &5750257288265802662
 GameObject:
   m_ObjectHideFlags: 0
@@ -2233,7 +2235,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9221093179727450098}
