@@ -6,6 +6,9 @@ using UnityEngine;
 public class PlayerUI : AMenu {
     public override MenuID MenuKey { get => MenuID.PlayerUI; }
 
+    // ==================== Configuration ====================
+    [SerializeField] AudioClip gameTheme;
+
     // ====================== References =====================
     [field: SerializeField] public TMP_Text RoundDisplay { get; private set; }
     [field: SerializeField] public ResourceBar HPBar { get; private set; }
@@ -33,6 +36,7 @@ public class PlayerUI : AMenu {
         // Update UI elements
         HPBar.Refresh();
         OnRoundChange(NetGameManager.Instance.Round);
+        AudioManager.PlayClip(gameTheme, true);
     }
     public override void CloseMenu() {
         DeregisterEvents();

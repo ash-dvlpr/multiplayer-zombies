@@ -7,6 +7,9 @@ using TMPro;
 public class MainMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Main; }
 
+    // ==================== Configuration ====================
+    [SerializeField] AudioClip mainTheme;
+
     // ====================== References =====================
     [field: SerializeField] public Button MultiplayerButton { get; private set; }
     public bool MultiplayerButtonState {
@@ -21,6 +24,7 @@ public class MainMenu : AMenu {
     // ===================== Custom Code =====================
     public override void OpenMenu() {
         base.OpenMenu();
+        AudioManager.PlayClip(mainTheme);
     }
     public override void CloseMenu() {
         base.CloseMenu();
