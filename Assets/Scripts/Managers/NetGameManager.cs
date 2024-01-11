@@ -11,6 +11,7 @@ using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Connection;
+using Unity.VisualScripting;
 
 public class NetGameManager : NetworkBehaviour {
     public static NetGameManager Instance { get; private set; }
@@ -228,8 +229,8 @@ public class NetGameManager : NetworkBehaviour {
 
     [Server]
     private void DespawnAllNet<T>() where T : NetworkBehaviour { 
-        var objects = Resources.FindObjectsOfTypeAll<T>();
-        // TODO: skip already dinitializing enemies
+        var objects = from o in Resources.FindObjectsOfTypeAll<T>()
+            where o.IsSpawned && !o.IsDeinitializing select o;
 
         foreach (var obj in objects) {
             base.Despawn(obj.gameObject);

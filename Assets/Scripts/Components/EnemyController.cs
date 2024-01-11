@@ -112,7 +112,7 @@ public class EnemyController : NetworkBehaviour {
     void OnTriggerEnter(Collider other) {
         if (health.IsAlive && !_attacking && other.CompareTag("Player")) {
             PlayAttackSound();
-            if (base.IsServer) { 
+            if (base.IsServer) {
                 StartCoroutine(AttackDelay());
                 netAnimator.SetTrigger(AnimatorID.triggerAttack);
                 Attack(other.transform);
@@ -167,18 +167,13 @@ public class EnemyController : NetworkBehaviour {
     private void ChangeTarget() {
         // Get players from EnemySpawner's cached player list
         // And filter for alive players
-        var players = NetGameManager.Instance?.Players.Where(
-            p =>{
-                // Skip if no health component found
-                if (!p.TryGet<Health>(out var health)) return false;
-                // Skip dead players
-                return health.IsAlive;
-            }
-        ).ToList();
+        var players = from p in NetGameManager.Instance?.Players
+                      where p.TryGet<Health>(out var health) && health.IsAlive
+                      select p;
 
         GameObject nearestPlayer = null;
         GameObject nearestPathablePlayer = null;
-        if (players.Count > 0) {
+        if (players.Any()) {
             var shortestDistance = Mathf.Infinity;
             var shortestPathableDistance = Mathf.Infinity;
 

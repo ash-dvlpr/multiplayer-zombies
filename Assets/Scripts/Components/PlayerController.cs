@@ -68,6 +68,10 @@ public class PlayerController : NetworkBehaviour, IInteractor {
         var type = typeof(T);
         componentCache[type] = resource;
     }
+    public bool Has<T>() {
+        var type = typeof(T);
+        return componentCache.ContainsKey(type);
+    }
     public bool TryGet<T>(out T resource) {
         var type = typeof(T);
         var result = componentCache.TryGetValue(type, out var cachedObj);
