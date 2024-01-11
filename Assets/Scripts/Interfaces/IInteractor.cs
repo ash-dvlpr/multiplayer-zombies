@@ -14,7 +14,7 @@ using FishNet.Serializing;
 /// 
 /// </summary>
 /// <typeparam name="T">Target Component</typeparam>
-public interface IInteractor : ICache {
+public interface IInteractor : ITypeCache {
     public List<Type> AllowedInteractableTypes { get; }
     public bool CanInteract(IInteractable interactable) {
         return AllowedInteractableTypes.Contains(interactable.Target);

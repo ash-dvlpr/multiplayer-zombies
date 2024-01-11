@@ -10,7 +10,7 @@ public class DisableOnPlayDrawer : PropertyDrawer {
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-        var playing = Application.isPlaying;
+        var playing = Application.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode;
         GUI.enabled = !playing;
 
         EditorGUI.PropertyField(position, property, label, true);
