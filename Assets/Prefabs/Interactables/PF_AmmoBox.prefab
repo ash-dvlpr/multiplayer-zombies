@@ -52,7 +52,7 @@ MonoBehaviour:
   _networkBehaviours: []
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField:
-  - {fileID: 6679652034804920276}
+  - {fileID: 5109399154347403294}
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
@@ -211,7 +211,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: 45fb3b613218da844b047d1f9349e0d6,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6679652034804920276}
+      addedObject: {fileID: 5109399154347403294}
     - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: 45fb3b613218da844b047d1f9349e0d6,
         type: 3}
       insertIndex: -1
@@ -227,7 +227,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2905998996857207622}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6679652034804920276
+--- !u!114 &5109399154347403294
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -294,8 +294,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 6679652034804920276}
-  _networkObjectCache: {fileID: 6679652034804920276}
+  _addedNetworkObject: {fileID: 6225729230850695764}
+  _networkObjectCache: {fileID: 5109399154347403294}
+  pickupSound: {fileID: 8300000, guid: 3b4cb136dd19d9745b5f4552c5b89e48, type: 3}
   restoreAll: 1
   ammoAmount: 10
 --- !u!4 &7867395466710290524 stripped

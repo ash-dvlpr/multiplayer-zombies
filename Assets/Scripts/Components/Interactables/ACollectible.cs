@@ -31,6 +31,7 @@ public abstract class ACollectible<R> : ABaseCollectible where R : AResource {
     [Server]
     public virtual void Collect(R interactorResource) {
         base.Despawn(this.gameObject);
+        PlayPickupSound();
     }
 }
 

@@ -254,4 +254,11 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     public void Interact(IInteractable interactable) {
         interactable.Interact(this);
     }
+
+    // ======================= Sounds ========================
+    //[ObserversRpc(BufferLast = true)]
+    //public void PlayDeathSound() {
+    //    if (base.IsClient && deathSound != null)
+    //        AudioManager.PlayClipOn(deathSound, audioSource);
+    //}
 }

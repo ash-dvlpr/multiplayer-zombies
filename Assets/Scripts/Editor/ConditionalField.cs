@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using Cinemachine.Editor;
 using System.Linq;
+using CustomExtensions.Collections;
 
 [CustomPropertyDrawer(typeof(ConditionalFieldAttribute))]
 public class ConditionalFieldAttributeDrawer : PropertyDrawer {
@@ -25,12 +26,17 @@ public class ConditionalFieldAttributeDrawer : PropertyDrawer {
         switch (fieldToCheck.type) {
             case "Enum":
                 var value = fieldToCheck.enumValueIndex;
+                //Debug.Log($"Value: {value} -> {conditional.compareValues.ToDebugString()}");
+
                 _toShow = conditional.compareValues.Contains(value.ToString());
                 break;
             default:
                 Debug.LogError($"ConditionalFieldAttributeDrawer: Unsupported field type: '{fieldToCheck.type}'");
                 break;
         }
+
+        // Invert if set
+        _toShow = conditional.inverse ? !_toShow : _toShow;
 
         // Look into this if you wanna extend this (change to reflexion)
         // https://forum.unity.com/threads/get-a-general-object-value-from-serializedproperty.327098/

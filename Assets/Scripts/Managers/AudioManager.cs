@@ -16,20 +16,23 @@ using Unity.VisualScripting.FullSerializer;
 public struct ClipConfig : ICacheable<string> {
     public string Key { get => clip.name; }
 
+    public Purpose purpose;
+    
+    [ConditionalField(nameof(purpose), true, (int) Purpose.Unknown)]
     public AudioClip clip;
 
-    public Purpose purpose;
+    [ConditionalField(nameof(purpose), true, (int) Purpose.Unknown)]
     [Range(0f, 1f)] public float volume;
 
-    [ConditionalField(nameof(purpose), (int) Purpose.Music, (int) Purpose.AdvSFX)]
+    [ConditionalField(nameof(purpose), (int) Purpose.Music, (int) Purpose.LocalisedSFX)]
     public Advanced advanced;
 
     [Serializable]
     public enum Purpose : int {
-        Unknown = 0,
-        Music   = 1, // If played again, won't start over from scratch
-        SFX     = 3,
-        AdvSFX  = 4,
+        Unknown       = 0,
+        Music         = 1, // If played again, won't start over from scratch
+        SFX           = 2,
+        LocalisedSFX  = 3,
     }
 
     [Serializable]
@@ -81,12 +84,12 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
             })
             .ForEach(c => {
                 Register(c);
-                Debug.Log($"{c.clip.name}'s HASH: {c.clip.GetHashCode()}");
             });
 
         // Create audio sources
         audioSources[ClipConfig.Purpose.Music] = this.gameObject.AddComponent<AudioSource>();
         audioSources[ClipConfig.Purpose.SFX] = this.gameObject.AddComponent<AudioSource>();
+        audioSources[ClipConfig.Purpose.LocalisedSFX] = this.gameObject.AddComponent<AudioSource>();
     }
 
     // ==================== Public API =====================
@@ -106,6 +109,7 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
                         break;
 
                     case ClipConfig.Purpose.SFX:
+                    case ClipConfig.Purpose.LocalisedSFX:
                         // Just play the audio
                         source.PlayOneShot(config.clip, config.volume);
                         break;
@@ -145,6 +149,11 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
                     case ClipConfig.Purpose.Music:
                         // Don't do anything if we don't want to restart and it's the same track
                         if (!restart && source.clip == config.clip) break;
+                        source.Stop(); source.Play();
+                        break;
+
+                    case ClipConfig.Purpose.SFX:
+                    case ClipConfig.Purpose.LocalisedSFX:
                         source.Stop(); source.Play();
                         break;
 

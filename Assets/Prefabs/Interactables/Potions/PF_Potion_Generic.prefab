@@ -155,6 +155,7 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 4064473098992669620}
   _networkObjectCache: {fileID: 4064473098992669620}
+  pickupSound: {fileID: 8300000, guid: 21bd06257f37b874faf9312f6f0ddc9c, type: 3}
   restoreAll: 0
   healthAmount: 60
 --- !u!1 &3860539059184117951

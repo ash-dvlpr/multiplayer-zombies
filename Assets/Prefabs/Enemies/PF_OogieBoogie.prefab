@@ -2410,6 +2410,10 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3019101839091719879}
   _networkObjectCache: {fileID: 3019101839091719879}
+  movingSound: {fileID: 8300000, guid: 1cbecaa2d7fe83c4f9e42885ef7ed4f8, type: 3}
+  attackSound: {fileID: 8300000, guid: d23c1435ffb9d67468c53c562dce61b5, type: 3}
+  randomSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: a4f933b46366fc148a4182cb834d74d9, type: 3}
   attackRate: 2.5
   attackDamage: 25
   timeBeforeCorpseRemoval: 4

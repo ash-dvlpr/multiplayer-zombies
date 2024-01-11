@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Text;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,6 +9,17 @@ namespace CustomExtensions.Collections {
 
     // Extensions for Arrays
     public static class AarrayExtensions {
+        public static string ToDebugString<T>(this T[] arr) {
+            StringBuilder sb = new StringBuilder("[");
+
+            for (int i = 0 ; i < arr.Length ; i++) {
+                sb.Append(arr[i].ToString());
+                if (i < arr.Length-1) sb.Append(",");
+            }
+            
+            sb.Append("]");
+            return sb.ToString();
+        }
         public static bool IsNullOrEmpty<T>(this T[] arr) {
             return (arr == null || arr.Length == 0);
         }

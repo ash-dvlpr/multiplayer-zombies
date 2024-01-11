@@ -11,7 +11,14 @@ using FishNet.Component.Animating;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class EnemyController : NetworkBehaviour {
+
     // ==================== Configuration ====================
+    [Header("Sounds")]
+    [SerializeField] AudioClip movingSound;
+    [SerializeField] AudioClip attackSound;
+    [SerializeField] AudioClip randomSound;
+    [SerializeField] AudioClip deathSound;
+
     [Header("Combat")]
     [SerializeField] float attackRate = 2f;
     [SerializeField] int attackDamage = 10;
@@ -26,6 +33,7 @@ public class EnemyController : NetworkBehaviour {
     Animator animator;
     NetworkAnimator netAnimator;
     Health health;
+    AudioSource audioSource;
 
     // ====================== Variables ======================
     [SyncVar] Transform _target;
@@ -37,12 +45,18 @@ public class EnemyController : NetworkBehaviour {
     public override void OnStartNetwork() {
         base.OnStartNetwork();
 
-        if (!base.IsServer) { 
+        if (!base.IsServer) {
             agent.enabled = false;
         }
+
+        // Register events
+        health.OnDeath += OnDeath;
     }
     public override void OnStopNetwork() {
         base.OnStopNetwork();
+
+        // Deregister events
+        health.OnDeath -= OnDeath;
     }
     public override void OnStartServer() {
         base.OnStartServer();
@@ -50,11 +64,15 @@ public class EnemyController : NetworkBehaviour {
         // Register enemy on the enemy spawner
         NetGameManager.Instance?.Enemies.Add(this);
 
-        // Register events
-        health.OnDeath += OnDeath;
-
         // Start searching for targets
         StartCoroutine(SearchTargets());
+        PlayMovingSound();
+    }
+
+    public override void OnStartClient() {
+        base.OnStartClient();
+
+        audioSource = this.gameObject.AddComponent<AudioSource>();
     }
 
     public override void OnStopServer() {
@@ -62,9 +80,6 @@ public class EnemyController : NetworkBehaviour {
 
         // Deregister enemy on the enemy spawner
         NetGameManager.Instance?.Enemies.Remove(this);
-
-        // Deregister events
-        health.OnDeath -= OnDeath;
 
         // Cleaup
         StopAllCoroutines();
@@ -96,9 +111,12 @@ public class EnemyController : NetworkBehaviour {
 
     void OnTriggerEnter(Collider other) {
         if (health.IsAlive && !_attacking && other.CompareTag("Player")) {
-            StartCoroutine(AttackDelay());
-            netAnimator.SetTrigger(AnimatorID.triggerAttack);
-            if (base.IsServer) Attack(other.transform);
+            PlayAttackSound();
+            if (base.IsServer) { 
+                StartCoroutine(AttackDelay());
+                netAnimator.SetTrigger(AnimatorID.triggerAttack);
+                Attack(other.transform);
+            }
         }
     }
 
@@ -110,6 +128,10 @@ public class EnemyController : NetworkBehaviour {
         animator.SetBool(AnimatorID.isRunning, false);
         agent.destination = this.transform.position;
         agent.isStopped = true;
+
+        if (base.IsClient) {
+            AudioManager.PlayClipOn(deathSound, audioSource);
+        }
 
         if (base.IsServer) StartCoroutine(DelayCorposeRemoval());
     }
@@ -132,6 +154,7 @@ public class EnemyController : NetworkBehaviour {
         _attacking = true;
         yield return new WaitForSeconds(attackRate);
         _attacking = false;
+        PlayMovingSound();
     }
 
     [Server]
@@ -150,7 +173,7 @@ public class EnemyController : NetworkBehaviour {
                 if (!p.TryGet<Health>(out var health)) return false;
                 // Skip dead players
                 return health.IsAlive;
-            } 
+            }
         ).ToList();
 
         GameObject nearestPlayer = null;
@@ -215,4 +238,24 @@ public class EnemyController : NetworkBehaviour {
     //        // TODO: damage
     //    }
     //}
+
+
+    // ======================= Sounds ========================
+    [ObserversRpc(BufferLast = true)]
+    public void PlayMovingSound() {
+        if (base.IsClient && movingSound != null)
+            AudioManager.PlayClipOn(movingSound, audioSource);
+    }
+
+    [ObserversRpc]
+    public void PlayAttackSound() {
+        if (base.IsClient && attackSound != null)
+            AudioManager.PlayClipOn(attackSound, audioSource);
+    }
+
+    [ObserversRpc]
+    public void PlayRandomSound() {
+        if (base.IsClient && randomSound != null)
+            AudioManager.PlayClipOn(randomSound, audioSource);
+    }
 }
