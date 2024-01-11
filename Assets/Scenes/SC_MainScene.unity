@@ -622,25 +622,25 @@ MonoBehaviour:
       spatialBlend: 1
   - purpose: 3
     clip: {fileID: 8300000, guid: 3b4cb136dd19d9745b5f4552c5b89e48, type: 3}
-    volume: 0.75
+    volume: 0.25
     advanced:
       loop: 0
       spatialBlend: 1
   - purpose: 3
     clip: {fileID: 8300000, guid: 14e0e3a6642b04e45a928822d3fe8a32, type: 3}
-    volume: 0.5
+    volume: 0.25
     advanced:
       loop: 0
       spatialBlend: 1
   - purpose: 3
     clip: {fileID: 8300000, guid: 21bd06257f37b874faf9312f6f0ddc9c, type: 3}
-    volume: 0.75
+    volume: 0.25
     advanced:
       loop: 0
       spatialBlend: 1
   - purpose: 3
     clip: {fileID: 8300000, guid: 2c6f8b6b65032514c8e5405d45f632f1, type: 3}
-    volume: 0.5
+    volume: 0.25
     advanced:
       loop: 0
       spatialBlend: 1

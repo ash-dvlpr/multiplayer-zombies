@@ -10,6 +10,7 @@ using System;
 /// <typeparam name="R">Target AResource</typeparam>
 public abstract class ACollectible<R> : ABaseCollectible where R : AResource {
     public override Type Target { get => typeof(R); }
+    protected bool pickedUp = false;
 
     /// <summary>
     /// Base implementetion for collection of the object.<br></br>
@@ -17,7 +18,7 @@ public abstract class ACollectible<R> : ABaseCollectible where R : AResource {
     /// <param name="interactor"></param>
     [Server]
     public override void Interact(IInteractor interactor) {
-        if (interactor.TryGet<R>(out var resource)) {
+        if (interactor.TryGet<R>(out var resource) && !pickedUp) {
             Collect(resource);
         }
     }
@@ -30,8 +31,9 @@ public abstract class ACollectible<R> : ABaseCollectible where R : AResource {
     /// <param name="interactorResource">Resource that will be affected by the interaction.</param>
     [Server]
     public virtual void Collect(R interactorResource) {
-        base.Despawn(this.gameObject);
+        pickedUp = true;
         PlayPickupSound();
+        base.Despawn(this.gameObject);
     }
 }
 

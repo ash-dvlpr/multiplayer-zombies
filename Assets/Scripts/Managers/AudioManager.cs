@@ -100,9 +100,10 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
 
             // If found and we have an audio source for it
             if (found && Instance.audioSources.TryGetValue(config.purpose, out var source)) {
-                ConfigAudioSource(source, config);
                 switch (config.purpose) {
                     case ClipConfig.Purpose.Music:
+                        ConfigAudioSource(source, config);
+
                         // Don't do anything if we don't want to restart and it's the same track
                         if (!restart && source.clip == config.clip) break;
                         source.Stop(); source.Play();
@@ -125,19 +126,30 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
         }
     }
 
-    //public static void PlayClipAt(AudioClip clip, Vector3 position) => PlayClipAt(clip.name, position);
-    //public static void PlayClipAt(string clipName, Vector3 position) {
-    //    if (Instance && !string.IsNullOrEmpty(clipName)) {
-    //        var found = Instance.TryGet(clipName, out var config);
-    //        if (found) { 
-                //ConfigAudioSource(source, config);
+    public static void PlayClipAt(AudioClip clip, Vector3 position) => PlayClipAt(clip.name, position);
+    public static void PlayClipAt(string clipName, Vector3 position) {
+        if (Instance && !string.IsNullOrEmpty(clipName)) {
+            var found = Instance.TryGet(clipName, out var config);
 
-    //        }
-    //        else {
-    //            Debug.LogError($"AudioManager.PlayClipAt(): Couldn't locate settings for audio clip '{clipName}'");
-    //        }
-    //    }
-    //}
+            // If found and we have an audio source for it
+            if (found && Instance.audioSources.TryGetValue(config.purpose, out var source)) {
+                switch (config.purpose) {
+                    case ClipConfig.Purpose.SFX:
+                    case ClipConfig.Purpose.LocalisedSFX:
+                        // Just play the audio
+                        AudioSource.PlayClipAtPoint(config.clip, position, config.volume);
+                        break;
+
+                    default:
+                        Debug.LogError($"AudioManager.PlayClipAt(): Unsupported clip purpose: '{config.purpose}'");
+                        break;
+                }
+            }
+            else {
+                Debug.LogError($"AudioManager.PlayClipAt(): Couldn't locate settings for audio clip '{clipName}'");
+            }
+        }
+    }
 
     public static void PlayClipOn(AudioClip clip, AudioSource source, bool restart = true) => PlayClipOn(clip.name, source, restart);
     public static void PlayClipOn(string clipName, AudioSource source, bool restart = true) {
