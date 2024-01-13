@@ -11,3 +11,4 @@ LightingData.asset filter=lfs diff=lfs merge=lfs -text
 /Assets/Plugins/TextMesh[[:space:]]Pro/Resources/**/*.asset filter=lfs diff=lfs merge=lfs -text
 /Assets/Art/Graphics/Fonts/*.asset filter=lfs diff=lfs merge=lfs -text
 Assets/Art/Graphics/Fonts/*.asset filter=lfs diff=lfs merge=lfs -text
+*.hdr filter=lfs diff=lfs merge=lfs -text
