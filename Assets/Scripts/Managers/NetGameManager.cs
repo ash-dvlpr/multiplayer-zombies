@@ -36,7 +36,7 @@ public class NetGameManager : NetworkBehaviour {
 
     public int Round { get => _round; private set => _round = value; }
     public int TotalEnemies { get => _totalEnemies; private set => _totalEnemies = value; }
-    public int AliveEnemies { get => _aliveEnemies; private set => _aliveEnemies = value; }
+    public int AliveEnemies { get => _aliveEnemies; set => _aliveEnemies = Math.Max(0, value); }
     
     [HideInInspector] public List<SpawnPoint> enemySpawnPoints = new();
     [HideInInspector] public List<SpawnPoint> resourceSpawnPoints = new();
@@ -287,7 +287,6 @@ public class NetGameManager : NetworkBehaviour {
         // If an enemy died/was removed
         if (SyncListOperation.RemoveAt == op) {
             var remainingEnemies = Enemies;
-            AliveEnemies = Enemies.Count;
 
             // If there are no enemies remaining
             if (remainingEnemies.Count == 0) {

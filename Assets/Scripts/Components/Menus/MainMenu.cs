@@ -40,6 +40,9 @@ public class MainMenu : AMenu {
     public void OnClick_Settings() {
         MenuManager.OpenMenu(MenuID.Settings);
     }
+    public void OnClick_Credits() {
+        MenuManager.OpenMenu(MenuID.Credits);
+    }
     public void OnClick_CloseGame() {
         GameManager.CloseGame();
     }

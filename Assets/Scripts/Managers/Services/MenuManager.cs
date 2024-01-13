@@ -8,11 +8,12 @@ public enum MenuID : int {
     None       = 0,
     Main       = 1,
     Settings   = 2,
-    Lobby      = 3,
-    Pause      = 4,
-    PlayerUI   = 5,
-    GameOverUI = 6,
-    Crossfade  = 7,
+    Credits    = 3,
+    Lobby      = 4,
+    Pause      = 5,
+    PlayerUI   = 6,
+    GameOverUI = 7,
+    Crossfade  = 8,
 }
 
 public static class MenuManager {

@@ -144,6 +144,8 @@ public class EnemyController : NetworkBehaviour {
 
             animator.SetBool(AnimatorID.isRunning, false);
             animator.SetBool(AnimatorID.isAlive, false);
+
+            NetGameManager.Instance.AliveEnemies--;
         }
             
         _collider.enabled = false;

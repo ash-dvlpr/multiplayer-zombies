@@ -1685,6 +1685,7 @@ GameObject:
   - component: {fileID: 2948416643673807308}
   - component: {fileID: 6047871108251672893}
   - component: {fileID: 2391406843012947594}
+  - component: {fileID: 266843328769153849}
   m_Layer: 5
   m_Name: CreditsMenu
   m_TagString: Untagged
@@ -1779,6 +1780,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &266843328769153849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4185186165686571408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f75850a4ca637849914bf888aacd07d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4821331869383835539
 GameObject:
   m_ObjectHideFlags: 0
@@ -3342,13 +3355,18 @@ PrefabInstance:
     - target: {fileID: 1198324070676572933, guid: 06b319151078938418604eb5fdb1e60f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1198324070676572933, guid: 06b319151078938418604eb5fdb1e60f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1198324070676572933, guid: 06b319151078938418604eb5fdb1e60f,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 266843328769153849}
     - target: {fileID: 1198324070676572933, guid: 06b319151078938418604eb5fdb1e60f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -3362,7 +3380,7 @@ PrefabInstance:
     - target: {fileID: 1198324070676572933, guid: 06b319151078938418604eb5fdb1e60f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: LobbyMenu, Assembly-CSharp
+      value: CreditsMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1198324070676572933, guid: 06b319151078938418604eb5fdb1e60f,
         type: 3}
