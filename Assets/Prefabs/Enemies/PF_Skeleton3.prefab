@@ -640,9 +640,9 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 5430026154933461714}
   _networkObjectCache: {fileID: 5430026154933461714}
-  movingSound: {fileID: 8300000, guid: 9792340f84a6a0e44a81cc1a4aa6e5f3, type: 3}
+  movingSound: {fileID: 8300000, guid: 80fdfae3b5e348c429a7a01badfc37ac, type: 3}
   attackSound: {fileID: 8300000, guid: 267644ff07d092242a01e34cbd57d45e, type: 3}
-  randomSound: {fileID: 0}
+  randomSound: {fileID: 8300000, guid: 1cbecaa2d7fe83c4f9e42885ef7ed4f8, type: 3}
   deathSound: {fileID: 8300000, guid: cd3c4e04ac6db8f4dbec20c38b5b7c49, type: 3}
   attackRate: 1
   attackDamage: 10
