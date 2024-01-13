@@ -23,12 +23,12 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     [SerializeField] float shootingRate = 0.1f;
     [SerializeField] int shotDamage = 20;
 
+    [Header("Sounds")]
+    [SerializeField] AudioClip deathSound;
+    [SerializeField] AudioClip shootSound;
+
     //[Header("Death")]
     //[SerializeField] float timeBeforeCorpseRemoval = 4f;
-
-    //[Header("Interaction")]
-    //[SerializeField] string interactableTag;
-
 
     // ====================== Variables ======================
     // Here interactable componets are cached
@@ -191,6 +191,7 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     }
     void OnDeath() {
         CanControl = false;
+        PlayDeathSound();
 
         // TODO: trigger death animation
         //Destroy(this, timeBeforeCorpseRemoval);
@@ -224,6 +225,7 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     [ServerRpc]
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
         if (ammo.HasAmmo) {
+            PlayShootSound();
             ammo.Consume(1);
 
             if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
@@ -260,9 +262,15 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     }
 
     // ======================= Sounds ========================
-    //[ObserversRpc(BufferLast = true)]
-    //public void PlayDeathSound() {
-    //    if (base.IsClient && deathSound != null)
-    //        AudioManager.PlayClipOn(deathSound, audioSource);
-    //}
+    [ObserversRpc]
+    public void PlayShootSound() {
+        if (base.IsClient && shootSound != null)
+            AudioManager.PlayClipAt(shootSound, this.transform.position);
+    }
+
+    [ObserversRpc]
+    public void PlayDeathSound() {
+        if (base.IsClient && deathSound != null)
+            AudioManager.PlayClipAt(deathSound, this.transform.position);
+    }
 }

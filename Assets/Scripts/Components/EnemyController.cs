@@ -34,6 +34,7 @@ public class EnemyController : NetworkBehaviour {
     NetworkAnimator netAnimator;
     Health health;
     AudioSource audioSource;
+    Collider _collider;
 
     // ====================== Variables ======================
     [SyncVar] Transform _target;
@@ -61,6 +62,9 @@ public class EnemyController : NetworkBehaviour {
     public override void OnStartServer() {
         base.OnStartServer();
 
+        _collider = GetComponent<Collider>();
+        animator.SetBool(AnimatorID.isAlive, true);
+
         // Register enemy on the enemy spawner
         NetGameManager.Instance?.Enemies.Add(this);
 
@@ -73,6 +77,15 @@ public class EnemyController : NetworkBehaviour {
         base.OnStartClient();
 
         audioSource = this.gameObject.AddComponent<AudioSource>();
+        
+        // Register enemy on the enemy spawner
+        AudioManager.Instance?.entitySources.Add(audioSource);
+    }
+    public override void OnStopClient() {
+        base.OnStopClient();
+
+        // Register enemy on the enemy spawner
+        AudioManager.Instance?.entitySources.Remove(audioSource);
     }
 
     public override void OnStopServer() {
@@ -123,11 +136,17 @@ public class EnemyController : NetworkBehaviour {
 
     // ===================== Custom Code =====================
     void OnDeath() {
-        if (base.IsServer) StopAllCoroutines();
+        StopAllCoroutines();
+        
+        if (base.IsServer) { 
+            agent.destination = this.transform.position;
+            agent.isStopped = true;
 
-        animator.SetBool(AnimatorID.isRunning, false);
-        agent.destination = this.transform.position;
-        agent.isStopped = true;
+            animator.SetBool(AnimatorID.isRunning, false);
+            animator.SetBool(AnimatorID.isAlive, false);
+        }
+            
+        _collider.enabled = false;
 
         if (base.IsClient) {
             AudioManager.PlayClipOn(deathSound, audioSource);

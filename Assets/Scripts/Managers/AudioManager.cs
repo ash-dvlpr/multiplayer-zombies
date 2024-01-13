@@ -6,18 +6,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 using CustomExtensions.Collections;
-using UnityEngine.UIElements;
-using FishNet.Broadcast;
-using Unity.VisualScripting;
-using static Unity.VisualScripting.Member;
-using Unity.VisualScripting.FullSerializer;
 
 [Serializable]
 public struct ClipConfig : ICacheable<string> {
     public string Key { get => clip.name; }
 
     public Purpose purpose;
-    
+
     [ConditionalField(nameof(purpose), true, (int) Purpose.Unknown)]
     public AudioClip clip;
 
@@ -36,7 +31,7 @@ public struct ClipConfig : ICacheable<string> {
     }
 
     [Serializable]
-    public struct Advanced { 
+    public struct Advanced {
         public bool loop;
 
         //[Range(0f, 1f)] public float pitch;
@@ -54,6 +49,7 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
     // ==================== Audio Cache ====================
     readonly Dictionary<string, ClipConfig> audioCache = new();
     readonly Dictionary<ClipConfig.Purpose, AudioSource> audioSources = new();
+    public readonly List<AudioSource> entitySources = new();
 
     public void Register(ClipConfig config) {
         var key = config.Key;
@@ -93,6 +89,40 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
     }
 
     // ==================== Public API =====================
+    public static void PauseAudio() {
+        if (Instance) {
+            // var (k, v) is a touple destructuring. "_" ignores the k variable
+            foreach (var (_, source) in Instance.audioSources) {
+                source.Pause();
+            }
+
+            foreach (var source in Instance.entitySources) {
+                source.Pause();
+            }
+        }
+    }
+
+    public static void ResumeAudio() {
+        if (Instance) {
+            // var (k, v) is a touple destructuring. "_" ignores the k variable
+            foreach (var (_, source) in Instance.audioSources) {
+                source.UnPause();
+            }
+
+            foreach (var source in Instance.entitySources) {
+                source.UnPause();
+            }
+        }
+    }
+
+    public static void ConfigAudioSource(AudioSource source, ClipConfig config) {
+        source.clip = config.clip;
+        source.volume = config.volume;
+        //source.pitch = config.advanced.pitch;
+        source.spatialBlend = config.advanced.spatialBlend;
+        source.loop = config.advanced.loop;
+    }
+
     public static void PlayClip(AudioClip clip, bool restart = true) => PlayClip(clip.name, restart);
     public static void PlayClip(string clipName, bool restart = true) {
         if (Instance && !string.IsNullOrEmpty(clipName)) {
@@ -102,10 +132,10 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
             if (found && Instance.audioSources.TryGetValue(config.purpose, out var source)) {
                 switch (config.purpose) {
                     case ClipConfig.Purpose.Music:
-                        ConfigAudioSource(source, config);
-
                         // Don't do anything if we don't want to restart and it's the same track
-                        if (!restart && source.clip == config.clip) break;
+                        if (!restart && source.clip != null && source.clip.name == clipName) break;
+                        
+                        ConfigAudioSource(source, config);
                         source.Stop(); source.Play();
                         break;
 
@@ -156,16 +186,18 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
         if (Instance && !string.IsNullOrEmpty(clipName)) {
             var found = Instance.TryGet(clipName, out var config);
             if (found) {
-                ConfigAudioSource(source, config);
                 switch (config.purpose) {
                     case ClipConfig.Purpose.Music:
                         // Don't do anything if we don't want to restart and it's the same track
-                        if (!restart && source.clip == config.clip) break;
+                        if (!restart && source.clip != null && source.clip.name == clipName) break;
+
+                        ConfigAudioSource(source, config);
                         source.Stop(); source.Play();
                         break;
 
                     case ClipConfig.Purpose.SFX:
                     case ClipConfig.Purpose.LocalisedSFX:
+                        ConfigAudioSource(source, config);
                         source.Stop(); source.Play();
                         break;
 
@@ -179,12 +211,6 @@ public class AudioManager : MonoBehaviour, ICache<string, ClipConfig> {
             }
         }
     }
-    public static void ConfigAudioSource(AudioSource source, ClipConfig config) {
-        source.clip = config.clip;
-        source.volume = config.volume;
-        //source.pitch = config.advanced.pitch;
-        source.spatialBlend = config.advanced.spatialBlend;
-        source.loop = config.advanced.loop;
-    }
+    
 }
 

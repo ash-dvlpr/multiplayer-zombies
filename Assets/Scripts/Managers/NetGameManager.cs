@@ -31,7 +31,12 @@ public class NetGameManager : NetworkBehaviour {
     // ====================== Variables ======================
     [Header("Variables")]
     [SyncVar(OnChange = nameof(Round_OnChange)), ShowOnly] int _round;
-    public int Round { get => _round; }
+    [SyncVar(OnChange = nameof(TotalEnemies_OnChange)), ShowOnly] int _totalEnemies;
+    [SyncVar(OnChange = nameof(AliveEnemies_OnChange)), ShowOnly] int _aliveEnemies;
+
+    public int Round { get => _round; private set => _round = value; }
+    public int TotalEnemies { get => _totalEnemies; private set => _totalEnemies = value; }
+    public int AliveEnemies { get => _aliveEnemies; private set => _aliveEnemies = value; }
     
     [HideInInspector] public List<SpawnPoint> enemySpawnPoints = new();
     [HideInInspector] public List<SpawnPoint> resourceSpawnPoints = new();
@@ -50,6 +55,16 @@ public class NetGameManager : NetworkBehaviour {
     public event Action<int> OnRoundChange {
         add    { lock(this) { onRoundChange += value; } }
         remove { lock(this) { onRoundChange -= value; } }
+    }
+    private event Action<int> onTotalEnemiesChange;
+    public event Action<int>  OnTotalEnemiesChange {
+        add    { lock(this) { onTotalEnemiesChange += value; } }
+        remove { lock(this) { onTotalEnemiesChange -= value; } }
+    }
+    private event Action<int> onAliveEnemiesChange;
+    public event Action<int>  OnAliveEnemiesChange {
+        add    { lock(this) { onAliveEnemiesChange += value; } }
+        remove { lock(this) { onAliveEnemiesChange -= value; } }
     }
 
     [ObserversRpc]
@@ -130,7 +145,7 @@ public class NetGameManager : NetworkBehaviour {
         // Start preparing the scene and 
         StopAllCoroutines();
         _roundTriggered = false;
-        _round = 0;
+        Round = 0;
 
         DespawnAllConsumibles<ABaseCollectible>();
 
@@ -153,6 +168,18 @@ public class NetGameManager : NetworkBehaviour {
             if (!GameManager.ApplicationIsQuitting) onRoundChange?.Invoke(next);
         }
     }
+    public void AliveEnemies_OnChange(int prev, int next, bool asServer) {
+        if (base.IsClient) {
+            // Notify event to client side subscribers
+            if (!GameManager.ApplicationIsQuitting) onAliveEnemiesChange?.Invoke(next);
+        }
+    }
+    public void TotalEnemies_OnChange(int prev, int next, bool asServer) {
+        if (base.IsClient) {
+            // Notify event to client side subscribers
+            if (!GameManager.ApplicationIsQuitting) onTotalEnemiesChange?.Invoke(next);
+        }
+    }
 
     [Server]
     IEnumerator RoundStartDelay() {
@@ -173,8 +200,10 @@ public class NetGameManager : NetworkBehaviour {
         }
 
         // Increase the round counter, then spawn n enemies. [n = round]
-        _round++;
-        for (int i = 0 ; i < _round ; i++) {
+        Round++;
+        TotalEnemies = Round;
+        AliveEnemies = Round;
+        for (int i = 0 ; i < Round ; i++) {
             SpawnEnemy();
         }
 
@@ -258,6 +287,7 @@ public class NetGameManager : NetworkBehaviour {
         // If an enemy died/was removed
         if (SyncListOperation.RemoveAt == op) {
             var remainingEnemies = Enemies;
+            AliveEnemies = Enemies.Count;
 
             // If there are no enemies remaining
             if (remainingEnemies.Count == 0) {

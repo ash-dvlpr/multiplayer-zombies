@@ -647,6 +647,8 @@ MonoBehaviour:
   maxShotDistance: 200
   shootingRate: 0.2
   shotDamage: 20
+  deathSound: {fileID: 8300000, guid: 2c6f8b6b65032514c8e5405d45f632f1, type: 3}
+  shootSound: {fileID: 8300000, guid: 14e0e3a6642b04e45a928822d3fe8a32, type: 3}
   _canControl: 0
   _canShoot: 1
   virtualCamera: {fileID: 4561794382584809056}

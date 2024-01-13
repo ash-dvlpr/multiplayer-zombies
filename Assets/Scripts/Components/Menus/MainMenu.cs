@@ -24,7 +24,7 @@ public class MainMenu : AMenu {
     // ===================== Custom Code =====================
     public override void OpenMenu() {
         base.OpenMenu();
-        AudioManager.PlayClip(mainTheme);
+        AudioManager.PlayClip(mainTheme, false);
     }
     public override void CloseMenu() {
         base.CloseMenu();

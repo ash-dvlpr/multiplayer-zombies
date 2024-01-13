@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour {
             lobby.CloseLobby();
         }
 
+        AudioManager.ResumeAudio();
         MenuManager.OpenMenu(MenuID.Main);
         return GameState.MainMenu;
     }
