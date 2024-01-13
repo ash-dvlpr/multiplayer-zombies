@@ -174,10 +174,10 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     public void Restore(bool hardReset = true) {
         CanShoot = true;
         CanControl = true;
+        ammo.ResetValues();
 
         if (hardReset) { 
             health.ResetValues();
-            ammo.ResetValues();
         }
         playerMovement.RequestTeleport(_spawnPosition);
     }

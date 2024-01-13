@@ -12,7 +12,6 @@ public class PlayerUI : AMenu {
     // ====================== References =====================
     [field: SerializeField] public TMP_Text RoundDisplay { get; private set; }
     [field: SerializeField] public TMP_Text RemainingEnemyCountDisplay { get; private set; }
-    [field: SerializeField] public TMP_Text TotalEnemyCountDisplay { get; private set; }
     [field: SerializeField] public ResourceBar HPBar { get; private set; }
     [field: SerializeField] public ResourceBar AmmoBar { get; private set; }
 
@@ -41,8 +40,7 @@ public class PlayerUI : AMenu {
 
         HPBar.Refresh();
         OnRoundChange(NetGameManager.Instance.Round);
-        OnAliveEnemiesChange(NetGameManager.Instance.AliveEnemies);
-        OnTotalEnemiesChange(NetGameManager.Instance.TotalEnemies);
+        OnEnemiesChange(0);
     }
     public override void CloseMenu() {
         DeregisterEvents();
@@ -52,23 +50,22 @@ public class PlayerUI : AMenu {
 
     private void RegisterEvents() {
         NetGameManager.Instance.OnRoundChange += OnRoundChange;
-        NetGameManager.Instance.OnAliveEnemiesChange += OnAliveEnemiesChange;
-        NetGameManager.Instance.OnTotalEnemiesChange += OnTotalEnemiesChange;
+        NetGameManager.Instance.OnAliveEnemiesChange += OnEnemiesChange;
+        NetGameManager.Instance.OnTotalEnemiesChange += OnEnemiesChange;
     }
     private void DeregisterEvents() {
         NetGameManager.Instance.OnRoundChange -= OnRoundChange;
-        NetGameManager.Instance.OnAliveEnemiesChange -= OnAliveEnemiesChange;
-        NetGameManager.Instance.OnTotalEnemiesChange -= OnTotalEnemiesChange;
+        NetGameManager.Instance.OnAliveEnemiesChange -= OnEnemiesChange;
+        NetGameManager.Instance.OnTotalEnemiesChange -= OnEnemiesChange;
     }
 
     private void OnRoundChange(int newValue) {
-        RoundDisplay?.SetText($"{newValue}");;
+        RoundDisplay?.SetText($"{newValue}"); ;
     }
-    private void OnAliveEnemiesChange(int newValue) {
-        RemainingEnemyCountDisplay?.SetText($"{newValue}");;
-    }
-    private void OnTotalEnemiesChange(int newValue) {
-        TotalEnemyCountDisplay?.SetText($"{newValue}");;
+    private void OnEnemiesChange(int newValue) {
+        RemainingEnemyCountDisplay?.SetText(
+            $"{NetGameManager.Instance.AliveEnemies}/{NetGameManager.Instance.TotalEnemies}"
+        );
     }
 
     // ===================== UI Actions ======================
