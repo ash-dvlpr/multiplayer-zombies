@@ -6,8 +6,6 @@ using UnityEngine;
 public class LobbyMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Lobby; }
     
-
-
     [SerializeField] TMP_InputField lobbyCodeInputField;
     public string LobbyCodeFieldText { get => lobbyCodeInputField.text.Trim(); }
 

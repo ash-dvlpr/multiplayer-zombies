@@ -23,12 +23,12 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     [SerializeField] float shootingRate = 0.1f;
     [SerializeField] int shotDamage = 20;
 
+    [Header("Sounds")]
+    [SerializeField] AudioClip deathSound;
+    [SerializeField] AudioClip shootSound;
+
     //[Header("Death")]
     //[SerializeField] float timeBeforeCorpseRemoval = 4f;
-
-    //[Header("Interaction")]
-    //[SerializeField] string interactableTag;
-
 
     // ====================== Variables ======================
     // Here interactable componets are cached
@@ -68,6 +68,10 @@ public class PlayerController : NetworkBehaviour, IInteractor {
         var type = typeof(T);
         componentCache[type] = resource;
     }
+    public bool Has<T>() {
+        var type = typeof(T);
+        return componentCache.ContainsKey(type);
+    }
     public bool TryGet<T>(out T resource) {
         var type = typeof(T);
         var result = componentCache.TryGetValue(type, out var cachedObj);
@@ -89,6 +93,7 @@ public class PlayerController : NetworkBehaviour, IInteractor {
 
         health.OnDeath += OnDeath;
         health.OnDeath += NetGameManager.Instance.OnPlayerDied;
+        ammo.OnNoAmmoLeft += NetGameManager.Instance.OnPlayerNoAmmoLeft;
     }
 
     public override void OnStopServer() {
@@ -99,6 +104,7 @@ public class PlayerController : NetworkBehaviour, IInteractor {
 
         health.OnDeath -= OnDeath;
         health.OnDeath -= NetGameManager.Instance.OnPlayerDied;
+        ammo.OnNoAmmoLeft -= NetGameManager.Instance.OnPlayerNoAmmoLeft;
     }
 
 
@@ -165,32 +171,29 @@ public class PlayerController : NetworkBehaviour, IInteractor {
 
     // ===================== Custom Code =====================
     [Server]
-    public void Restore() {
+    public void Restore(bool hardReset = true) {
         CanShoot = true;
         CanControl = true;
-        health.ResetValues();
-        ammo.ResetValues();
+
+        if (hardReset) { 
+            health.ResetValues();
+            ammo.ResetValues();
+        }
         playerMovement.RequestTeleport(_spawnPosition);
     }
     [Server]
     void RoundStart() {
-        Debug.Log("Round Started");
-
-        
-        // TODO: Round start message
         CanControl = CanShoot = true;
     }
     [Server]
     void RoundEnd() {
-        Debug.Log("Round Ended");
-
         CanControl = CanShoot = false;
     }
     void OnDeath() {
-        Debug.Log("Player died");
         CanControl = false;
-        // TODO: trigger death animation
+        PlayDeathSound();
 
+        // TODO: trigger death animation
         //Destroy(this, timeBeforeCorpseRemoval);
     }
 
@@ -222,6 +225,7 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     [ServerRpc]
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
         if (ammo.HasAmmo) {
+            PlayShootSound();
             ammo.Consume(1);
 
             if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
@@ -255,5 +259,18 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     [Server]
     public void Interact(IInteractable interactable) {
         interactable.Interact(this);
+    }
+
+    // ======================= Sounds ========================
+    [ObserversRpc]
+    public void PlayShootSound() {
+        if (base.IsClient && shootSound != null)
+            AudioManager.PlayClipAt(shootSound, this.transform.position);
+    }
+
+    [ObserversRpc]
+    public void PlayDeathSound() {
+        if (base.IsClient && deathSound != null)
+            AudioManager.PlayClipAt(deathSound, this.transform.position);
     }
 }

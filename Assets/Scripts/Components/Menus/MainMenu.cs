@@ -7,22 +7,26 @@ using TMPro;
 public class MainMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Main; }
 
+    // ==================== Configuration ====================
+    [SerializeField] AudioClip mainTheme;
+
     // ====================== References =====================
     [field: SerializeField] public Button MultiplayerButton { get; private set; }
     public bool MultiplayerButtonState {
         get => MultiplayerButton?.interactable ?? false;
         set {
-            if (MultiplayerButton) { 
+            if (MultiplayerButton) {
                 MultiplayerButton.interactable = value;
             }
         }
     }
 
     // ===================== Custom Code =====================
-    public override void OpenMenu() { 
+    public override void OpenMenu() {
         base.OpenMenu();
+        AudioManager.PlayClip(mainTheme, false);
     }
-    public override void CloseMenu() { 
+    public override void CloseMenu() {
         base.CloseMenu();
     }
 
@@ -33,7 +37,7 @@ public class MainMenu : AMenu {
     public void OnClick_Multiplayer() {
         GameManager.CreateMultiPlayerLobby();
     }
-    public void OnClick_Settings() { 
+    public void OnClick_Settings() {
         MenuManager.OpenMenu(MenuID.Settings);
     }
     public void OnClick_CloseGame() {

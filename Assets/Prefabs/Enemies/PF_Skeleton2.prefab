@@ -1552,7 +1552,7 @@ GameObject:
   - component: {fileID: 7900116984341768026}
   - component: {fileID: 3564724057640134477}
   - component: {fileID: 3629903982140387601}
-  - component: {fileID: 7117736816172991350}
+  - component: {fileID: 2054444816867033615}
   m_Layer: 0
   m_Name: Attack Area
   m_TagString: Untagged
@@ -1625,8 +1625,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &7117736816172991350
-SphereCollider:
+--- !u!136 &2054444816867033615
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1643,9 +1643,11 @@ SphereCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.5864466
+  m_Height: 1.3362075
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.084997356, z: 0}
 --- !u!1 &6007803590636603208
 GameObject:
   m_ObjectHideFlags: 0
@@ -2662,9 +2664,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 1
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 3328473713853456097}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3328473713853456097}
   IgnoredParameters: []
   _animator: {fileID: 306186967204834090}
   _smoothFloats: 1
@@ -2839,9 +2841,9 @@ MonoBehaviour:
   - {fileID: 7186341303837325160}
   - {fileID: 4864014939293851938}
   - {fileID: 8758703748825856661}
+  - {fileID: 6325287373545133201}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
-  <ChildNetworkObjects>k__BackingField:
-  - {fileID: 0}
+  <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2851,7 +2853,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 5
+  <PrefabId>k__BackingField: 19
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
@@ -2916,13 +2918,13 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -334000983
   m_Radius: 0.3
-  m_Speed: 3
-  m_Acceleration: 10
+  m_Speed: 5
+  m_Acceleration: 12
   avoidancePriority: 50
-  m_AngularSpeed: 600
-  m_StoppingDistance: 1.6
+  m_AngularSpeed: 800
+  m_StoppingDistance: 1.4
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 1.9
   m_BaseOffset: -0.02
@@ -2943,7 +2945,11 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3328473713853456097}
   _networkObjectCache: {fileID: 3328473713853456097}
-  attackRate: 2.5
+  movingSound: {fileID: 8300000, guid: 9792340f84a6a0e44a81cc1a4aa6e5f3, type: 3}
+  attackSound: {fileID: 8300000, guid: 267644ff07d092242a01e34cbd57d45e, type: 3}
+  randomSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: cd3c4e04ac6db8f4dbec20c38b5b7c49, type: 3}
+  attackRate: 1
   attackDamage: 10
   timeBeforeCorpseRemoval: 4
   _target: {fileID: 0}

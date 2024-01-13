@@ -12,6 +12,7 @@ public enum MenuID : int {
     Pause      = 4,
     PlayerUI   = 5,
     GameOverUI = 6,
+    Crossfade  = 7,
 }
 
 public static class MenuManager {
@@ -122,5 +123,17 @@ public static class MenuManager {
             Debug.LogError($"MenuManger.CloseMenu(): {CurrentMenu} not found.");
             Debug.LogException(ke, mainCanvas);
         }
+    }
+
+    // Utils
+    public static void FadeOut(bool forced = false) {
+        Debug.Log("Fading Out");
+        var crossfade = (Crossfade) Get(MenuID.Crossfade);
+        crossfade.TriggerFadeOut(forced);
+    }
+    public static void FadeIn(bool forced = false) { 
+        Debug.Log("Fading In");
+        var crossfade = (Crossfade) Get(MenuID.Crossfade);
+        crossfade.TriggerFadeIn(forced);
     }
 }

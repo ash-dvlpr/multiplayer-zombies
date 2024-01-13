@@ -3,7 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ICache {
-    public void Register<T>(T @object);
-    public bool TryGet<T>(out T @object);
+public interface ICache<K, V> where V : ICacheable<K> {
+    public void Register(V @object);
+    public bool TryGet(K key, out V @object);
+}
+
+public interface ICacheable<K> { 
+    public K Key { get; }
 }

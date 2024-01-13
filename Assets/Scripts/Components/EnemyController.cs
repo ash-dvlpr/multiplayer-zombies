@@ -11,7 +11,14 @@ using FishNet.Component.Animating;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
 public class EnemyController : NetworkBehaviour {
+
     // ==================== Configuration ====================
+    [Header("Sounds")]
+    [SerializeField] AudioClip movingSound;
+    [SerializeField] AudioClip attackSound;
+    [SerializeField] AudioClip randomSound;
+    [SerializeField] AudioClip deathSound;
+
     [Header("Combat")]
     [SerializeField] float attackRate = 2f;
     [SerializeField] int attackDamage = 10;
@@ -26,6 +33,8 @@ public class EnemyController : NetworkBehaviour {
     Animator animator;
     NetworkAnimator netAnimator;
     Health health;
+    AudioSource audioSource;
+    Collider _collider;
 
     // ====================== Variables ======================
     [SyncVar] Transform _target;
@@ -36,27 +45,47 @@ public class EnemyController : NetworkBehaviour {
     // ====================== Unity Code ======================
     public override void OnStartNetwork() {
         base.OnStartNetwork();
-        //health.OnDeath += OnDeath;
 
-        if (!base.IsServer) { 
+        if (!base.IsServer) {
             agent.enabled = false;
         }
+
+        // Register events
+        health.OnDeath += OnDeath;
     }
     public override void OnStopNetwork() {
         base.OnStopNetwork();
-        //health.OnDeath -= OnDeath;
+
+        // Deregister events
+        health.OnDeath -= OnDeath;
     }
     public override void OnStartServer() {
         base.OnStartServer();
 
+        _collider = GetComponent<Collider>();
+        animator.SetBool(AnimatorID.isAlive, true);
+
         // Register enemy on the enemy spawner
         NetGameManager.Instance?.Enemies.Add(this);
 
-        // Register events
-        health.OnDeath += OnDeath;
-
         // Start searching for targets
         StartCoroutine(SearchTargets());
+        PlayMovingSound();
+    }
+
+    public override void OnStartClient() {
+        base.OnStartClient();
+
+        audioSource = this.gameObject.AddComponent<AudioSource>();
+        
+        // Register enemy on the enemy spawner
+        AudioManager.Instance?.entitySources.Add(audioSource);
+    }
+    public override void OnStopClient() {
+        base.OnStopClient();
+
+        // Register enemy on the enemy spawner
+        AudioManager.Instance?.entitySources.Remove(audioSource);
     }
 
     public override void OnStopServer() {
@@ -64,9 +93,6 @@ public class EnemyController : NetworkBehaviour {
 
         // Deregister enemy on the enemy spawner
         NetGameManager.Instance?.Enemies.Remove(this);
-
-        // Deregister events
-        health.OnDeath -= OnDeath;
 
         // Cleaup
         StopAllCoroutines();
@@ -91,27 +117,40 @@ public class EnemyController : NetworkBehaviour {
                 agent.destination = target;
             }
 
-            bool moving = agent.velocity.magnitude > 1;
+            bool moving = agent.velocity.magnitude > 0.1f;
             animator.SetBool(AnimatorID.isRunning, moving);
         }
     }
 
     void OnTriggerEnter(Collider other) {
         if (health.IsAlive && !_attacking && other.CompareTag("Player")) {
-            StartCoroutine(AttackDelay());
-            netAnimator.SetTrigger(AnimatorID.triggerAttack);
-            if (base.IsServer) Attack(other.transform);
+            PlayAttackSound();
+            if (base.IsServer) {
+                StartCoroutine(AttackDelay());
+                netAnimator.SetTrigger(AnimatorID.triggerAttack);
+                Attack(other.transform);
+            }
         }
     }
 
 
     // ===================== Custom Code =====================
     void OnDeath() {
-        if (base.IsServer) StopAllCoroutines();
+        StopAllCoroutines();
+        
+        if (base.IsServer) { 
+            agent.destination = this.transform.position;
+            agent.isStopped = true;
 
-        animator.SetBool(AnimatorID.isRunning, false);
-        agent.destination = this.transform.position;
-        agent.isStopped = true;
+            animator.SetBool(AnimatorID.isRunning, false);
+            animator.SetBool(AnimatorID.isAlive, false);
+        }
+            
+        _collider.enabled = false;
+
+        if (base.IsClient) {
+            AudioManager.PlayClipOn(deathSound, audioSource);
+        }
 
         if (base.IsServer) StartCoroutine(DelayCorposeRemoval());
     }
@@ -126,7 +165,7 @@ public class EnemyController : NetworkBehaviour {
     IEnumerator SearchTargets() {
         while (true) {
             ChangeTarget();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(NetGameManager.Instance?.TimeBetweenPathRecalculations ?? 1);
         }
     }
 
@@ -134,6 +173,7 @@ public class EnemyController : NetworkBehaviour {
         _attacking = true;
         yield return new WaitForSeconds(attackRate);
         _attacking = false;
+        PlayMovingSound();
     }
 
     [Server]
@@ -146,20 +186,17 @@ public class EnemyController : NetworkBehaviour {
     private void ChangeTarget() {
         // Get players from EnemySpawner's cached player list
         // And filter for alive players
-        var players = NetGameManager.Instance?.Players.Where(
-            p =>{
-                // Skip if no health component found
-                if (!p.TryGet<Health>(out var health)) return false;
-                // Skip dead players
-                return health.IsAlive;
-            } 
-        ).ToList();
+        var players = from p in NetGameManager.Instance?.Players
+                      where p.TryGet<Health>(out var health) && health.IsAlive
+                      select p;
 
         GameObject nearestPlayer = null;
-        if (players.Count > 0) {
+        GameObject nearestPathablePlayer = null;
+        if (players.Any()) {
             var shortestDistance = Mathf.Infinity;
-            //nearestPlayer = players.First().gameObject;
+            var shortestPathableDistance = Mathf.Infinity;
 
+            // Calculate closest pathabe player and the mathematically closest player
             foreach (var p in players) {
                 var vDistance = p.transform.position - transform.position;
                 // We are just comparing distances, we don't need precision, so we can save up on a Mathf.Sqrt()
@@ -169,18 +206,28 @@ public class EnemyController : NetworkBehaviour {
                 var path = new NavMeshPath();
                 agent.CalculatePath(p.transform.position, path);
 
-                // Skip unreachable targets
-                if (NavMeshPathStatus.PathInvalid == path.status) continue;
-
+                // Store the true shortest distance in case there are no players with a full path
                 if (shortestDistance > distance) {
                     nearestPlayer = p.gameObject;
                     shortestDistance = distance;
                 }
-            }
-        }
 
-        // If no targets found, stay in place
-        _target = nearestPlayer != null ? nearestPlayer.transform : this.transform;
+                // Skip unreachable targets
+                if (NavMeshPathStatus.PathInvalid == path.status) continue;
+
+                if (shortestPathableDistance > distance) {
+                    nearestPathablePlayer = p.gameObject;
+                    shortestPathableDistance = distance;
+                }
+            }
+
+            // If there were no pathable players, use the mathematically closest player
+            _target = nearestPathablePlayer == null ? nearestPlayer.transform : nearestPathablePlayer.transform;
+        }
+        // If there are no alive players
+        else {
+            _target = this.transform;
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -205,4 +252,24 @@ public class EnemyController : NetworkBehaviour {
     //        // TODO: damage
     //    }
     //}
+
+
+    // ======================= Sounds ========================
+    [ObserversRpc(BufferLast = true)]
+    public void PlayMovingSound() {
+        if (base.IsClient && movingSound != null)
+            AudioManager.PlayClipOn(movingSound, audioSource);
+    }
+
+    [ObserversRpc]
+    public void PlayAttackSound() {
+        if (base.IsClient && attackSound != null)
+            AudioManager.PlayClipOn(attackSound, audioSource);
+    }
+
+    [ObserversRpc]
+    public void PlayRandomSound() {
+        if (base.IsClient && randomSound != null)
+            AudioManager.PlayClipOn(randomSound, audioSource);
+    }
 }

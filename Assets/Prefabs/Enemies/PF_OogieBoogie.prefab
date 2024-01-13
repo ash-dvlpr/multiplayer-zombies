@@ -316,7 +316,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 383788569288210502}
@@ -1473,7 +1473,7 @@ GameObject:
   - component: {fileID: 383788569288210502}
   - component: {fileID: 3461784607992860762}
   - component: {fileID: 7382742148008318238}
-  - component: {fileID: 2697211409298761995}
+  - component: {fileID: 5193132447139141083}
   m_Layer: 0
   m_Name: Attack Area
   m_TagString: Untagged
@@ -1546,8 +1546,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &2697211409298761995
-SphereCollider:
+--- !u!136 &5193132447139141083
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1564,9 +1564,11 @@ SphereCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.5864466
+  m_Height: 1.3362075
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.084997356, z: 0}
 --- !u!1 &5750257288265802662
 GameObject:
   m_ObjectHideFlags: 0
@@ -2304,7 +2306,7 @@ MonoBehaviour:
   - {fileID: 4434292780548331545}
   - {fileID: 1715607964653209714}
   - {fileID: 4018162430315475779}
-  - {fileID: 0}
+  - {fileID: 849079749377006094}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
@@ -2316,9 +2318,9 @@ MonoBehaviour:
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 5
+  <PrefabId>k__BackingField: 9
   <SpawnableCollectionId>k__BackingField: 0
-  _scenePathHash: 221360987
+  _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 7316545888257002828
 --- !u!54 &8552969721437099
@@ -2381,13 +2383,13 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -334000983
   m_Radius: 0.3
-  m_Speed: 3
+  m_Speed: 2.5
   m_Acceleration: 10
   avoidancePriority: 50
-  m_AngularSpeed: 600
-  m_StoppingDistance: 1.6
+  m_AngularSpeed: 800
+  m_StoppingDistance: 1.4
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 1.9
   m_BaseOffset: -0.02
@@ -2408,8 +2410,12 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3019101839091719879}
   _networkObjectCache: {fileID: 3019101839091719879}
+  movingSound: {fileID: 8300000, guid: 1cbecaa2d7fe83c4f9e42885ef7ed4f8, type: 3}
+  attackSound: {fileID: 8300000, guid: d23c1435ffb9d67468c53c562dce61b5, type: 3}
+  randomSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: a4f933b46366fc148a4182cb834d74d9, type: 3}
   attackRate: 2.5
-  attackDamage: 10
+  attackDamage: 25
   timeBeforeCorpseRemoval: 4
   _target: {fileID: 0}
 --- !u!114 &4018162430315475779
@@ -2427,8 +2433,8 @@ MonoBehaviour:
   _componentIndexCache: 2
   _addedNetworkObject: {fileID: 3019101839091719879}
   _networkObjectCache: {fileID: 3019101839091719879}
-  <Max>k__BackingField: 100
-  _amount: 100
+  <Max>k__BackingField: 200
+  _amount: 200
 --- !u!1 &8804188404362369086
 GameObject:
   m_ObjectHideFlags: 0

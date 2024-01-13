@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour {
             lobby.CloseLobby();
         }
 
+        AudioManager.ResumeAudio();
         MenuManager.OpenMenu(MenuID.Main);
         return GameState.MainMenu;
     }
@@ -281,5 +282,12 @@ public class GameManager : MonoBehaviour {
         //var task = asyncMethod?.Invoke();
         yield return new WaitUntil(() => task.IsCompleted);
         actionAfterWait?.Invoke();
+    }
+
+    // Left here because it can be usefull for sequencing events
+    public static IEnumerator SequentialCorroutines(params IEnumerator[] corroutines) {
+        foreach (var coroutine in corroutines) {
+            yield return coroutine;
+        }
     }
 }

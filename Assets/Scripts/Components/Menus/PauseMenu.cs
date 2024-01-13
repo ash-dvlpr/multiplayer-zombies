@@ -11,9 +11,9 @@ public class PauseMenu : AMenu {
     [SerializeField] TMP_Text roomCodeDisplay;
 
     // ===================== Custom Code =====================
-
     public override void OpenMenu() {
         GameManager.ClientInMenu = true;
+        AudioManager.PauseAudio();
 
         PauseGame();
         UpdateRoomCode();
@@ -27,20 +27,20 @@ public class PauseMenu : AMenu {
         base.CloseMenu();
     }
 
-    // ===================== Custom Code =====================
     private void UpdateRoomCode() {
-        if (GameManager.IsMultiplayerGame) { 
+        if (GameManager.IsMultiplayerGame) {
             // Set lobby code text
             var lobby = (MultiPlayerLobby) GameManager.GetLobby;
             roomCodeDisplay.text = $"{lobby.LobbyCode}";
 
             roomCodePanel.SetActive(true);
-        } else {
+        }
+        else {
             ClearRoomCode();
         }
     }
-    
-    private void ClearRoomCode() { 
+
+    private void ClearRoomCode() {
         roomCodePanel.SetActive(false);
     }
 
