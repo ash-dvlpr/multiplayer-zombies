@@ -7,8 +7,11 @@ public class SettingsMenu : AMenu {
     public override MenuID MenuKey { get => MenuID.Settings; }
     
     [SerializeField] Setting onScreenControllerOption;
-
     Toggle _toggle;
+
+    [SerializeField] Slider horizontalSensitivitySlider;
+    [SerializeField] Slider verticalSensitivitySlider;
+
 
     // ===================== Custom Code =====================
     public override void OpenMenu() {
@@ -33,6 +36,16 @@ public class SettingsMenu : AMenu {
 #else
         onScreenControllerOption.gameObject.SetActive(false);
 #endif
+
+        // Horizontal sensitivity
+        horizontalSensitivitySlider.minValue = SettingsManager.MIN_LOOK_SENSITIVITY_VALUE;
+        horizontalSensitivitySlider.maxValue = SettingsManager.MAX_LOOK_SENSITIVITY_VALUE;
+        horizontalSensitivitySlider.normalizedValue = SettingsManager.LookSensitivityX;
+
+        // Vertical sensitivity
+        verticalSensitivitySlider.minValue = SettingsManager.MIN_LOOK_SENSITIVITY_VALUE;
+        verticalSensitivitySlider.maxValue = SettingsManager.MAX_LOOK_SENSITIVITY_VALUE;
+        verticalSensitivitySlider.normalizedValue = SettingsManager.LookSensitivityY;
     }
 
     // ===================== UI Actions ======================
@@ -45,6 +58,12 @@ public class SettingsMenu : AMenu {
 #endif
     }
 
+    public void OnValueChanged_HorizontalSensitivity() {
+        SettingsManager.LookSensitivityX = horizontalSensitivitySlider.normalizedValue; 
+    }
+    public void OnValueChanged_VerticalSensitivity() {
+        SettingsManager.LookSensitivityY = verticalSensitivitySlider.normalizedValue; 
+    }
 
     //? Normal actions
     public void OnClick_Back() {

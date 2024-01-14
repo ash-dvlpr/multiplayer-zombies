@@ -10,8 +10,6 @@ public class PlayerMovement : NetworkBehaviour {
     [Header("Camera Movement / Look")]
     [SerializeField] GameObject cameraHandle;
     [SerializeField] GameObject weaponHandle;
-    [SerializeField] float lookSpeedX = 24f;
-    [SerializeField] float lookSpeedY = 24f;
     [SerializeField, Range(0f, 90f)] float lookMaxAngleUp   = 80f;
     [SerializeField, Range(0f, 90f)] float lookMaxAngleDown = 90f;
 
@@ -75,12 +73,12 @@ public class PlayerMovement : NetworkBehaviour {
     void HandleCameraLook() {
         if (controller.CanControl) {
             var lookDelta = InputManager.InGame_LookDelta;
-            _cameraPitch -= lookDelta.y * lookSpeedY;
+            _cameraPitch -= lookDelta.y * SettingsManager.LookSensitivityY;
             _cameraPitch = Mathf.Clamp(_cameraPitch, -lookMaxAngleUp, lookMaxAngleDown);
 
             cameraHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
             weaponHandle.transform.localRotation = Quaternion.Euler(_cameraPitch, 0, 0);
-            transform.rotation *= Quaternion.Euler(0, lookDelta.x * lookSpeedX, 0);
+            transform.rotation *= Quaternion.Euler(0, lookDelta.x * SettingsManager.LookSensitivityX, 0);
         }
     }
 
