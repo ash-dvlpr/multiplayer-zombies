@@ -614,8 +614,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3019101839091719879, guid: 5754eafd012b47a449489cbfaff3074d,
         type: 3}
+      propertyPath: _scenePathHash
+      value: 221360987
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019101839091719879, guid: 5754eafd012b47a449489cbfaff3074d,
+        type: 3}
       propertyPath: <SceneId>k__BackingField
-      value: 950738200220338513
+      value: 950738204037045075
       objectReference: {fileID: 0}
     - target: {fileID: 3019101839091719879, guid: 5754eafd012b47a449489cbfaff3074d,
         type: 3}
@@ -1014,8 +1019,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3019101839091719879, guid: 5754eafd012b47a449489cbfaff3074d,
         type: 3}
+      propertyPath: _scenePathHash
+      value: 221360987
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019101839091719879, guid: 5754eafd012b47a449489cbfaff3074d,
+        type: 3}
       propertyPath: <SceneId>k__BackingField
-      value: 950738203929483326
+      value: 950738202496107680
       objectReference: {fileID: 0}
     - target: {fileID: 3019101839091719879, guid: 5754eafd012b47a449489cbfaff3074d,
         type: 3}
