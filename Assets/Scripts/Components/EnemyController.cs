@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 using FishNet;
 using FishNet.Object;
@@ -18,6 +19,8 @@ public class EnemyController : NetworkBehaviour {
     [SerializeField] AudioClip attackSound;
     [SerializeField] AudioClip randomSound;
     [SerializeField] AudioClip deathSound;
+    [SerializeField] float randomSoundMinDelay = 3f;
+    [SerializeField] float randomSoundMaxDelay = 10f;
 
     [Header("Combat")]
     [SerializeField] float attackRate = 2f;
@@ -71,6 +74,7 @@ public class EnemyController : NetworkBehaviour {
 
         // Start searching for targets
         StartCoroutine(SearchTargets());
+        StartCoroutine(RandomSoundLoop());
         PlayMovingSound();
     }
     public override void OnStopServer() {
@@ -256,6 +260,13 @@ public class EnemyController : NetworkBehaviour {
 
 
     // ======================= Sounds ========================
+    private IEnumerator RandomSoundLoop() {
+        while (health.IsAlive) { 
+            yield return new WaitForSeconds(Random.Range(randomSoundMinDelay, randomSoundMaxDelay));
+            PlayRandomSound();
+        }
+    }
+
     [ObserversRpc(BufferLast = true)]
     public void PlayMovingSound() {
         if (base.IsClient && movingSound != null)
@@ -271,6 +282,6 @@ public class EnemyController : NetworkBehaviour {
     [ObserversRpc]
     public void PlayRandomSound() {
         if (base.IsClient && randomSound != null)
-            AudioManager.PlayClipOn(randomSound, audioSource);
+            AudioManager.PlayClipAt(randomSound, this.transform.position);
     }
 }
