@@ -388,6 +388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7481dcde4e47f24ba3baf9ee594ea52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstSelected: {fileID: 7280394374984403929}
   <RoundsDisplay>k__BackingField: {fileID: 7362859679805397713}
   <RestartButton>k__BackingField: {fileID: 1215837802949495906}
 --- !u!1 &5976151341911504227
@@ -945,12 +946,18 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 35689522841904999}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 7280394374984403929}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7280394374984403929 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7311562602893765822, guid: 06b319151078938418604eb5fdb1e60f,
+    type: 3}
+  m_PrefabInstance: {fileID: 35689522841904999}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8130943724632287350 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8117774966425374481, guid: 06b319151078938418604eb5fdb1e60f,

@@ -65,9 +65,8 @@ public static class MenuManager {
         return menu;
     }
 
-    public static void ResetSelectedUIObject() {
-        //var selected = EventSystem.current.currentSelectedGameObject;
-        EventSystem.current.SetSelectedGameObject(null);
+    public static void ResetSelectedUIObject(GameObject newSelected = null) {
+        EventSystem.current.SetSelectedGameObject(newSelected);
     }
 
     /// <summary>

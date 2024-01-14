@@ -117,6 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d072ffb75889bb34b94dd45dc22a2463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstSelected: {fileID: 4027490755532495467}
   roomCodePanel: {fileID: 4743923731526691167}
   roomCodeDisplay: {fileID: 2138919374071204365}
 --- !u!1 &2871188665092389909
@@ -852,7 +853,7 @@ PrefabInstance:
     - target: {fileID: 8117774966425374481, guid: 06b319151078938418604eb5fdb1e60f,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 825.00006
+      value: 825
       objectReference: {fileID: 0}
     - target: {fileID: 8117774966425374481, guid: 06b319151078938418604eb5fdb1e60f,
         type: 3}
@@ -1322,6 +1323,12 @@ PrefabInstance:
 --- !u!224 &2466643975071316420 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8117774966425374481, guid: 06b319151078938418604eb5fdb1e60f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5950212722677020373}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4027490755532495467 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7311562602893765822, guid: 06b319151078938418604eb5fdb1e60f,
     type: 3}
   m_PrefabInstance: {fileID: 5950212722677020373}
   m_PrefabAsset: {fileID: 0}

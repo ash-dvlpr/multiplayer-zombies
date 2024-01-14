@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48d7f6bcc4a1bb3449764d0e68edc471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstSelected: {fileID: 7528744258822668768}
   onScreenControllerOption: {fileID: 3788144968021631877}
 --- !u!1 &1102609801086920326
 GameObject:
@@ -1124,6 +1125,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06b319151078938418604eb5fdb1e60f, type: 3}
+--- !u!1 &7528744258822668768 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7311562602893765822, guid: 06b319151078938418604eb5fdb1e60f,
+    type: 3}
+  m_PrefabInstance: {fileID: 940296233902173534}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &9053566910544192079 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8117774966425374481, guid: 06b319151078938418604eb5fdb1e60f,

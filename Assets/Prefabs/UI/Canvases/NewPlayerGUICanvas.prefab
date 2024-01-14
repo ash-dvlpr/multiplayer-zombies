@@ -666,6 +666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e82acd6d7463e4abd30dd088635bd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstSelected: {fileID: 0}
   gameTheme: {fileID: 8300000, guid: 5b9ad674ce9162746832472d01016a65, type: 3}
   <RoundDisplay>k__BackingField: {fileID: 228686139038858176}
   <RemainingEnemyCountDisplay>k__BackingField: {fileID: 1232850356170687114}

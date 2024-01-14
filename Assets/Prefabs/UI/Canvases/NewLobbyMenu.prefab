@@ -328,6 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f281a8e49f03440bae80bdd83179bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstSelected: {fileID: 7491672494393688775}
   lobbyCodeInputField: {fileID: 1798879667932523005}
 --- !u!1 &2922432807802506045
 GameObject:
@@ -1276,6 +1277,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06b319151078938418604eb5fdb1e60f, type: 3}
+--- !u!1 &7491672494393688775 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7311562602893765822, guid: 06b319151078938418604eb5fdb1e60f,
+    type: 3}
+  m_PrefabInstance: {fileID: 180186875097902713}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8225831661723591016 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8117774966425374481, guid: 06b319151078938418604eb5fdb1e60f,

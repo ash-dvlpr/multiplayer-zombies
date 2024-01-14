@@ -5,12 +5,16 @@ using UnityEngine;
 public abstract class AMenu : MonoBehaviour {
     public abstract MenuID MenuKey { get; }
 
+    // ==================== Configuration ====================
+    [SerializeField] protected GameObject firstSelected;
+
     // ===================== Custom Code =====================
     /// <summary>
     /// Used for showing the menu. Can be extended to do additional setup.
     /// </summary>
     public virtual void OpenMenu() {
         // Show Menu
+        MenuManager.ResetSelectedUIObject(firstSelected);
         gameObject.SetActive(true);
     }
 
@@ -18,6 +22,7 @@ public abstract class AMenu : MonoBehaviour {
     /// Used for showing the menu. Can be extended to do additional cleanup.
     /// </summary>
     public virtual void CloseMenu() {
+        MenuManager.ResetSelectedUIObject();
         gameObject.SetActive(false);
     }
 
