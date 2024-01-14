@@ -8,6 +8,8 @@ public class Health : AResource {
     // ==================== Configuration ====================
     public override ResourceType ResType { get => ResourceType.Plentiful; }
 
+    [field: SerializeField] public ParticleSystem onHitParticleSystem;
+
     // ====================== Variables ======================
     public bool IsAlive { 
         get => (Amount > 0);
@@ -16,16 +18,22 @@ public class Health : AResource {
     // ======================= NetCode ========================
 
     // ===================== Custom Code =====================
-    //[ServerRpc(RequireOwnership = false)]
     [Server]
     public void Heal(int amount) {
         Amount += Math.Max(0, amount);
     }
 
-    //[ServerRpc(RequireOwnership = false)]
     [Server]
     public void Damage(int amount) {
         Amount -= Math.Max(0, amount);
+        PlayHitFX();
+    }
+
+    [ObserversRpc]
+    public void PlayHitFX() {
+        if (base.IsClient && onHitParticleSystem != null) { 
+            onHitParticleSystem.Play();
+        }
     }
 
     // ================== Outside Facing API ==================

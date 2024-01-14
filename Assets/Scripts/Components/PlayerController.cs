@@ -19,9 +19,6 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     [Header("Shooting")]
     [SerializeField] NetworkAnimator weaponAnimator;
     [SerializeField] LayerMask damageableLayers;
-    [SerializeField] float maxShotDistance;
-    [SerializeField] float shootingRate = 0.1f;
-    [SerializeField] int shotDamage = 20;
 
     [Header("Sounds")]
     [SerializeField] AudioClip deathSound;
@@ -46,7 +43,7 @@ public class PlayerController : NetworkBehaviour, IInteractor {
         set => _canControl = value;
     }
     public bool CanShoot {
-        get => CanControl && ammo.HasAmmo && _canShoot;
+        get => CanControl && ammo.HasAmmo && weapon != null && _canShoot;
         private set => _canShoot = value;
     }
     public List<Type> AllowedInteractableTypes { get => componentCache.Keys.ToList(); }
@@ -54,12 +51,13 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     // ====================== References =====================
     [Header("References")]
     [SerializeField] CinemachineVirtualCamera virtualCamera;
+    [SerializeField] GameObject barsCanvas;
     [SerializeField] Weapon weapon;
     PlayerMovement playerMovement;
 
     PlayerUI playerUI;
-    ResourceBar hpBar;
-    ResourceBar ammoBar;
+    ResourceBar hudHpBar;
+    ResourceBar hudAmmoBar;
     Health health;
     Ammo ammo;
 
@@ -112,8 +110,9 @@ public class PlayerController : NetworkBehaviour, IInteractor {
         base.OnStartClient();
 
         if (base.IsOwner) {
-            hpBar.SwapTrackedResource(health);
-            ammoBar.SwapTrackedResource(ammo);
+            hudHpBar.SwapTrackedResource(health);
+            hudAmmoBar.SwapTrackedResource(ammo);
+            barsCanvas.gameObject.SetActive(false);
         }
         else {
             virtualCamera.enabled = false;
@@ -142,8 +141,8 @@ public class PlayerController : NetworkBehaviour, IInteractor {
 
 
         playerUI = (PlayerUI) MenuManager.Get(MenuID.PlayerUI);
-        hpBar = playerUI.HPBar;
-        ammoBar = playerUI.AmmoBar;
+        hudHpBar = playerUI.HPBar;
+        hudAmmoBar = playerUI.AmmoBar;
     }
 
     void OnEnable() {
@@ -214,9 +213,10 @@ public class PlayerController : NetworkBehaviour, IInteractor {
             var camDir = Camera.main.transform.forward;
 
             weaponAnimator.SetTrigger(AnimatorID.triggerAttack);
+            PlayShootEffects();
             Shoot(camPos, camDir);
 
-            yield return new WaitForSeconds(shootingRate);
+            yield return new WaitForSeconds(weapon.ShootingDelay);
         }
 
         CanShoot = true;
@@ -225,12 +225,12 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     [ServerRpc]
     void Shoot(Vector3 cameraPosition, Vector3 direction) {
         if (ammo.HasAmmo) {
-            PlayShootSound();
+            CL_PlayShootEffects();
             ammo.Consume(1);
 
-            if (Physics.Raycast(cameraPosition, direction, out var hit, maxShotDistance, damageableLayers)) {
+            if (Physics.Raycast(cameraPosition, direction, out var hit, weapon.MaxShotDistance, damageableLayers)) {
                 var hitHp = hit.transform.GetComponent<Health>();
-                hitHp?.Damage(shotDamage);
+                hitHp?.Damage(weapon.ShotDamage);
             }
         }
     }
@@ -262,10 +262,16 @@ public class PlayerController : NetworkBehaviour, IInteractor {
     }
 
     // ======================= Sounds ========================
-    [ObserversRpc]
-    public void PlayShootSound() {
-        if (base.IsClient && shootSound != null)
-            AudioManager.PlayClipAt(shootSound, this.transform.position);
+    [Client]
+    public void PlayShootEffects() {
+        if (base.IsClient && weapon != null) 
+            weapon.PlayShootEffects();
+    }
+
+    [ObserversRpc(ExcludeOwner = true)]
+    public void CL_PlayShootEffects() {
+        if (base.IsClient && weapon != null) 
+            weapon.PlayShootEffects();
     }
 
     [ObserversRpc]

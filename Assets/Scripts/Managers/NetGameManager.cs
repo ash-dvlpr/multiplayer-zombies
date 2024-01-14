@@ -287,6 +287,7 @@ public class NetGameManager : NetworkBehaviour {
         // If an enemy died/was removed
         if (SyncListOperation.RemoveAt == op) {
             var remainingEnemies = Enemies;
+            AliveEnemies = remainingEnemies.Count;
 
             // If there are no enemies remaining
             if (remainingEnemies.Count == 0) {

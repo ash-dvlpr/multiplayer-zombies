@@ -28,6 +28,7 @@ public class EnemyController : NetworkBehaviour {
 
     // ====================== References =====================
     public Health EnemyHealth { get => health; }
+    [SerializeField] GameObject barsCanvas;
 
     NavMeshAgent agent;
     Animator animator;
@@ -72,6 +73,15 @@ public class EnemyController : NetworkBehaviour {
         StartCoroutine(SearchTargets());
         PlayMovingSound();
     }
+    public override void OnStopServer() {
+        base.OnStopServer();
+
+        // Deregister enemy on the enemy spawner
+        NetGameManager.Instance?.Enemies.Remove(this);
+
+        // Cleaup
+        StopAllCoroutines();
+    }
 
     public override void OnStartClient() {
         base.OnStartClient();
@@ -86,16 +96,6 @@ public class EnemyController : NetworkBehaviour {
 
         // Register enemy on the enemy spawner
         AudioManager.Instance?.entitySources.Remove(audioSource);
-    }
-
-    public override void OnStopServer() {
-        base.OnStopServer();
-
-        // Deregister enemy on the enemy spawner
-        NetGameManager.Instance?.Enemies.Remove(this);
-
-        // Cleaup
-        StopAllCoroutines();
     }
 
     void Awake() {
@@ -144,14 +144,13 @@ public class EnemyController : NetworkBehaviour {
 
             animator.SetBool(AnimatorID.isRunning, false);
             animator.SetBool(AnimatorID.isAlive, false);
-
-            NetGameManager.Instance.AliveEnemies--;
         }
             
         _collider.enabled = false;
 
         if (base.IsClient) {
             AudioManager.PlayClipOn(deathSound, audioSource);
+            barsCanvas.gameObject.SetActive(false);
         }
 
         if (base.IsServer) StartCoroutine(DelayCorposeRemoval());
