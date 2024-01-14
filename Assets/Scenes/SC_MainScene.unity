@@ -1347,7 +1347,7 @@ PrefabInstance:
     - target: {fileID: 2517234326920218868, guid: 3d3475b2913fa4047aa46c64da9fe3d0,
         type: 3}
       propertyPath: m_Name
-      value: NewPlayerGameOverCanvas
+      value: PlayerGameOverCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 8912548374510862644, guid: 3d3475b2913fa4047aa46c64da9fe3d0,
         type: 3}
@@ -1465,7 +1465,7 @@ PrefabInstance:
     - target: {fileID: 1809033285604372176, guid: d4054e087682ef54193f3e8f9b32b623,
         type: 3}
       propertyPath: m_Name
-      value: NewPauseMenu
+      value: PauseMenu
       objectReference: {fileID: 0}
     - target: {fileID: 2913302873625971525, guid: d4054e087682ef54193f3e8f9b32b623,
         type: 3}
@@ -1589,7 +1589,7 @@ PrefabInstance:
     - target: {fileID: 2473120592916939459, guid: 26a2ba70bc52a324ead4b3945de6bae1,
         type: 3}
       propertyPath: m_Name
-      value: NewPlayerGUICanvas
+      value: PlayerGUICanvas
       objectReference: {fileID: 0}
     - target: {fileID: 3414388834844115456, guid: 26a2ba70bc52a324ead4b3945de6bae1,
         type: 3}
@@ -1704,10 +1704,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1562369084}
     m_Modifications:
+    - target: {fileID: 1306442356272121212, guid: 9058fb9357fe70b46984adcb9a29c292,
+        type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.b
+      value: 0.9607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 1306442356272121212, guid: 9058fb9357fe70b46984adcb9a29c292,
+        type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.g
+      value: 0.9607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 1306442356272121212, guid: 9058fb9357fe70b46984adcb9a29c292,
+        type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.r
+      value: 0.9607843
+      objectReference: {fileID: 0}
     - target: {fileID: 2785212162374897769, guid: 9058fb9357fe70b46984adcb9a29c292,
         type: 3}
       propertyPath: m_Name
-      value: NewMainMenu
+      value: MainMenu
       objectReference: {fileID: 0}
     - target: {fileID: 3375525298785437051, guid: 9058fb9357fe70b46984adcb9a29c292,
         type: 3}
@@ -1955,7 +1970,7 @@ PrefabInstance:
     - target: {fileID: 585199438011594316, guid: 763e884f1d052a54abab5b5662f94b5c,
         type: 3}
       propertyPath: m_Name
-      value: NewSettingsMenu
+      value: SettingsMenu
       objectReference: {fileID: 0}
     - target: {fileID: 7935671166375333558, guid: 763e884f1d052a54abab5b5662f94b5c,
         type: 3}
@@ -2073,7 +2088,7 @@ PrefabInstance:
     - target: {fileID: 2785212162374897769, guid: bdfe67d653de6be45b6143c65bf26875,
         type: 3}
       propertyPath: m_Name
-      value: NewLobbyMenu
+      value: LobbyMenu
       objectReference: {fileID: 0}
     - target: {fileID: 3375525298785437051, guid: bdfe67d653de6be45b6143c65bf26875,
         type: 3}
