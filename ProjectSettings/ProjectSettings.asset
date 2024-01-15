@@ -812,6 +812,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     Android: FISHNET;FISHNET_V3;FISHNET_PRO
     Standalone: FISHNET;FISHNET_V3;FISHNET_PRO
+    Windows Store Apps: FISHNET;FISHNET_V3;FISHNET_PRO
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
@@ -845,11 +846,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: MultiplayerZombies
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: IES Valle Jerte Plasencia
+  metroCertificateIssuer: IES Valle Jerte Plasencia
+  metroCertificateNotAfter: 800169a6a866db01
   metroApplicationDescription: MultiplayerZombies
   wsaImages: {}
   metroTileShortName: MultiplayerZombies
